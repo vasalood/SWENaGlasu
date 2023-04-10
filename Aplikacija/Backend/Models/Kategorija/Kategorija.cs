@@ -18,9 +18,11 @@ namespace Models
         [NotMapped]
         public Dictionary<string,string> Polja{get;set;}
 
-        private string _dictionaryJSON="";
 
         [Column("Polja",TypeName ="nvarchar(max)")]
+
+        //_DictionaryJSON je property koji se mapira umesto recnika Polja
+        //Nema nikakvu drugu upotrebu u kodu, za sve potrebe se koristiti Polja
         public string _DictionaryJSON
         {
             get
@@ -30,7 +32,7 @@ namespace Models
 
             set
             {
-                _dictionaryJSON=value;
+                string _dictionaryJSON=value;
                 var tmp= JsonConvert.DeserializeObject<Dictionary<string,string>>(_dictionaryJSON);
                 if(tmp!=null)
                     Polja=tmp;

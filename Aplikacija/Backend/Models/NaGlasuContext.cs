@@ -12,6 +12,13 @@ namespace Models
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Kategorija>().HasAlternateKey(k=>k.Ime);
+            modelBuilder.Entity<Kategorija>().OwnsMany(k=>k.Podkategorije,
+            p=>{
+                p.Property<int>("KategorijaId");
+                p.WithOwner().HasForeignKey("KategorijaId");
+                p.HasKey("Ime","KategorijaId");
+            });
+
         }
     }
 }
