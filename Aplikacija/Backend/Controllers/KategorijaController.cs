@@ -1,32 +1,32 @@
 using Microsoft.AspNetCore.Mvc;
+using Models;
 
 namespace Backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class WeatherForecastController : ControllerBase
+public class KategorijaController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+    private readonly NaGlasuContext _context;
 
-    private readonly ILogger<WeatherForecastController> _logger;
-
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public KategorijaController(NaGlasuContext context)
     {
-        _logger = logger;
+        _context=context;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    [HttpPost]
+    [Route("PostaviKategoriju")]
+    public async Task<ActionResult> PostaviKategoriju([FromBody]Kategorija kategorija)
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        try{
+                _context.Kategorije.Add(kategorija);
+                await _context.SaveChangesAsync();
+                return Ok("Kategorija dodata.");
+        }
+        catch(Exception e)
         {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+            return BadRequest(e.Message);
+        }
+
     }
 }
