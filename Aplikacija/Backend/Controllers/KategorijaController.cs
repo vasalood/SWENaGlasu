@@ -31,22 +31,24 @@ public class KategorijaController : ControllerBase
 
     }
 
-    [HttpGet]
-    [Route("VratiKategoriju/{ime}")]
 
-    public ActionResult VratiKategoriju([FromRoute]string ime)
+
+    //TODO: Pitanje dal ovo treba uopste, nek ostane za sad.
+    [HttpGet]
+    [Route("VratiKategoriju/{id}")]
+
+    public ActionResult VratiKategorijuId([FromRoute]int id)
     {
         try
         {
-            var tmp=_context.Kategorije.Where(k=>k.Ime.Equals(ime)).Include(k=>k.Podkategorije).FirstOrDefault();
+            var tmp=_context.Kategorije.Where(k=>k.Id.Equals(id)).Include(k=>k.Podkategorije).FirstOrDefault();
              if(tmp==null)
-                return BadRequest($"Nepostoji kategorija sa imenom: \"{ime}\"");
+                return BadRequest($"Nepostoji kategorija sa id-em: \"{id}\"");
 
             object ret = new 
             {
                 Id=tmp.Id,
                 Ime=tmp.Ime,
-                Polja=tmp.Polja,
                 Podkategorije=tmp.Podkategorije
             };
             return Ok(ret);
@@ -58,33 +60,15 @@ public class KategorijaController : ControllerBase
     }
 
     [HttpGet]
-    [Route("VratiImenaKategorija")]
-
-    public async Task<ActionResult> VratiImenaKategorija()
-    {
-        try
-        {
-            var tmp= await _context.Kategorije.Select(k=>k.Ime).ToListAsync();
-
-           
-            return Ok(tmp);
-        }
-        catch(Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
-
-    [HttpGet]
     [Route("VratiKategorijeIPodkategorije")]
-    public async Task<ActionResult> VratiSveKategorije()
+    public async Task<ActionResult> VratiKategorijeIPodkategorije()
     {
         try
         {
-            var tmp= await _context.Kategorije.Include(k=>k.Podkategorije).Select(k=> new {
+            var tmp= await _context.Kategorije.AsNoTracking().Where(k=>1==1).OrderBy(k=>k.Ime).Include(k=>k.Podkategorije).Select(k=> new {
                 Ime=k.Ime,
                 Id=k.Id,
-                Podkategorije=k.Podkategorije
+                Podkategorije=k.Podkategorije.OrderBy(p=>p.Ime)
                 }).ToListAsync();
 
            
@@ -121,5 +105,15 @@ public class KategorijaController : ControllerBase
             return BadRequest(e.Message);
         }
 
+    }
+
+    [HttpGet]
+    [Route("VratiPoljaKategorije/{id}")]
+    public async Task<ActionResult> VratiPoljaKategorije([FromRoute] int id)
+    {
+        var polja = await _context.Kategorije.Where(k => k.Id == id).Select(k => k.Polja).FirstOrDefaultAsync();
+        if(polja==null)
+            return BadRequest($"Nepostoji kategorija sa id-em {id}.");
+        return Ok(polja);
     }
 }
