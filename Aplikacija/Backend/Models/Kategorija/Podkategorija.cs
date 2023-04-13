@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Models
 {
-    [Owned]
+    //[Owned]
 
    /*Podkategorija je slab tip entiteta koji poseduje Kategorija. Ime nije jedinstveni identifikator, vec je jedan deo kompozitnog kljuca,
     ///ciji je drugi deo kolona KategorijaId, koja ne postoji kao property u objektnom modelu. Property Id je automatski generisan od strane
@@ -14,7 +14,7 @@ namespace Models
         [MaxLength(50)]
         public string Ime{get;set;}
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public int Id{get;set;}
     }
 }

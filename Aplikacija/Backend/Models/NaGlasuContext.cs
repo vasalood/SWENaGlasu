@@ -8,15 +8,17 @@ namespace Models
         {
         }
         public DbSet<Kategorija> Kategorije{get;set;}
-
-
+        public DbSet<Oglas> Oglasi { get; set; }
+        
         //Ovde se konfigurise izgled baze
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Koristi se da se postavi ogranicenje UNIQUE na kolonu ili kolone
             modelBuilder.Entity<Kategorija>().HasAlternateKey(k=>k.Ime);
-            //OwnsMany u paru sa Owned anotacijom (vidi klasu Podkategorija) omogucava da se klasa pamti kao slab tip entiteta
-            modelBuilder.Entity<Kategorija>().OwnsMany(k=>k.Podkategorije,
+
+            /*
+                DEPRECATED
+             modelBuilder.Entity<Kategorija>().OwnsMany(k=>k.Podkategorije,
             p=>{
                 //Ovaj deo overriduje defaultna podesavanja za slabe tipove entiteta odnosno kljuceve
                 //Po defaultu se pamti KategorijaId za spoljasnji kljuc, a parcijalni je neki vid Id-a u Podkategoriji
@@ -27,20 +29,19 @@ namespace Models
                 p.WithOwner().HasForeignKey("KategorijaId");
 
                 //Ovde se overriduje default ponasanje, Ime podkategorije i KategorijaId su postavljeni za kljuc
-                p.HasKey("Ime","KategorijaId");
+                p.HasKey("Ime", "KategorijaId");
 
-            });
-
-            modelBuilder.Entity<Oglas>().OwnsOne(o => o.Kategorija);
-            modelBuilder.Entity<Oglas>().OwnsOne(o => o.Podkategorija);
-
-            //TODO: WORK IN PROGRESS
-
-           /*  modelBuilder.Entity<Oglas>(b=>
-            {
-                b.HasOne<Kategorija>().WithMany().HasForeignKey("KategorijaId");
-                b.ToTable("Oglas");
             }); */
+
+            modelBuilder.Entity<Podkategorija>().Property<int>("KategorijaId");
+            modelBuilder.Entity<Kategorija>().HasMany(k => k.Podkategorije).WithOne().HasForeignKey("KategorijaId");
+            modelBuilder.Entity<Podkategorija>().HasAlternateKey("Ime", "KategorijaId");
+
+            modelBuilder.Entity<Oglas>().OwnsOne(o => o.Kategorija,
+            k=>
+            {
+                k.HasOne<Kategorija>().WithMany().HasForeignKey("Id").OnDelete(DeleteBehavior.NoAction);
+            });  
 
         }
     }
