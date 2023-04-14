@@ -10,6 +10,7 @@ namespace Models
         public DbSet<Kategorija> Kategorije{get;set;}
         public DbSet<Oglas> Oglasi { get; set; }
         
+         public DbSet<Korisnik> Korisnici { get; set; }
         //Ovde se konfigurise izgled baze
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
