@@ -21,6 +21,9 @@ namespace Models
             modelBuilder.Entity<Kategorija>().HasMany(k => k.Podkategorije).WithOne().HasForeignKey("KategorijaId");
             modelBuilder.Entity<Podkategorija>().HasAlternateKey("Ime", "KategorijaId");
 
+            modelBuilder.Entity<Ocena>().HasOne(o => o.Vlasnik).WithMany().OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<FavoritSpoj>().HasOne(f => f.Korisnik).WithMany().OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }
