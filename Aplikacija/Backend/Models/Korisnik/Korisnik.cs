@@ -20,6 +20,9 @@ namespace Models
         [MaxLength(50)]
         public string Prezime { get; set; }
         [Required]
+        [MaxLength(50)]
+        public string UserName { get; set; }
+        [Required]
         public int Telefon { get; set; }
         public string Sifra { get; set; }
         [Required]
