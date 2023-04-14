@@ -475,7 +475,6 @@ $RECYCLE.BIN/
 .vscode/tasks.json
 .vscode/
 *.json
-*.csproj
 Program.cs
 Migrations/
 ####################################
