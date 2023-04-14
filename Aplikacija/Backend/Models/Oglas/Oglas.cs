@@ -8,22 +8,6 @@ namespace Models
     
     public class Oglas
     {
-        [Owned]
-        public class KategorijaStruct
-        {
-            [NotMapped]
-            public string Ime { get; set; }
-            public int Id{ get; set; }
-
-            public KategorijaStruct(string ime, int id)
-            {
-                Ime = ime;
-                Id = id;
-            }
-
-            public KategorijaStruct()
-            { }
-        }
 
         [Key]
         public long Id { get; set; }
@@ -31,7 +15,9 @@ namespace Models
         [Required]
         [MaxLength(100)]
         public string Ime { get; set; }
-        public KategorijaStruct Kategorija{ get; set; }
+
+        [NotMapped]
+        public Kategorija Kategorija{ get; set; }
         public Podkategorija Podkategorija{ get; set; }
 
         [NotMapped]
@@ -54,9 +40,27 @@ namespace Models
             }
         }
 
+
+        //Kredit je valuta promotivne moci. Dinari se uplacuju i konvertuju u kredit koji vremenom opada. 
         public int Kredit { get; set; }
         public DateTime DatumPostavljanja{ get; set; }
 
+        //Slike ce se cuvati na disku umesto u bazi, a u bazi ce se cuvati putanja do slike
+
+        public SmerOglasa Smer { get; set; }
+        public TipOglasa Tip { get; set; }
+        //public List<FavoritSpoj> Favoriti {get;set;}
+        public int Cena { get; set; }
+
+        public int Kolicina { get; set; }
+
+        public int BrojPregleda { get; set; }
+
+        public Korisnik Vlasnik{ get; set; }
+
+        public List<FavoritSpoj> Favoriti{ get; set; }
+        public List<Slika> Slike { get; set; }
+        public List<Ocena> Ocene{ get; set; }
         public Oglas()
         {
 
@@ -65,11 +69,10 @@ namespace Models
         {
             Id = id;
             Ime = ime;
-            Kategorija = new KategorijaStruct(imeKategorije, idKategorije);
+            Kategorija = new Kategorija(imeKategorije, idKategorije);
             Podkategorija = podkategorija;
             Polja = polja;
         }
-        //TODO: Referenca na korisnika
 
     }
 }

@@ -42,5 +42,14 @@ namespace Models
             }
         }
         public List<Podkategorija> Podkategorije{get;set;}
+
+        public Kategorija()
+        {}
+
+        public Kategorija(string ime,int id)
+        {
+            Id = id;
+            Ime = ime;
+        }
     }
 }
