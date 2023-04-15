@@ -20,10 +20,10 @@ public class KategorijaController : ControllerBase
 
     [HttpPost]
     [Route("PostaviKategoriju")]
-    public ActionResult PostaviKategoriju([FromBody]Kategorija kategorija)
+    public async Task<ActionResult> PostaviKategoriju([FromBody]Kategorija kategorija)
     {
         try{
-            _service.DodajKategoriju(kategorija);
+            await _service.DodajKategoriju(kategorija);
             return Ok("Kategorija dodata.");
         }
         catch(Exception e)

@@ -17,7 +17,7 @@ namespace Domain.Models
         public string Ime { get; set; }
 
         [NotMapped]
-        [JsonIgnore]
+        //[System.Text.Json.Serialization.JsonIgnore]
         public Kategorija Kategorija{ get; set; }
         public Podkategorija Podkategorija{ get; set; }
 
@@ -26,7 +26,7 @@ namespace Domain.Models
 
 
         [Column("Polja",TypeName ="nvarchar(max)")]
-        [JsonIgnore]
+        //[System.Text.Json.Serialization.JsonIgnore]
         public string _DictionaryJSON 
         {
             get
@@ -51,7 +51,7 @@ namespace Domain.Models
 
         public SmerOglasa Smer { get; set; }
         public TipOglasa Tip { get; set; }
-        //public List<FavoritSpoj> Favoriti {get;set;}
+
         public int Cena { get; set; }
 
         public int Kolicina { get; set; }
@@ -60,22 +60,72 @@ namespace Domain.Models
 
         public Korisnik Vlasnik{ get; set; }
 
-        [JsonIgnore]
+        //[System.Text.Json.Serialization.JsonIgnore]
         public List<FavoritSpoj> Favoriti{ get; set; }
-        [JsonIgnore]
+        //[System.Text.Json.Serialization.JsonIgnore]
         public List<Slika> Slike { get; set; }
         public List<Ocena> Ocene{ get; set; }
         public Oglas()
         {
 
         }
-        public Oglas(long id, string ime,string imeKategorije, int idKategorije, Podkategorija podkategorija,Dictionary<string,string> polja)
+        public Oglas(OglasDto oglas)
+        {
+            Id = oglas.Id;
+            Ime = oglas.Ime;
+            Podkategorija = oglas.Podkategorija;
+            Polja = oglas.Polja;
+            Kredit = oglas.Kredit;
+            DatumPostavljanja = oglas.DatumPostavljanja;
+            Smer = oglas.Smer;
+            Tip = oglas.Tip;
+            Cena = oglas.Cena;
+            Kolicina = oglas.Kolicina;
+            BrojPregleda = oglas.BrojPregleda;
+            Slike = oglas.Slike;
+            Vlasnik = new Korisnik();
+            Vlasnik.Id = oglas.VlasnikId;
+        }
+
+        public Oglas(long id, string ime,string imeKategorije,
+         int idKategorije, Podkategorija podkategorija,Dictionary<string,string> polja,
+         int kredit,DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,
+         int cena,int kolicina,int brojPregleda)
         {
             Id = id;
             Ime = ime;
-            Kategorija = new Kategorija(imeKategorije, idKategorije);
+            Kategorija = new Kategorija(imeKategorije,idKategorije);
             Podkategorija = podkategorija;
             Polja = polja;
+            Kredit = kredit;
+            DatumPostavljanja = datumPostavljanja;
+            Smer = smer;
+            Tip = tip;
+            Cena = cena;
+            Kolicina = kolicina;
+            BrojPregleda = brojPregleda;
+        }
+
+        public Oglas(long id, string ime,string imeKategorije,
+         int idKategorije, Podkategorija podkategorija,Dictionary<string,string> polja,
+         int kredit,DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,
+         int cena,int kolicina,int brojPregleda,int VlasnikId,string ImeVlasnika)
+        {
+            Id = id;
+            Ime = ime;
+            Kategorija = new Kategorija(imeKategorije,idKategorije);
+            Podkategorija = podkategorija;
+            Polja = polja;
+            Kredit = kredit;
+            DatumPostavljanja = datumPostavljanja;
+            Smer = smer;
+            Tip = tip;
+            Cena = cena;
+            Kolicina = kolicina;
+            BrojPregleda = brojPregleda;
+            Vlasnik=new Korisnik();
+            Vlasnik.Id = VlasnikId;
+            Vlasnik.Ime = ImeVlasnika;
         }
 
     }

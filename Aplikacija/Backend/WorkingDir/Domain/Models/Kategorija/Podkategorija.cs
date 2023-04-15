@@ -16,5 +16,9 @@ namespace Domain.Models
 
         [Key]
         public int Id{get;set;}
+        public int KategorijaId{ get; set; }
+
+        [NotMapped]
+        public string KategorijaNaziv{ get; set; }
     }
 }

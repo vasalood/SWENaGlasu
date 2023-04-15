@@ -67,6 +67,8 @@ namespace Business.Repo
         public async Task PostaviOglas(Oglas oglas)
         {
             oglas.DatumPostavljanja = DateTime.Now;
+            var vlasnik = _context.Korisnici.Find(oglas.Vlasnik.Id);
+            
             _context.Oglasi.Add(oglas);
             await _context.SaveChangesAsync();
         }   
@@ -79,9 +81,14 @@ namespace Business.Repo
 
         public async Task<List<Oglas>?> VratiMtihNOglasa(int N, int M, object filters)
         {
-            var tmp = await _context.Oglasi.Where(o => 1 == 1/*Ovde idu filteri*/).Skip(M * N).Take(N).Include(o=>o.Podkategorija).Join(_context.Kategorije,
-            o=>o.Kategorija.Id,k=>k.Id,(o,k)=>new Oglas(o.Id,o.Ime,k.Ime,k.Id,o.Podkategorija,o.Polja)).Join(_context.Korisnici,
-            o=>o.Vlasnik.Id,k=>k.Id,(o,k)=>new Oglas(o.Id,o.Ime,k.Ime,k.Id,o.Podkategorija,o.Polja)).ToListAsync();
+            var tmp = await _context.Oglasi.Where(o => 1 == 1/*Ovde idu filteri*/).Skip(M * N).Take(N).Include(o=>o.Podkategorija)
+            .Join(_context.Kategorije,
+            o=>o.Kategorija.Id,k=>k.Id,(o,k)=>
+            new Oglas(o.Id,o.Ime,k.Ime,k.Id,o.Podkategorija,o.Polja,o.Kredit,o.DatumPostavljanja,o.Smer,o.Tip,
+            o.Cena,o.Kolicina,o.BrojPregleda))
+            .Join(_context.Korisnici,
+            o=>o.Vlasnik.Id,k=>k.Id,(o,k)=>new Oglas(o.Id,o.Ime,k.Ime,k.Id,o.Podkategorija,o.Polja,o.Kredit,o.DatumPostavljanja,o.Smer,o.Tip,
+            o.Cena,o.Kolicina,o.BrojPregleda,k.Id,k.Ime)).ToListAsync();
 
             return tmp;
         }

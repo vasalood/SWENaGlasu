@@ -32,7 +32,7 @@ public class OglasController : ControllerBase
     }
 
     [HttpPost]
-    [Route("PostaviSlike/{korisnikId}")]
+    [Route("PostaviSlike/{korisnikId}/{oglasId}")]
     public async Task<ActionResult> PostaviSlike([FromForm]List<IFormFile> slike,long oglasId)
     {
         await _service.PostaviSlike(slike,oglasId);
@@ -41,14 +41,19 @@ public class OglasController : ControllerBase
 
     [HttpPost]
     [Route("PostaviOglas")]
-    public async Task<ActionResult> PostaviOglas([FromBody]Oglas oglas)
+    public async Task<ActionResult> PostaviOglas([FromBody]OglasDto oglas)
     {
-        await _service.PostaviOglas(oglas);
-        return Ok(oglas.Id);
+        Oglas praviOglas = new Oglas(oglas);
+        await _service.PostaviOglas(praviOglas);
+        return Ok(praviOglas.Id);
     }
 
-    
-
-
+    /* [Route("VratiSlike/{oglasId}/{brSlike}")]
+    [HttpGet]
+    public async Task<ActionResult> VratiSlike(long oglasId,int brSlike)
+    {
+        _service.VratiSliku(oglasId, brSlike);
+        return File();
+    } */
  
 }

@@ -23,7 +23,7 @@ namespace Domain.Models
 
         //_DictionaryJSON je property koji se mapira umesto recnika Polja
         //Nema nikakvu drugu upotrebu u kodu, za sve potrebe se koristiti Polja
-        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string _DictionaryJSON
         {
             get
