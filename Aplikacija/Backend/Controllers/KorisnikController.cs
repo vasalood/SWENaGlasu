@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
 
 namespace Backend.Controllers;
-
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class KorisnikController : ControllerBase
