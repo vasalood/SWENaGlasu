@@ -32,16 +32,22 @@ public class AuthenticationController:ControllerBase
             SecurityStamp=Guid.NewGuid().ToString(),
             UserName=korisnik.UserName
         };
-        var result = await _userManager.CreateAsync(user,korisnik.Sifra);
-        if(result.Succeeded)
+        if(await _roleManager.RoleExistsAsync(role))
         {
+             var result = await _userManager.CreateAsync(user,korisnik.Sifra);
+            if(!result.Succeeded)
+             {
+             var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
+            return BadRequest($"Neuspesna registracija: {errorMessages}");
+             }
+            await _userManager.AddToRoleAsync(user,role);
             return Ok("Uspesna registracija");
         }
         else
         {
-    var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
-    return BadRequest($"Neuspesna registracija: {errorMessages}");
-}
+            return BadRequest("This role doesn't exist.");
+        }
+        
 
     }
 }
