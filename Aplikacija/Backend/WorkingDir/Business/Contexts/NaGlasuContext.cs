@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Domain.Models;
+using Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-namespace Models
+
+namespace Business.Contexts
 {
     public class NaGlasuContext: IdentityDbContext<IdentityUser> 
     {

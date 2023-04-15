@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Models
+namespace Domain.Models
 {
     public class Kategorija
     {
@@ -23,6 +23,7 @@ namespace Models
 
         //_DictionaryJSON je property koji se mapira umesto recnika Polja
         //Nema nikakvu drugu upotrebu u kodu, za sve potrebe se koristiti Polja
+        [JsonIgnore]
         public string _DictionaryJSON
         {
             get

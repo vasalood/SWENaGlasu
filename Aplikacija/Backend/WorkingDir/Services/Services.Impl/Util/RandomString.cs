@@ -1,4 +1,4 @@
-namespace Utility
+namespace Services.Impl.Util
 {
     public class RandomString 
     {

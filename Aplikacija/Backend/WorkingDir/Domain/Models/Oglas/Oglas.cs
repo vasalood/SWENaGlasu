@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Models;
 
-namespace Models
+namespace Domain.Models
 {
     
     public class Oglas
@@ -17,6 +17,7 @@ namespace Models
         public string Ime { get; set; }
 
         [NotMapped]
+        [JsonIgnore]
         public Kategorija Kategorija{ get; set; }
         public Podkategorija Podkategorija{ get; set; }
 
@@ -25,6 +26,7 @@ namespace Models
 
 
         [Column("Polja",TypeName ="nvarchar(max)")]
+        [JsonIgnore]
         public string _DictionaryJSON 
         {
             get
@@ -58,7 +60,9 @@ namespace Models
 
         public Korisnik Vlasnik{ get; set; }
 
+        [JsonIgnore]
         public List<FavoritSpoj> Favoriti{ get; set; }
+        [JsonIgnore]
         public List<Slika> Slike { get; set; }
         public List<Ocena> Ocene{ get; set; }
         public Oglas()
