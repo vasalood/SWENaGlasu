@@ -10,7 +10,6 @@ public class OglasController : ControllerBase
 {
 
     private readonly IOglasService _service;
-
     public OglasController(IOglasService service)
     {
         _service = service;
@@ -48,12 +47,28 @@ public class OglasController : ControllerBase
         return Ok(praviOglas.Id);
     }
 
-    /* [Route("VratiSlike/{oglasId}/{brSlike}")]
+    [HttpPost]
+    [Route("PostaviOglasTest")]
+    public async Task<ActionResult> PostaviOglasTest([FromForm]OglasDto o)
+    {//radi, nastavi
+        if(o.Slike!=null)
+            return Ok();
+        return BadRequest("Nema slika nema ton");
+    }
+
+    [Route("VratiSliku/{oglasId}/{brSlike}")]
     [HttpGet]
-    public async Task<ActionResult> VratiSlike(long oglasId,int brSlike)
+    public async Task<ActionResult> VratiSliku(long oglasId,int brSlike)
     {
-        _service.VratiSliku(oglasId, brSlike);
-        return File();
-    } */
+        Slika slika = await _service.VratiSliku(oglasId, brSlike);
+        string headerType = "image/";
+        string extension=Path.GetExtension(slika.Path);
+        if(extension==".png")
+            headerType += "png";
+        else
+            headerType += "jpeg";
+
+        return File(slika.Data,headerType,slika.Path);
+    }
  
 }

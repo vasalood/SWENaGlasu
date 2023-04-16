@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
@@ -54,7 +55,8 @@ public class AuthenticationController:ControllerBase
         
 
     }
-    [HttpPost]
+
+   /* [HttpPost]
     [Route("login")]
     public async Task<IActionResult>Login([FromBody]LoginModel loginModel)
     {
@@ -93,5 +95,5 @@ public class AuthenticationController:ControllerBase
             
         );
         return token;
-    }
+    }*/
 }

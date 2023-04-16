@@ -9,5 +9,6 @@ namespace Services.Abs
         public Task PostaviOglas(Oglas oglas);
         public Task<int> PrebrojiOglaseZaFiltere(object filters);
         public Task AzurirajOglas(Oglas oglas);
+        public Task<Slika> VratiSliku(long oglasId, int slikaBr);
     }
 }

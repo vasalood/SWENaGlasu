@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Domain.Models
 {
@@ -17,5 +18,14 @@ namespace Domain.Models
         {
             Path = path;
         }
+        
+        public Slika(string path,byte[] data)
+        {
+            Path = path;
+            Data = data;
+        }
+        [NotMapped]
+        [JsonIgnore]
+        public byte[] Data{ get; set; }
     }
 }

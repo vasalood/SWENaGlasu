@@ -19,6 +19,8 @@ namespace Domain.Models
         public int VlasnikId{ get; set; }
         public string VlasnikKorisnickoIme{ get; set; }
         public List<Slika> Slike { get; set; }
+
+        public List<IFormFile> SlikeFile{ get; set; }
         public OglasDto()
         {
 

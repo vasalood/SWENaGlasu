@@ -20,7 +20,7 @@ namespace Services.Impl
 
         public async Task AzurirajOglas(Oglas oglas)
         {
-            var oldOglas = _repo.VratiOglas(oglas.Id);
+            var oldOglas = _repo.VratiOglas(oglas.Id,null);
             if(oldOglas==null)
             {
                 throw new NullOglasException(oglas.Id);
@@ -44,7 +44,7 @@ namespace Services.Impl
 
         public async Task PostaviSlike(List<IFormFile> slike,long oglasId)
         {
-            var tmpO = _repo.VratiOglas(oglasId);
+            var tmpO = _repo.VratiOglas(oglasId,null);
             if(tmpO==null)
                 throw new NullOglasException(oglasId);
             Oglas oglas = tmpO;
@@ -64,6 +64,17 @@ namespace Services.Impl
             if(tmp==null)
                 tmp = new List<Oglas>();
             return tmp;
+        }
+
+        public async Task<Slika> VratiSliku(long oglasId, int slikaBr)
+        {
+            var oglas = _repo.VratiOglas(oglasId, o => o.Slike);
+            if(oglas==null)
+                throw new NullOglasException(oglasId);
+            if(slikaBr>oglas.Slike.Count||slikaBr<0)
+                throw new NullSlikaException(oglasId, slikaBr);
+            oglas.Slike[slikaBr - 1].Data = await System.IO.File.ReadAllBytesAsync(oglas.Slike[slikaBr - 1].Path);
+            return oglas.Slike[slikaBr - 1];
         }
     }
 }
