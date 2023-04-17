@@ -16,12 +16,11 @@ namespace Domain.Models
         [MaxLength(100)]
         public string Ime { get; set; }
 
-        [NotMapped]
         //[System.Text.Json.Serialization.JsonIgnore]
-        public Kategorija Kategorija{ get; set; }
         public Podkategorija Podkategorija{ get; set; }
 
         [NotMapped]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Dictionary<string,string> Polja{ get; set; }
 
 
@@ -86,15 +85,14 @@ namespace Domain.Models
             Vlasnik.Id = oglas.VlasnikId;
         }
 
-        public Oglas(long id, string ime,string imeKategorije,
-         int idKategorije, Podkategorija podkategorija,Dictionary<string,string> polja,
+        public Oglas(long id, string ime ,Podkategorija podkategorija,string KategorijaIme,Dictionary<string,string> polja,
          int kredit,DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,
          int cena,int kolicina,int brojPregleda)
         {
             Id = id;
             Ime = ime;
-            Kategorija = new Kategorija(imeKategorije,idKategorije);
             Podkategorija = podkategorija;
+            podkategorija.KategorijaNaziv = KategorijaIme;
             Polja = polja;
             Kredit = kredit;
             DatumPostavljanja = datumPostavljanja;
@@ -105,14 +103,12 @@ namespace Domain.Models
             BrojPregleda = brojPregleda;
         }
 
-        public Oglas(long id, string ime,string imeKategorije,
-         int idKategorije, Podkategorija podkategorija,Dictionary<string,string> polja,
+        public Oglas(long id, string ime, Podkategorija podkategorija,Dictionary<string,string> polja,
          int kredit,DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,
          int cena,int kolicina,int brojPregleda,int VlasnikId,string ImeVlasnika)
         {
             Id = id;
             Ime = ime;
-            Kategorija = new Kategorija(imeKategorije,idKategorije);
             Podkategorija = podkategorija;
             Polja = polja;
             Kredit = kredit;
