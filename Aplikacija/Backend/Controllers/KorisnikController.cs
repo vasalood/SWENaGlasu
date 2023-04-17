@@ -5,7 +5,6 @@ using Business.Contexts;
 
 
 namespace Backend.Controllers;
-[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class KorisnikController : ControllerBase
@@ -16,6 +15,7 @@ public class KorisnikController : ControllerBase
         Context=context;
     }
     [Route("Preuzmi")]
+    [AllowAnonymous]
     [HttpGet]
     public ActionResult Preuzmi()
     {
