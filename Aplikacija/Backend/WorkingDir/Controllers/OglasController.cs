@@ -17,7 +17,7 @@ public class OglasController : ControllerBase
 
     //TODO: definisati sve filtere [i napraviti klasu filter]
     [Route("VratiMtihNOglasa/{N}/{M}")]
-    [HttpGet]
+    [HttpPost]
     public async Task<ActionResult> VratiMtihNOglasa(int N,int M,[FromBody] object filters)
     {
         try{
@@ -45,16 +45,6 @@ public class OglasController : ControllerBase
         
     }
 
-
-    [Route("VratiSliku/{oglasId}/{brSlike}")]
-    [HttpPost]
-    [Route("PostaviOglasTest")]
-    public async Task<ActionResult> PostaviOglasTest([FromForm]OglasDto o)
-    {//radi, nastavi
-        if(o.Slike!=null)
-            return Ok();
-        return BadRequest("Nema slika nema ton");
-    }
 
     [Route("VratiSliku/{oglasId}/{brSlike}")]
     [HttpGet]

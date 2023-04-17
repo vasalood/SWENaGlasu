@@ -44,18 +44,8 @@ namespace Services.Impl
                 throw new NullPodkategorijaException(oglasDto.Podkategorija.Id);
             //podkategorija.KategorijaNaziv = kategorija.Ime;
             oglas.Podkategorija =podkategorija;
-            await _repo.PostaviOglas(oglas);
-        }
-
-        public async Task PostaviSlike(List<IFormFile> slike,long oglasId)
-        {
-            var tmpO = _repo.VratiOglas(oglasId,null);
-            if(tmpO==null)
-                throw new NullOglasException(oglasId);
-            Oglas oglas = tmpO;
-            List<Slika> listaSlika =await _repo.PostaviSlike(slike);
-            oglas.Slike = listaSlika;
-            await AzurirajOglas(oglas);
+            oglas.Slike=await _repo.PostaviSlike(oglasDto.PrimljeneSlike);
+            await _repo.SacuvajOglas(oglas);
         }
 
         public async Task<int> PrebrojiOglaseZaFiltere(object filters)
