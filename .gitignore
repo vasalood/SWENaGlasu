@@ -477,4 +477,6 @@ $RECYCLE.BIN/
 *.json
 Program.cs
 Migrations/
+wwwroot/
+!wwwroot/test.txt
 ####################################
