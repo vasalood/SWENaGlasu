@@ -18,7 +18,9 @@ namespace Domain.Models
         public int BrojPregleda { get; set; }
         public int VlasnikId{ get; set; }
         public string VlasnikKorisnickoIme{ get; set; }
-        public List<IFormFile> PrimljeneSlike { get; set; }
+        public List<Slika> Slike { get; set; }
+
+        public List<IFormFile> SlikeFile{ get; set; }
         public OglasDto()
         {
 

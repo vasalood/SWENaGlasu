@@ -47,6 +47,16 @@ public class OglasController : ControllerBase
 
 
     [Route("VratiSliku/{oglasId}/{brSlike}")]
+    [HttpPost]
+    [Route("PostaviOglasTest")]
+    public async Task<ActionResult> PostaviOglasTest([FromForm]OglasDto o)
+    {//radi, nastavi
+        if(o.Slike!=null)
+            return Ok();
+        return BadRequest("Nema slika nema ton");
+    }
+
+    [Route("VratiSliku/{oglasId}/{brSlike}")]
     [HttpGet]
     public async Task<ActionResult> VratiSliku(long oglasId,int brSlike)
     {
