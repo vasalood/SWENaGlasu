@@ -4,16 +4,18 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Domain.Exceptions;
 using Services.Impl.Util;
+using System.Linq.Expressions;
 
 namespace Business.Repo
 {
+    
     public class OglasRepoImpl : IOglasRepo
     {
         private IWebHostEnvironment _environment;
-         private const int  MAX_BR_SLIKA= 5;
+        private const int  MAX_BR_SLIKA= 5;
         private const string SLIKE_FOLDER = "SlikeOglasa";
-
-    //10MB
+        private readonly string[] EXTENSIONS = new string[] {".jpg", ".png", ".jpeg" };
+        //10MB
         private const long MAX_VELICINA_SLIKE = 10*0b1_00000_00000_00000_00000;
         private string FOLDER_PATH;
         private readonly NaGlasuContext _context;
@@ -38,10 +40,10 @@ namespace Business.Repo
 
             foreach(IFormFile slika in slike)
             {
-            //if(slika.ContentType!="image/jpeg"||slika.ContentType!="image/png") ne radi?
-                //return BadRequest($"Slika {slika.FileName} je nedozvoljenog tipa (dozvoljene su samo png i jpg slike)");
+                //if(slika.ContentType!="image/jpeg"||slika.ContentType!="image/png") ne radi?
+                    //return BadRequest($"Slika {slika.FileName} je nedozvoljenog tipa (dozvoljene su samo png i jpg slike)");
                 String extension = Path.GetExtension(slika.FileName);
-                if(extension!=".png"&&extension!=".jpg")
+                if(!EXTENSIONS.Contains(extension))
                     throw new NedozvoljenaEkstenzijaException(extension);
                 if(slika.Length>MAX_VELICINA_SLIKE)
                     throw new VeliakSlikaException(slika.FileName, MAX_VELICINA_SLIKE);
@@ -61,14 +63,10 @@ namespace Business.Repo
             }
         }
             return Slike;
-
         }
 
-        public async Task PostaviOglas(Oglas oglas)
+        public async Task SacuvajOglas(Oglas oglas)
         {
-            oglas.DatumPostavljanja = DateTime.Now;
-            var vlasnik = _context.Korisnici.Find(oglas.Vlasnik.Id);
-            
             _context.Oglasi.Add(oglas);
             await _context.SaveChangesAsync();
         }   
@@ -76,7 +74,6 @@ namespace Business.Repo
         public async Task<int> PrebrojiOglaseZaFiltere(object filters)
         {
             return await _context.Oglasi.Where(o => 1 == 1).CountAsync();
-
         }
 
         public async Task<List<Oglas>?> VratiMtihNOglasa(int N, int M, object filters)
@@ -93,17 +90,12 @@ namespace Business.Repo
             return tmp;
         }
 
-        public Oglas? VratiOglas(long oglasId)
+        public Oglas? VratiOglas(long oglasId,Expression<Func<Oglas,object>>? lambda)
         {
-            return _context.Oglasi.Find(oglasId);
+            return lambda!=null?_context.Oglasi.Where(o=>o.Id==oglasId).Include(lambda).FirstOrDefault()
+            :_context.Oglasi.Where(o=>o.Id==oglasId).FirstOrDefault();
         }
 
-        public async Task AzurirajOglas(Oglas oldOglas,Oglas oglas)
-        {
-            oldOglas.Cena = oglas.Cena;
-            oldOglas.Ime = oglas.Ime;
-            oldOglas.Slike = oglas.Slike;
-            await _context.SaveChangesAsync();
-        }
+    
     }
 }

@@ -10,7 +10,6 @@ public class OglasController : ControllerBase
 {
 
     private readonly IOglasService _service;
-
     public OglasController(IOglasService service)
     {
         _service = service;
@@ -32,28 +31,34 @@ public class OglasController : ControllerBase
     }
 
     [HttpPost]
-    [Route("PostaviSlike/{korisnikId}/{oglasId}")]
-    public async Task<ActionResult> PostaviSlike([FromForm]List<IFormFile> slike,long oglasId)
-    {
-        await _service.PostaviSlike(slike,oglasId);
-        return Ok("Slike postavljene.");
-    }
-
-    [HttpPost]
     [Route("PostaviOglas")]
-    public async Task<ActionResult> PostaviOglas([FromBody]OglasDto oglas)
+    public async Task<ActionResult> PostaviOglas([FromForm]OglasDto oglas)
     {
-        Oglas praviOglas = new Oglas(oglas);
-        await _service.PostaviOglas(praviOglas);
-        return Ok(praviOglas.Id);
+        try{
+            await _service.PostaviOglas(oglas);
+            return Ok("Oglas postavljen.");
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+        
     }
 
-    /* [Route("VratiSlike/{oglasId}/{brSlike}")]
+
+    [Route("VratiSliku/{oglasId}/{brSlike}")]
     [HttpGet]
-    public async Task<ActionResult> VratiSlike(long oglasId,int brSlike)
+    public async Task<ActionResult> VratiSliku(long oglasId,int brSlike)
     {
-        _service.VratiSliku(oglasId, brSlike);
-        return File();
-    } */
+        Slika slika = await _service.VratiSliku(oglasId, brSlike);
+        string headerType = "image/";
+        string extension=Path.GetExtension(slika.Path);
+        if(extension==".png")
+            headerType += "png";
+        else
+            headerType += "jpeg";
+
+        return File(slika.Data,headerType,slika.Path);
+    }
  
 }

@@ -18,45 +18,13 @@ namespace Domain.Models
         public int BrojPregleda { get; set; }
         public int VlasnikId{ get; set; }
         public string VlasnikKorisnickoIme{ get; set; }
-        public List<Slika> Slike { get; set; }
+        public List<IFormFile> PrimljeneSlike { get; set; }
         public OglasDto()
         {
 
         }
-        public OglasDto(long id, string ime,Podkategorija podkategorija,Dictionary<string,string> polja,
-         int kredit,DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,
-         int cena,int kolicina,int brojPregleda)
-        {
-            Id = id;
-            Ime = ime;
-            Podkategorija = podkategorija;
-            Polja = polja;
-            Kredit = kredit;
-            DatumPostavljanja = datumPostavljanja;
-            Smer = smer;
-            Tip = tip;
-            Cena = cena;
-            Kolicina = kolicina;
-            BrojPregleda = brojPregleda;
-        }
-        public OglasDto(long id, string ime, Podkategorija podkategorija,Dictionary<string,string> polja,
-         int kredit,DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,
-         int cena,int kolicina,int brojPregleda,int vlasnikId,string vlasnikKorisnickoIme)
-         {
-            Id = id;
-            Ime = ime;
-            Podkategorija = podkategorija;
-            Polja = polja;
-            Kredit = kredit;
-            VlasnikId = vlasnikId;
-            DatumPostavljanja = datumPostavljanja;
-            Smer = smer;
-            Tip = tip;
-            Cena = cena;
-            Kolicina = kolicina;
-            VlasnikKorisnickoIme = vlasnikKorisnickoIme;
-            BrojPregleda = brojPregleda;
-         }
+
+    
 
 
     }

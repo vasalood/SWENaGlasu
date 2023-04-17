@@ -82,7 +82,6 @@ namespace Domain.Models
             Cena = oglas.Cena;
             Kolicina = oglas.Kolicina;
             BrojPregleda = oglas.BrojPregleda;
-            Slike = oglas.Slike;
             Vlasnik = new Korisnik();
             Vlasnik.Id = oglas.VlasnikId;
         }
