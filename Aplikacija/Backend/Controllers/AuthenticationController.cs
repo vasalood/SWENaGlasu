@@ -6,6 +6,10 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using UserManagementService;
+using MimeKit;
+using MailKit.Net.Smtp;
+using System.Net;
 
 namespace Backend.Controllers;
 
@@ -15,17 +19,20 @@ public class AuthenticationController:ControllerBase
 {
     private readonly UserManager<IdentityUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IEmailService _emailService;
     private readonly IConfiguration _configuration;
     public AuthenticationController(UserManager<IdentityUser> userManager,RoleManager<IdentityRole> roleManager
-    ,IConfiguration configuration)
+    ,IConfiguration configuration,IEmailService emailService )
     {
         _userManager=userManager;
         _roleManager=roleManager;
         _configuration=configuration;
+       _emailService=emailService;
     }
     [HttpPost]
     public async Task<IActionResult>Register([FromBody]Korisnik korisnik, string role)
     {
+        ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
         var userExist= await _userManager.FindByEmailAsync(korisnik.Email);
         if(userExist!=null)
         {
@@ -46,6 +53,10 @@ public class AuthenticationController:ControllerBase
             return BadRequest($"Neuspesna registracija: {errorMessages}");
              }
             await _userManager.AddToRoleAsync(user,role);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink=Url.Action(nameof(ConfirmEmail),"Authentication", new {token,email=user.Email}, Request.Scheme);
+            var message = new Message(new string[] { user.Email! }, "Confirmation email link", confirmationLink!);
+                _emailService.SendEmail(message);
             return Ok("Uspesna registracija");
         }
         else
@@ -55,13 +66,40 @@ public class AuthenticationController:ControllerBase
         
 
     }
+     [HttpGet]
+     public  IActionResult TestEmail()
+     {
+        ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            var message = new Message(new string[]{"peksi001@gmail.com"},"Test","<h1>Pokusaj poruke!</h1>");
+        _emailService.SendEmail(message);
+        return Ok();
 
-   /* [HttpPost]
+    }
+    [Route("ConfirmEmail")]
+    [HttpGet()]
+    public async Task<IActionResult> ConfirmEmail(string token, string email)
+    {
+        ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+        var user = await _userManager.FindByEmailAsync(email);
+        if(user != null)
+        {
+            var result = await _userManager.ConfirmEmailAsync(user,token);
+            if(result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            return BadRequest();
+        }
+        else
+            return BadRequest();
+    }
+     [HttpPost]
     [Route("login")]
     public async Task<IActionResult>Login([FromBody]LoginModel loginModel)
     {
         //checking the user ...
-        var user = await _userManager.FindByEmailAsync(loginModel.UserName);
+        var user = await _userManager.FindByNameAsync(loginModel.UserName);
         if(user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
         {
             var authClaims = new List<Claim>
@@ -95,5 +133,10 @@ public class AuthenticationController:ControllerBase
             
         );
         return token;
-    }*/
+    }
 }
+
+    //  }
+   
+
+   

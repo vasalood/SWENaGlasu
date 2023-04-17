@@ -15,7 +15,6 @@ public class KorisnikController : ControllerBase
         Context=context;
     }
     [Route("Preuzmi")]
-    [AllowAnonymous]
     [HttpGet]
     public ActionResult Preuzmi()
     {
