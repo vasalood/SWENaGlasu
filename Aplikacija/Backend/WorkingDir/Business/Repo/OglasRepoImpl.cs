@@ -76,17 +76,17 @@ namespace Business.Repo
             return await _context.Oglasi.Where(o => 1 == 1).CountAsync();
         }
 
-        public async Task<List<Oglas>?> VratiMtihNOglasa(int N, int M, object filters)
+        public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, object filters)
         {
-            var tmp = await _context.Oglasi.Where(o => 1 == 1/*Ovde idu filteri*/).Skip(M * N).Take(N).Include(o=>o.Podkategorija)
-            .Join(_context.Kategorije,
-            o=>o.Kategorija.Id,k=>k.Id,(o,k)=>
-            new Oglas(o.Id,o.Ime,k.Ime,k.Id,o.Podkategorija,o.Polja,o.Kredit,o.DatumPostavljanja,o.Smer,o.Tip,
-            o.Cena,o.Kolicina,o.BrojPregleda))
-            .Join(_context.Korisnici,
-            o=>o.Vlasnik.Id,k=>k.Id,(o,k)=>new Oglas(o.Id,o.Ime,k.Ime,k.Id,o.Podkategorija,o.Polja,o.Kredit,o.DatumPostavljanja,o.Smer,o.Tip,
-            o.Cena,o.Kolicina,o.BrojPregleda,k.Id,k.Ime)).ToListAsync();
+            var tmp = await _context.Oglasi.Where(o => 1 == 1/*Ovde idu filteri*/).Skip(M * N).Take(N).Include(o => o.Podkategorija)
+            .Include(o=>o.Vlasnik)
+             .Join(_context.Kategorije,
+            o => o.Podkategorija.KategorijaId, k => k.Id, (o, k) =>
+            new Oglas(o.Id, o.Ime, o.Podkategorija, k.Ime, o.Polja, o.Kredit, o.DatumPostavljanja, o.Smer, o.Tip,
+            o.Cena, o.Kolicina, o.BrojPregleda,o.Vlasnik.Id,o.Vlasnik.UserName)).ToListAsync(); 
 
+            if(tmp==null)
+                tmp = new List<Oglas>();
             return tmp;
         }
 
@@ -96,6 +96,11 @@ namespace Business.Repo
             :_context.Oglasi.Where(o=>o.Id==oglasId).FirstOrDefault();
         }
 
-    
+        public async Task<List<Oglas>> VratiOglase(long[] oglasIds, Expression<Func<Oglas, object>>? lambdaInclude)
+        {
+            return await (lambdaInclude != null ? _context.Oglasi.Where(o => oglasIds.Contains(o.Id)).Include(lambdaInclude).ToListAsync() :
+            _context.Oglasi.Where(o => oglasIds.Contains(o.Id)).ToListAsync());
+
+        }
     }
 }

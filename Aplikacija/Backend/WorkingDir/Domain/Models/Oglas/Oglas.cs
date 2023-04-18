@@ -20,12 +20,11 @@ namespace Domain.Models
         public Podkategorija Podkategorija{ get; set; }
 
         [NotMapped]
-        [System.Text.Json.Serialization.JsonIgnore]
         public Dictionary<string,string> Polja{ get; set; }
 
 
         [Column("Polja",TypeName ="nvarchar(max)")]
-        //[System.Text.Json.Serialization.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string _DictionaryJSON 
         {
             get
@@ -59,9 +58,9 @@ namespace Domain.Models
 
         public Korisnik Vlasnik{ get; set; }
 
-        //[System.Text.Json.Serialization.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public List<FavoritSpoj> Favoriti{ get; set; }
-        //[System.Text.Json.Serialization.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public List<Slika> Slike { get; set; }
         public List<Ocena> Ocene{ get; set; }
         public Oglas()
@@ -103,9 +102,9 @@ namespace Domain.Models
             BrojPregleda = brojPregleda;
         }
 
-        public Oglas(long id, string ime, Podkategorija podkategorija,Dictionary<string,string> polja,
+        public Oglas(long id, string ime, Podkategorija podkategorija,string KategorijaIme, Dictionary<string,string> polja,
          int kredit,DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,
-         int cena,int kolicina,int brojPregleda,int VlasnikId,string ImeVlasnika)
+         int cena,int kolicina,int brojPregleda,int VlasnikId,string UsernameVlasnika)
         {
             Id = id;
             Ime = ime;
@@ -120,7 +119,7 @@ namespace Domain.Models
             BrojPregleda = brojPregleda;
             Vlasnik=new Korisnik();
             Vlasnik.Id = VlasnikId;
-            Vlasnik.Ime = ImeVlasnika;
+            Vlasnik.UserName = UsernameVlasnika;
         }
 
     }

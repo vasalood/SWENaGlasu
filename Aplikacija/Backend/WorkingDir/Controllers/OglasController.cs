@@ -1,3 +1,4 @@
+using Controllers.Utils;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abs;
@@ -30,6 +31,24 @@ public class OglasController : ControllerBase
      
     }
 
+    [Route("VratiNNaslovnihSlika")]
+    [HttpGet]
+    public async Task<ActionResult> VratiNNaslovnihSlika([FromQuery] long[] ids)
+    {
+        try{
+            var slike = await _service.VratiNNaslovnihSlika(ids);
+            if(slike==null)
+                slike = new List<Slika>();
+            var zipSlika = await ZipCreator.ZipujNSlike(slike);
+            return File(zipSlika.Data, ZipFile.CONTENT_TYPE, zipSlika.Name);
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        } 
+     
+    }
+
     [HttpPost]
     [Route("PostaviOglas")]
     public async Task<ActionResult> PostaviOglas([FromForm]OglasDto oglas)
@@ -46,19 +65,28 @@ public class OglasController : ControllerBase
     }
 
 
-    [Route("VratiSliku/{oglasId}/{brSlike}")]
+    [Route("VratiSlike/{oglasId}")]
     [HttpGet]
-    public async Task<ActionResult> VratiSliku(long oglasId,int brSlike)
+    public async Task<ActionResult> VratiSlike(long oglasId)
     {
-        Slika slika = await _service.VratiSliku(oglasId, brSlike);
-        string headerType = "image/";
-        string extension=Path.GetExtension(slika.Path);
-        if(extension==".png")
-            headerType += "png";
-        else
-            headerType += "jpeg";
-
-        return File(slika.Data,headerType,slika.Path);
+        try
+        {
+            List<Slika> slike= await _service.VratiSlike(oglasId);
+            ZipFile zipFile = await ZipCreator.ZipujSlike(slike);
+            return File(zipFile.Data, ZipFile.CONTENT_TYPE, zipFile.Name); 
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+        
+        
     }
- 
+
+    [HttpGet]
+    [Route("VratiOglasTEST")]
+    public ActionResult VratiOglastTEST(long id)
+    {
+        return Ok(_service.VratiOglas(id));
+    }
 }

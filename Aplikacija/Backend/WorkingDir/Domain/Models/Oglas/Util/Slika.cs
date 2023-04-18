@@ -27,5 +27,7 @@ namespace Domain.Models
         [NotMapped]
         [JsonIgnore]
         public byte[] Data{ get; set; }
+
+        public long OglasId{ get; set; }
     }
 }

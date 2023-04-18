@@ -61,15 +61,37 @@ namespace Services.Impl
             return tmp;
         }
 
-        public async Task<Slika> VratiSliku(long oglasId, int slikaBr)
+        public async Task<List<Slika>> VratiSlike(long oglasId)
         {
             var oglas = _repo.VratiOglas(oglasId, o => o.Slike);
             if(oglas==null)
                 throw new NullOglasException(oglasId);
-            if(slikaBr>oglas.Slike.Count||slikaBr<0)
-                throw new NullSlikaException(oglasId, slikaBr);
-            oglas.Slike[slikaBr - 1].Data = await System.IO.File.ReadAllBytesAsync(oglas.Slike[slikaBr - 1].Path);
-            return oglas.Slike[slikaBr - 1];
+            if(oglas.Slike.Count==0)
+                return new List<Slika> ();
+            for(int i=0;i!=oglas.Slike.Count;++i)
+            {
+                oglas.Slike[i].Data = await System.IO.File.ReadAllBytesAsync(oglas.Slike[i].Path);
+            }
+            return oglas.Slike;
+        }
+
+        public Oglas VratiOglas(long id)
+        {
+            var oglas = _repo.VratiOglas(id, o => o.Podkategorija);
+            if(oglas==null)
+                throw new NullOglasException(id);
+            return oglas;
+        }
+
+        public async Task<List<Slika>> VratiNNaslovnihSlika(long[] oglasIds)
+        {
+            List<Oglas> tmp = await _repo.VratiOglase(oglasIds, o => o.Slike);
+            List<Slika>? slike = tmp.Where(o=>o.Slike!=null).Select(o=>o.Slike[0]).ToList();;
+            if(slike==null)
+               return new List<Slika>();
+            return slike;
+
+
         }
     }
 }
