@@ -2,7 +2,7 @@ using Domain.Models;
 using Services.Abs;
 using Domain.IRepo;
 using Domain.Exceptions;
-
+using Utility;
 
 namespace Services.Impl
 {
@@ -36,7 +36,7 @@ namespace Services.Impl
 
         public async Task<List<Kategorija>> VratiKategorije()
         {
-            var ret =await _repo.VratiKategorije(Utility.OrderType.Ascending);
+            var ret =await _repo.VratiKategorije(OrderType.Ascending);
             if(ret==null)
             {
                 ret = new List<Kategorija>();
@@ -59,7 +59,5 @@ namespace Services.Impl
                 throw new NullKategorijaException(id);
             return kat.Polja;
         }
-
-
     }
 }

@@ -1,7 +1,7 @@
 using System.IO.Compression;
 using Domain.Models;
 
-namespace Controllers.Utils;
+namespace Services.Utility;
 
 public class ZipCreator
 {

@@ -1,8 +1,9 @@
 using System.Linq.Expressions;
 using Domain.Exceptions;
 using Utility;
+using Domain.Models;
 
-namespace Domain.Models;
+namespace Business.Repo.Utility;
 
 public class OrderByMapperOglas : OrderByMapper<Oglas>
 {

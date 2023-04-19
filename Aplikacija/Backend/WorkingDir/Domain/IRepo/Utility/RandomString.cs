@@ -1,4 +1,4 @@
-namespace Domain.IRepo.Utils
+namespace Domain.IRepo.Utility
 {
     public class RandomString
 {

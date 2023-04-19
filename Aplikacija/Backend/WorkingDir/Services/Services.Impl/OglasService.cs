@@ -2,9 +2,8 @@ using Domain.Models;
 using Services.Abs;
 using Domain.IRepo;
 using Domain.Exceptions;
-using Models;
-using Domain.IRepo.Utils;
-using Utility;
+using Domain.IRepo.Utility;
+using Services.Utility;
 
 namespace Services.Impl
 {
@@ -50,14 +49,14 @@ namespace Services.Impl
             await _repo.SacuvajOglas(oglas);
         }
 
-        public async Task<int> PrebrojiOglaseZaFiltere(OglasFilteri filters)
+        public async Task<int> PrebrojiOglaseZaFiltere(OglasFilteri? filters)
         {
             return await _repo.PrebrojiOglaseZaFiltere(filters);
         }
 
-        public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri filters, Order order)
+        public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri? filters)
         {
-            var tmp = await _repo.VratiMtihNOglasa(N, M, filters,order);
+            var tmp = await _repo.VratiMtihNOglasa(N, M, filters);
             if(tmp==null)
                 tmp = new List<Oglas>();
             return tmp;
@@ -94,6 +93,16 @@ namespace Services.Impl
             return slike;
 
 
+        }
+
+        public async Task<ZipFile> VratiNaslovneSlikeZIP(long[] oglasIds)
+        {
+            return await ZipCreator.ZipujNSlike(await VratiNaslovneSlike(oglasIds));
+        }
+
+        public async Task<ZipFile> VratiSlikeZIP(long oglasId)
+        {
+            return await ZipCreator.ZipujSlike(await VratiSlike(oglasId));
         }
     }
 }
