@@ -3,8 +3,9 @@ using Domain.IRepo;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Domain.Exceptions;
-using Services.Impl.Util;
+using Domain.IRepo.Utils;
 using System.Linq.Expressions;
+using Utility;
 
 namespace Business.Repo
 {
@@ -12,6 +13,8 @@ namespace Business.Repo
     public class OglasRepoImpl : IOglasRepo
     {
         private IWebHostEnvironment _environment;
+        private OglasFilterMapper _mapper;
+        private OrderByMapperOglas _orderByMapper;
         private const int  MAX_BR_SLIKA= 5;
         private const string SLIKE_FOLDER = "SlikeOglasa";
         private readonly string[] EXTENSIONS = new string[] {".jpg", ".png", ".jpeg" };
@@ -25,6 +28,8 @@ namespace Business.Repo
             _context = context;
             _environment = environment;
             FOLDER_PATH = Path.Combine(_environment.WebRootPath,SLIKE_FOLDER);
+            _mapper = new OglasFilterMapper();
+            _orderByMapper = new OrderByMapperOglas();
             if(!Directory.Exists(FOLDER_PATH))
             {
                 Directory.CreateDirectory(FOLDER_PATH);
@@ -71,23 +76,40 @@ namespace Business.Repo
             await _context.SaveChangesAsync();
         }   
 
-        public async Task<int> PrebrojiOglaseZaFiltere(object filters)
+        public async Task<int> PrebrojiOglaseZaFiltere(OglasFilteri? filters)
         {
-            return await _context.Oglasi.Where(o => 1 == 1).CountAsync();
+            return await _context.Oglasi.Where(_mapper.Map(filters)).CountAsync();
         }
 
-        public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, object filters)
+        public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri? filteri, Order order)
         {
-            var tmp = await _context.Oglasi.Where(o => 1 == 1/*Ovde idu filteri*/).Skip(M * N).Take(N).Include(o => o.Podkategorija)
-            .Include(o=>o.Vlasnik)
+            var lambdaSelector = _mapper.Map(filteri);
+            var tmp = _context.Oglasi.Where(lambdaSelector).Skip(M * N).Take(N)/* .Include(o => o.Podkategorija)
+            .Include(o => o.Vlasnik)
              .Join(_context.Kategorije,
             o => o.Podkategorija.KategorijaId, k => k.Id, (o, k) =>
             new Oglas(o.Id, o.Ime, o.Podkategorija, k.Ime, o.Polja, o.Kredit, o.DatumPostavljanja, o.Smer, o.Tip,
-            o.Cena, o.Kolicina, o.BrojPregleda,o.Vlasnik.Id,o.Vlasnik.UserName)).ToListAsync(); 
+            o.Cena, o.Kolicina, o.BrojPregleda, o.Vlasnik.Id, o.Vlasnik.UserName)) */;
 
-            if(tmp==null)
-                tmp = new List<Oglas>();
-            return tmp;
+            var keySelector = _orderByMapper.Map(order.By);
+
+            switch(order.Type)
+            {
+                case OrderType.Ascending:
+                    tmp = tmp.OrderBy(keySelector);
+                break;
+                case OrderType.Descending:
+                    tmp = tmp.OrderByDescending(keySelector);
+                    break;
+            }
+            var tm = lambdaSelector.Compile();
+            Oglas test = new Oglas();
+            test.Podkategorija.KategorijaId = 3;
+            System.Diagnostics.Debug.WriteLine($"Ovo je test{tm(test)}");
+            var list = await tmp.ToListAsync();
+            if(list==null)
+                list = new List<Oglas>();
+            return list;
         }
 
         public Oglas? VratiOglas(long oglasId,Expression<Func<Oglas,object>>? lambda)
@@ -102,5 +124,7 @@ namespace Business.Repo
             _context.Oglasi.Where(o => oglasIds.Contains(o.Id)).ToListAsync());
 
         }
+
+
     }
 }

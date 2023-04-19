@@ -1,7 +1,9 @@
 using Controllers.Utils;
+using Domain.IRepo.Utils;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abs;
+using Utility;
 
 namespace Backend.Controllers;
 
@@ -19,10 +21,11 @@ public class OglasController : ControllerBase
     //TODO: definisati sve filtere [i napraviti klasu filter]
     [Route("VratiMtihNOglasa/{N}/{M}")]
     [HttpPost]
-    public async Task<ActionResult> VratiMtihNOglasa(int N,int M,[FromBody] object filters)
+    public async Task<ActionResult> VratiMtihNOglasa(int N,int M,[FromBody] OglasFilteri filters, [FromQuery]OrderType orderType
+    ,OrderBy orderBy)
     {
         try{
-            return Ok(await _service.VratiMtihNOglasa(N, M, filters));
+            return Ok(await _service.VratiMtihNOglasa(N, M, filters,new Order(orderBy,orderType)));
         }
         catch(Exception e)
         {
@@ -31,12 +34,12 @@ public class OglasController : ControllerBase
      
     }
 
-    [Route("VratiNNaslovnihSlika")]
+    [Route("VratiNaslovneSlike")]
     [HttpGet]
-    public async Task<ActionResult> VratiNNaslovnihSlika([FromQuery] long[] ids)
+    public async Task<ActionResult> VratiNaslovneSlike([FromQuery] long[] ids)
     {
         try{
-            var slike = await _service.VratiNNaslovnihSlika(ids);
+            var slike = await _service.VratiNaslovneSlike(ids);
             if(slike==null)
                 slike = new List<Slika>();
             var zipSlika = await ZipCreator.ZipujNSlike(slike);

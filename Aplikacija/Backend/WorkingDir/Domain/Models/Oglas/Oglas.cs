@@ -63,6 +63,10 @@ namespace Domain.Models
         [System.Text.Json.Serialization.JsonIgnore]
         public List<Slika> Slike { get; set; }
         public List<Ocena> Ocene{ get; set; }
+
+        //TODO: Grad
+
+        //TODO: Stanje
         public Oglas()
         {
 
