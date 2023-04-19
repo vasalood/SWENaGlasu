@@ -5,6 +5,7 @@ using Business.Contexts;
 
 
 namespace Backend.Controllers;
+[Authorize(Roles ="Admin")]
 [ApiController]
 [Route("[controller]")]
 public class KorisnikController : ControllerBase
