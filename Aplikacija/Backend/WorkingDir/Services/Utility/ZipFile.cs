@@ -1,4 +1,4 @@
-namespace Controllers.Utils;
+namespace Services.Utility;
 
 public class ZipFile
 {

@@ -1,4 +1,5 @@
-using Controllers.Utils;
+using Services.Utility;
+using Domain.IRepo.Utility;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abs;
@@ -16,13 +17,14 @@ public class OglasController : ControllerBase
         _service = service;
     }
 
-    //TODO: definisati sve filtere [i napraviti klasu filter]
     [Route("VratiMtihNOglasa/{N}/{M}")]
     [HttpPost]
-    public async Task<ActionResult> VratiMtihNOglasa(int N,int M,[FromBody] object filters)
+    public async Task<ActionResult> VratiMtihNOglasa(int N,int M,[FromBody] OglasFilteri? filters )
     {
         try{
-            return Ok(await _service.VratiMtihNOglasa(N, M, filters));
+            List<Oglas> listaOglasa =await _service.VratiMtihNOglasa(N, M, filters);
+            List<OglasDto> retLista = listaOglasa.Select(o => new OglasDto(o)).ToList();
+            return Ok(retLista);
         }
         catch(Exception e)
         {
@@ -31,15 +33,12 @@ public class OglasController : ControllerBase
      
     }
 
-    [Route("VratiNNaslovnihSlika")]
+    [Route("VratiNaslovneSlike")]
     [HttpGet]
-    public async Task<ActionResult> VratiNNaslovnihSlika([FromQuery] long[] ids)
+    public async Task<ActionResult> VratiNaslovneSlike([FromQuery] long[] oglasIds)
     {
         try{
-            var slike = await _service.VratiNNaslovnihSlika(ids);
-            if(slike==null)
-                slike = new List<Slika>();
-            var zipSlika = await ZipCreator.ZipujNSlike(slike);
+            ZipFile zipSlika = await _service.VratiNaslovneSlikeZIP(oglasIds);
             return File(zipSlika.Data, ZipFile.CONTENT_TYPE, zipSlika.Name);
         }
         catch(Exception e)
@@ -71,8 +70,7 @@ public class OglasController : ControllerBase
     {
         try
         {
-            List<Slika> slike= await _service.VratiSlike(oglasId);
-            ZipFile zipFile = await ZipCreator.ZipujSlike(slike);
+            ZipFile zipFile= await _service.VratiSlikeZIP(oglasId);
             return File(zipFile.Data, ZipFile.CONTENT_TYPE, zipFile.Name); 
         }
         catch(Exception e)

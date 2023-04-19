@@ -63,6 +63,10 @@ namespace Domain.Models
         [System.Text.Json.Serialization.JsonIgnore]
         public List<Slika> Slike { get; set; }
         public List<Ocena> Ocene{ get; set; }
+
+        public String Lokacija { get; set; }
+
+        public Stanje? Stanje { get; set; }
         public Oglas()
         {
 
@@ -82,33 +86,19 @@ namespace Domain.Models
             BrojPregleda = oglas.BrojPregleda;
             Vlasnik = new Korisnik();
             Vlasnik.Id = oglas.VlasnikId;
+            Lokacija = oglas.Lokacija;
+            Stanje = oglas.Stanje;
         }
 
-        public Oglas(long id, string ime ,Podkategorija podkategorija,string KategorijaIme,Dictionary<string,string> polja,
-         int kredit,DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,
-         int cena,int kolicina,int brojPregleda)
-        {
-            Id = id;
-            Ime = ime;
-            Podkategorija = podkategorija;
-            podkategorija.KategorijaNaziv = KategorijaIme;
-            Polja = polja;
-            Kredit = kredit;
-            DatumPostavljanja = datumPostavljanja;
-            Smer = smer;
-            Tip = tip;
-            Cena = cena;
-            Kolicina = kolicina;
-            BrojPregleda = brojPregleda;
-        }
 
         public Oglas(long id, string ime, Podkategorija podkategorija,string KategorijaIme, Dictionary<string,string> polja,
          int kredit,DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,
-         int cena,int kolicina,int brojPregleda,int VlasnikId,string UsernameVlasnika)
+         int cena,int kolicina,int brojPregleda,int VlasnikId,string UsernameVlasnika,Stanje? stanje, String lokacija)
         {
             Id = id;
             Ime = ime;
             Podkategorija = podkategorija;
+            Podkategorija.KategorijaNaziv = KategorijaIme;
             Polja = polja;
             Kredit = kredit;
             DatumPostavljanja = datumPostavljanja;
@@ -120,6 +110,8 @@ namespace Domain.Models
             Vlasnik=new Korisnik();
             Vlasnik.Id = VlasnikId;
             Vlasnik.UserName = UsernameVlasnika;
+            Stanje = stanje;
+            Lokacija = lokacija;
         }
 
     }

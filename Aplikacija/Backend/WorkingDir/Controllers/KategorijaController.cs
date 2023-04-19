@@ -44,6 +44,8 @@ public class KategorijaController : ControllerBase
         try
         {
             Kategorija tmp = _service.VratiKategoriju(id);
+
+            //TODO: KategorijaDto, Mapper?
             object ret = new 
             {
                 Id=tmp.Id,

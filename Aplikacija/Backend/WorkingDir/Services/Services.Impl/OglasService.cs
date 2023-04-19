@@ -2,7 +2,8 @@ using Domain.Models;
 using Services.Abs;
 using Domain.IRepo;
 using Domain.Exceptions;
-using Models;
+using Domain.IRepo.Utility;
+using Services.Utility;
 
 namespace Services.Impl
 {
@@ -48,12 +49,12 @@ namespace Services.Impl
             await _repo.SacuvajOglas(oglas);
         }
 
-        public async Task<int> PrebrojiOglaseZaFiltere(object filters)
+        public async Task<int> PrebrojiOglaseZaFiltere(OglasFilteri? filters)
         {
             return await _repo.PrebrojiOglaseZaFiltere(filters);
         }
 
-        public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, object filters)
+        public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri? filters)
         {
             var tmp = await _repo.VratiMtihNOglasa(N, M, filters);
             if(tmp==null)
@@ -83,7 +84,7 @@ namespace Services.Impl
             return oglas;
         }
 
-        public async Task<List<Slika>> VratiNNaslovnihSlika(long[] oglasIds)
+        public async Task<List<Slika>> VratiNaslovneSlike(long[] oglasIds)
         {
             List<Oglas> tmp = await _repo.VratiOglase(oglasIds, o => o.Slike);
             List<Slika>? slike = tmp.Where(o=>o.Slike!=null).Select(o=>o.Slike[0]).ToList();;
@@ -92,6 +93,16 @@ namespace Services.Impl
             return slike;
 
 
+        }
+
+        public async Task<ZipFile> VratiNaslovneSlikeZIP(long[] oglasIds)
+        {
+            return await ZipCreator.ZipujNSlike(await VratiNaslovneSlike(oglasIds));
+        }
+
+        public async Task<ZipFile> VratiSlikeZIP(long oglasId)
+        {
+            return await ZipCreator.ZipujSlike(await VratiSlike(oglasId));
         }
     }
 }

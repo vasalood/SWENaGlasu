@@ -10,6 +10,7 @@ using UserManagementService;
 using MimeKit;
 using MailKit.Net.Smtp;
 using System.Net;
+using Business.Contexts;
 
 namespace Backend.Controllers;
 
@@ -21,13 +22,15 @@ public class AuthenticationController:ControllerBase
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IEmailService _emailService;
     private readonly IConfiguration _configuration;
+    private readonly  NaGlasuContext _context ;
     public AuthenticationController(UserManager<IdentityUser> userManager,RoleManager<IdentityRole> roleManager
-    ,IConfiguration configuration,IEmailService emailService )
+    ,IConfiguration configuration,IEmailService emailService,NaGlasuContext context )
     {
         _userManager=userManager;
         _roleManager=roleManager;
         _configuration=configuration;
        _emailService=emailService;
+       _context=context;
     }
     [HttpPost]
     public async Task<IActionResult>Register([FromBody]Korisnik korisnik, string role)
@@ -57,6 +60,8 @@ public class AuthenticationController:ControllerBase
             var confirmationLink=Url.Action(nameof(ConfirmEmail),"Authentication", new {token,email=user.Email}, Request.Scheme);
             var message = new Message(new string[] { user.Email! }, "Confirmation email link", confirmationLink!);
                 _emailService.SendEmail(message);
+                _context.Korisnici.Add(korisnik);
+                await _context.SaveChangesAsync();
             return Ok("Uspesna registracija");
         }
         else
@@ -113,10 +118,14 @@ public class AuthenticationController:ControllerBase
                 authClaims.Add(new Claim(ClaimTypes.Role,role));
             }
             var jwtToken= GetToken(authClaims);
+            if(user.EmailConfirmed)
             return Ok(new{
                 token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
                 expiration=jwtToken.ValidTo
             });
+            else{
+                return BadRequest("Please confirm your email");
+            }
         }
 
         return Unauthorized();
