@@ -61,7 +61,7 @@ namespace Domain.Models
         [System.Text.Json.Serialization.JsonIgnore]
         public List<FavoritSpoj> Favoriti{ get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
-        public List<Slika> Slike { get; set; }
+        public List<Slika>? Slike { get; set; }
         public List<Ocena> Ocene{ get; set; }
 
         public String Lokacija { get; set; }
@@ -76,7 +76,12 @@ namespace Domain.Models
             Id = oglas.Id;
             Ime = oglas.Ime;
             Podkategorija = oglas.Podkategorija;
-            Polja = oglas.Polja;
+            Polja = new Dictionary<string, string>();
+            int count = int.Min(oglas.StavkePoljaImena.Count(), oglas.StavkePoljaVrednosti.Count());
+            for (int i = 0; i != count;++i)
+            {
+                Polja.Add(oglas.StavkePoljaImena[i], oglas.StavkePoljaVrednosti[i]);
+            }
             Kredit = oglas.Kredit;
             DatumPostavljanja = oglas.DatumPostavljanja;
             Smer = oglas.Smer;
@@ -91,10 +96,13 @@ namespace Domain.Models
         }
 
 
-        public Oglas(long id, string ime, Podkategorija podkategorija,string KategorijaIme, Dictionary<string,string> polja,
+        /* public Oglas(long id, string ime, Podkategorija podkategorija,string KategorijaIme, Dictionary<string,string> polja,
          int kredit,DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,
          int cena,int kolicina,int brojPregleda,int VlasnikId,string UsernameVlasnika,Stanje? stanje, String lokacija)
         {
+
+            //o.Id, o.Ime, o.Podkategorija, k.Ime, o.Polja, o.Kredit, o.DatumPostavljanja, o.Smer, o.Tip,
+            //o.Cena, o.Kolicina, o.BrojPregleda, o.Vlasnik.Id, o.Vlasnik.UserName,o.Stanje,o.Lokacija
             Id = id;
             Ime = ime;
             Podkategorija = podkategorija;
@@ -112,7 +120,7 @@ namespace Domain.Models
             Vlasnik.UserName = UsernameVlasnika;
             Stanje = stanje;
             Lokacija = lokacija;
-        }
+        } */
 
     }
 }

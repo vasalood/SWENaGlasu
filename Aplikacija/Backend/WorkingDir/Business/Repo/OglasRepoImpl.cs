@@ -6,6 +6,7 @@ using Domain.Exceptions;
 using System.Linq.Expressions;
 using Domain.IRepo.Utility;
 using Business.Repo.Utility;
+using Models;
 
 namespace Business.Repo
 {
@@ -91,8 +92,16 @@ namespace Business.Repo
             .Include(o => o.Vlasnik)
              .Join(_context.Kategorije,
             o => o.Podkategorija.KategorijaId, k => k.Id, (o, k) =>
-            new Oglas(o.Id, o.Ime, o.Podkategorija, k.Ime, o.Polja, o.Kredit, o.DatumPostavljanja, o.Smer, o.Tip,
-            o.Cena, o.Kolicina, o.BrojPregleda, o.Vlasnik.Id, o.Vlasnik.UserName,o.Stanje,o.Lokacija));
+            new Oglas
+            {
+                Id = o.Id, Ime = o.Ime, Podkategorija = new Podkategorija{Id = o.Podkategorija.Id, Ime=o.Podkategorija.Ime,
+                    KategorijaId=o.Podkategorija.KategorijaId, KategorijaNaziv=k.Ime},
+                Polja=o.Polja, Kredit=o.Kredit, DatumPostavljanja=o.DatumPostavljanja, Smer=o.Smer, Tip=o.Tip, Cena=o.Cena,
+                Kolicina=o.Kolicina,BrojPregleda=o.BrojPregleda, Vlasnik = new Korisnik {Id=o.Vlasnik.Id,UserName=o.Vlasnik.UserName},
+                Stanje=o.Stanje,Lokacija=o.Lokacija
+            }
+            /* new Oglas(o.Id, o.Ime, o.Podkategorija, k.Ime, o.Polja, o.Kredit, o.DatumPostavljanja, o.Smer, o.Tip,
+            o.Cena, o.Kolicina, o.BrojPregleda, o.Vlasnik.Id, o.Vlasnik.UserName,o.Stanje,o.Lokacija) */);
 
             var list = await tmp.ToListAsync();
             if(list==null)
@@ -111,5 +120,13 @@ namespace Business.Repo
             return await (lambdaInclude != null ? _context.Oglasi.Where(o => oglasIds.Contains(o.Id)).Include(lambdaInclude).ToListAsync() :
             _context.Oglasi.Where(o => oglasIds.Contains(o.Id)).ToListAsync());
         }
+
+        public async Task AzurirajOglas(Oglas oglas)
+        {
+            _context.Oglasi.Update(oglas);
+            await _context.SaveChangesAsync();
+        }
+
+     
     }
 }

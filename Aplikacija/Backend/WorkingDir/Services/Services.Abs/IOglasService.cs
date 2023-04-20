@@ -1,6 +1,7 @@
 using Domain.Models;
 using Services.Utility;
 using Domain.IRepo.Utility;
+using System.Linq.Expressions;
 
 namespace Services.Abs
 {
@@ -11,9 +12,10 @@ namespace Services.Abs
         public Task<ZipFile> VratiNaslovneSlikeZIP(long[] oglasIds);
         public Task PostaviOglas(OglasDto oglas);
         public Task<int> PrebrojiOglaseZaFiltere(OglasFilteri? filteri);
-        public Task AzurirajOglas(Oglas oglas);
+        public Task AzurirajOglas(Oglas oglas,OglasDto nOglas);
         public Task<List<Slika>> VratiSlike(long oglasId);
         public Task<ZipFile> VratiSlikeZIP(long oglasId);
-        public Oglas VratiOglas(long oglasId);
+        public Oglas VratiOglas(long oglasId,Expression<Func<Oglas,object>>? predicate=null);
+        public Task OceniOglas(long oglasId, OcenaDto ocena);
     }
 }

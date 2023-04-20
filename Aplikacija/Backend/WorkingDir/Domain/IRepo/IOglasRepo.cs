@@ -13,5 +13,6 @@ namespace Domain.IRepo
         public Task<List<Slika>> PostaviSlike(List<IFormFile> slike);
         public Task<int> PrebrojiOglaseZaFiltere(OglasFilteri? filteri);
         public Task SacuvajOglas(Oglas oglas);
+        public Task AzurirajOglas(Oglas oglas);
     }
 }

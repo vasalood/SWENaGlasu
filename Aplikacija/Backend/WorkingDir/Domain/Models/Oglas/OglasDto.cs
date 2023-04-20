@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
+
 namespace Domain.Models
 {
     [NotMapped]
@@ -9,6 +10,10 @@ namespace Domain.Models
         public string Ime { get; set; }
         public Podkategorija Podkategorija{ get; set; }
         public Dictionary<string,string> Polja{ get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public List<String> StavkePoljaImena { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public List<String> StavkePoljaVrednosti{ get; set; }
         public int Kredit { get; set; }
         public DateTime DatumPostavljanja{ get; set; }
         public SmerOglasa Smer { get; set; }
@@ -18,7 +23,9 @@ namespace Domain.Models
         public int BrojPregleda { get; set; }
         public int VlasnikId{ get; set; }
         public string VlasnikKorisnickoIme{ get; set; }
-        public List<IFormFile> PrimljeneSlike { get; set; }
+
+        [System.Text.Json.Serialization.JsonIgnore]
+        public List<IFormFile>? PrimljeneSlike { get; set; }
         public String Lokacija { get; set; }
         public Stanje? Stanje { get; set; }
 
