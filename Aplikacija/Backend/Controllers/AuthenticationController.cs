@@ -11,6 +11,9 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using System.Net;
 using Business.Contexts;
+using System.ComponentModel.DataAnnotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend.Controllers;
 
@@ -32,6 +35,7 @@ public class AuthenticationController:ControllerBase
        _emailService=emailService;
        _context=context;
     }
+    [Route("Sign Up")]
     [HttpPost]
     public async Task<IActionResult>Register([FromBody]Korisnik korisnik, string role)
     {
@@ -100,7 +104,7 @@ public class AuthenticationController:ControllerBase
             return BadRequest();
     }
      [HttpPost]
-    [Route("login")]
+    [Route("Login")]
     public async Task<IActionResult>Login([FromBody]LoginModel loginModel)
     {
         //checking the user ...
@@ -143,9 +147,59 @@ public class AuthenticationController:ControllerBase
         );
         return token;
     }
+    [Route("Forgot Password")]
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> ForgotPassword([Required]string  email)
+    {
+        ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+        var user = await _userManager.FindByEmailAsync(email);
+        if(user != null)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var ForgotPasswordLink=Url.Action(nameof(ResettPassword),"Authentication",new{token,email=user.Email},Request.Scheme);
+             var message = new Message(new string[] { user.Email! }, "Forgot Password link", ForgotPasswordLink!);
+                _emailService.SendEmail(message);
+            return Ok($"Password Changed request is sent on Email {user.Email}");
+           
+        }
+        else
+        {
+            return BadRequest("This email doesn't exist!");
+        }
+    }
+    [HttpGet("reset-password")]
+    public IActionResult ResettPassword(string token,string email){
+        var model = new ResetPassword{Token = token, Email=email};
+        return Ok(new {model});
+
+    }
+    [Route("Reset Password")]
+    [HttpPost]
+    public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
+    {
+        //ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+        var user = await _userManager.FindByEmailAsync(resetPassword.Email);
+        if(user != null)
+        {
+            var resetPassResult = await _userManager.ResetPasswordAsync(user,resetPassword.Token,resetPassword.Password);
+            if(!resetPassResult.Succeeded)
+            {
+                foreach(var error in resetPassResult.Errors)
+                ModelState.AddModelError(error.Code, error.Description);
+
+                return Ok(ModelState);
+            }
+            return Ok("Sifra je uspesno promenjena");
+        }
+        else
+        {
+            return BadRequest("This email doesn't exist!");
+        }
+    }
 }
 
-    //  }
+    
    
 
    
