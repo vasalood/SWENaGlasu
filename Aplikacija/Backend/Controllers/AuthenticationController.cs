@@ -88,6 +88,7 @@ public class AuthenticationController:ControllerBase
         
 
     }
+   
      [HttpGet]
      public  IActionResult TestEmail()
      {
@@ -319,6 +320,27 @@ public class AuthenticationController:ControllerBase
         else
         {
             return BadRequest("Neuspesno blokiran korisnik");
+        }
+    }
+    [Route("SuspendUserOnTime/{userName}/{Ime}/{Prezime}/{Adresa}/{Uplata}/{Telefon}")]
+    [HttpPut]
+    public async Task<IActionResult>UpdateUser(string userName,string Ime, string Prezime,string Adresa,int Uplata, string Telefon)
+    {
+        Korisnik userExist=await _userManager.FindByNameAsync(userName);
+        if(userExist== null)
+        {
+            return BadRequest("User ne postoji");
+        }
+        else
+        {
+            userExist.Ime=Ime;
+            userExist.Prezime=Prezime;
+            userExist.Adresa=Adresa;
+            userExist.Uplata=Uplata;
+            userExist.Telefon=Telefon;
+           await _userManager.UpdateAsync(userExist);
+            return Ok("Uspesno promenjen korisnik!");
+            
         }
     }
 }
