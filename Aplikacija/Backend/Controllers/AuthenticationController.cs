@@ -21,23 +21,25 @@ namespace Backend.Controllers;
 [Route("[controller]")]
 public class AuthenticationController:ControllerBase
 {
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<Korisnik> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IEmailService _emailService;
     private readonly IConfiguration _configuration;
     private readonly  NaGlasuContext _context ;
-    public AuthenticationController(UserManager<IdentityUser> userManager,RoleManager<IdentityRole> roleManager
-    ,IConfiguration configuration,IEmailService emailService,NaGlasuContext context )
+    private readonly SignInManager<Korisnik> _signInManager;
+    public AuthenticationController(UserManager<Korisnik> userManager,RoleManager<IdentityRole> roleManager
+    ,IConfiguration configuration,IEmailService emailService,NaGlasuContext context, SignInManager<Korisnik> signInManager )
     {
         _userManager=userManager;
         _roleManager=roleManager;
         _configuration=configuration;
        _emailService=emailService;
        _context=context;
+       _signInManager=signInManager;
     }
     [Route("Sign Up")]
     [HttpPost]
-    public async Task<IActionResult>Register([FromBody]Korisnik korisnik, string role)
+    public async Task<IActionResult>Register([FromBody]RegisterModel korisnik, string role)
     {
         ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
         var userExist= await _userManager.FindByEmailAsync(korisnik.Email);
@@ -45,15 +47,26 @@ public class AuthenticationController:ControllerBase
         {
             return BadRequest("Email vec postoji.");
         }
-        IdentityUser user = new()
+        var userExist2 =await _userManager.FindByEmailAsync(korisnik.UserName);
+          if(userExist2!=null)
+        {
+            return BadRequest("UserName vec postoji.");
+        }
+        Korisnik user = new()
         {
             Email = korisnik.Email,
             SecurityStamp=Guid.NewGuid().ToString(),
-            UserName=korisnik.UserName
+            UserName=korisnik.UserName,
+            Ime=korisnik.Ime,
+            Prezime=korisnik.Prezime,
+            Adresa=korisnik.Adresa,
+            Telefon=korisnik.Telefon,
+            Uplata= korisnik.Uplata
+
         };
         if(await _roleManager.RoleExistsAsync(role))
         {
-             var result = await _userManager.CreateAsync(user,korisnik.Sifra);
+             var result = await _userManager.CreateAsync(user,korisnik.Password);
             if(!result.Succeeded)
              {
              var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
@@ -64,8 +77,8 @@ public class AuthenticationController:ControllerBase
             var confirmationLink=Url.Action(nameof(ConfirmEmail),"Authentication", new {token,email=user.Email}, Request.Scheme);
             var message = new Message(new string[] { user.Email! }, "Confirmation email link", confirmationLink!);
                 _emailService.SendEmail(message);
-                _context.Korisnici.Add(korisnik);
-                await _context.SaveChangesAsync();
+               // _context.Korisnici.Add(korisnik);
+                //await _context.SaveChangesAsync();
             return Ok("Uspesna registracija");
         }
         else
@@ -111,6 +124,10 @@ public class AuthenticationController:ControllerBase
         var user = await _userManager.FindByNameAsync(loginModel.UserName);
         if(user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
         {
+            if(await _userManager.IsLockedOutAsync(user))
+            {
+                return BadRequest("Vas nalog je suspendovan !");
+            }
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name,user.UserName),
@@ -195,6 +212,113 @@ public class AuthenticationController:ControllerBase
         else
         {
             return BadRequest("This email doesn't exist!");
+        }
+    }
+    [Route("Get Korisnik")]
+    [HttpGet]
+    public async Task<IActionResult>GetKorisnikByUserName(string userName)
+    {
+        var korisnik =await _userManager.FindByNameAsync(userName);
+        if(korisnik != null)
+        {
+        //     Korisnik user = new()
+        // {
+        //     Email = korisnik.Email,
+        //     SecurityStamp=Guid.NewGuid().ToString(),
+        //     UserName=korisnik.UserName,
+        //     Ime=korisnik.Ime,
+        //     Prezime=korisnik.Prezime,
+        //     Adresa=korisnik.Adresa,
+        //     Telefon=korisnik.Telefon,
+        //     Uplata= korisnik.Uplata
+
+        // };
+            RegisterModel model = new(){
+                Ime = korisnik.Ime,
+                Prezime=korisnik.Prezime,
+                UserName=korisnik.UserName,
+              Adresa=korisnik.Adresa,
+            Telefon=korisnik.Telefon,
+             Uplata= korisnik.Uplata,
+              Email = korisnik.Email
+            };
+            return Ok(model);
+        }
+        else
+        {
+            return BadRequest("Ne postoji korisnik sa tim userNameom");
+        }
+    }
+    [Route("PromeniRolu")]
+    [HttpPut]
+    public async Task<IActionResult>ChangeRole(string userName)
+    {
+        var userExist = await _userManager.FindByNameAsync(userName);
+        if(userExist==null)
+        {
+            return BadRequest("User ne postoji!");
+        }
+        else
+        {
+           var result = await _userManager.RemoveFromRoleAsync(userExist,"User");
+                if(result.Succeeded)
+                {
+                    result=await _userManager.AddToRoleAsync(userExist,"PremiumUser");
+                    return Ok("Uspesno promenjena rola");
+                }
+                else
+                {
+                    return BadRequest("Neuspesna promena role");
+                }
+        }
+    }
+[Route("SuspendujKorisnika")]
+    [HttpPut]
+    public async Task<IActionResult>SuspendUser(string userName)
+    {
+        var user = await _userManager.FindByNameAsync(userName);
+        if(user != null)
+        {
+            await _userManager.SetLockoutEndDateAsync(user,DateTimeOffset.MaxValue);
+              await _signInManager.SignOutAsync();
+            return Ok("Uspesno blokiran korisnik!");
+        }
+        else
+        {
+            return BadRequest("Neuspesno blokiran korisnik");
+        }
+    }
+    [Route("UnBlockUser")]
+    [HttpPut]
+    public async Task<IActionResult>UnSuspendUser(string userName)
+    {
+         var user = await _userManager.FindByNameAsync(userName);
+        if(user != null)
+        {
+            await _userManager.SetLockoutEndDateAsync(user,DateTimeOffset.UtcNow);
+            
+            return Ok("Uspesno Odblokiran korisnik!");
+        }
+        else
+        {
+            return BadRequest("Neuspesno odblokiran korisnik");
+        }
+    }
+
+    [Route("SuspendUserOnTime")]
+    [HttpPut]
+    public async Task<IActionResult>SuspendUserOnTime(string userName,int number)
+    {
+        var user = await _userManager.FindByNameAsync(userName);
+        if(user != null)
+        {
+            await _userManager.SetLockoutEndDateAsync(user,DateTimeOffset.UtcNow.AddMonths(number));
+              await _signInManager.SignOutAsync();
+            return Ok("Uspesno blokiran korisnik!");
+        }
+        else
+        {
+            return BadRequest("Neuspesno blokiran korisnik");
         }
     }
 }

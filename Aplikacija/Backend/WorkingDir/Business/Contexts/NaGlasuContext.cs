@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Business.Contexts
 {
-    public class NaGlasuContext: IdentityDbContext<IdentityUser> 
+    public class NaGlasuContext: IdentityDbContext<Korisnik> 
     {
         public NaGlasuContext(DbContextOptions<NaGlasuContext> options):base(options)
         {
