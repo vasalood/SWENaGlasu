@@ -343,6 +343,13 @@ public class AuthenticationController:ControllerBase
             
         }
     }
+    [Route("LogOut")]
+    [HttpGet]
+    public async Task<IActionResult>LogOut()
+    {
+        await _signInManager.SignOutAsync();
+        return Ok("Uspesno ste odjavljeni");//mozda treba ovde redirekcija na pocetnu stranicu nekako 
+    }
 }
 
     
