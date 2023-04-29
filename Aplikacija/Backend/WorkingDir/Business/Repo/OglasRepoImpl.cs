@@ -127,6 +127,9 @@ namespace Business.Repo
             await _context.SaveChangesAsync();
         }
 
-     
+        public void ObrisiOglas(Oglas oglas)
+        {
+            _context.Oglasi.Remove(oglas);
+        }
     }
 }

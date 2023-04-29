@@ -15,6 +15,8 @@ namespace Business.Contexts
         public DbSet<Oglas> Oglasi { get; set; }
 
         public DbSet<Korisnik> Korisnici{ get; set; }
+
+        public DbSet<Ugovor> Ugovori{ get; set; }
         //Ovde se konfigurise izgled baze
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {

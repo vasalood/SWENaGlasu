@@ -14,5 +14,6 @@ namespace Domain.IRepo
         public Task<int> PrebrojiOglaseZaFiltere(OglasFilteri? filteri);
         public Task SacuvajOglas(Oglas oglas);
         public Task AzurirajOglas(Oglas oglas);
+        public void ObrisiOglas(Oglas oglas);
     }
 }
