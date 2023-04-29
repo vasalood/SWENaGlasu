@@ -10,4 +10,6 @@ public interface IUgovorRepo
     void UpisiUgovor(Ugovor ugovor);
 
     void ObrisiUgovor(Ugovor ugovor);
+
+    void AzurirajUgovor(Ugovor ugovor);
 }

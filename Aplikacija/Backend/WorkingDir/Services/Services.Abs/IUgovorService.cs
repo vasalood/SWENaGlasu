@@ -10,4 +10,6 @@ public interface IUgovorService
     void UpisiUgovor(Ugovor ugovor);
 
     void ObrisiUgovor(long Id);
+
+    void AzurirajUgovor(Ugovor ugovor);
 }

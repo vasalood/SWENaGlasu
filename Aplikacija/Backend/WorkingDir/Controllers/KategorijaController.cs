@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
 using Domain.Models;
 using Business.Contexts;
-
 using Services.Abs;
 
 namespace Controllers{
@@ -13,7 +10,7 @@ namespace Controllers{
 public class KategorijaController : ControllerBase
 {
     private readonly IKategorijaService _service;
-    public KategorijaController(NaGlasuContext context,IKategorijaService service)
+    public KategorijaController(IKategorijaService service)
     {
         _service = service;
     }

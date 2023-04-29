@@ -26,12 +26,15 @@ namespace Business.Contexts
             modelBuilder.Entity<Kategorija>().HasMany(k => k.Podkategorije).WithOne().HasForeignKey("KategorijaId");
             modelBuilder.Entity<Podkategorija>().HasAlternateKey("Ime", "KategorijaId");
             modelBuilder.Entity<Ocena>().HasOne(o => o.Vlasnik).WithMany().OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Ocena>().HasAlternateKey("VlasnikId","OglasId");
             modelBuilder.Entity<FavoritSpoj>().HasOne(f => f.Korisnik).WithMany().OnDelete(DeleteBehavior.NoAction);
            
             SeedRoles(modelBuilder);
 
             modelBuilder.Entity<Ocena>().HasOne(o => o.Vlasnik).WithMany().OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<FavoritSpoj>().HasOne(f => f.Korisnik).WithMany().OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Ugovor>().HasOne(u => u.Oglas).WithMany().OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Oglas>().OwnsMany(o => o.Slike, s =>
             {

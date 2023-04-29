@@ -101,7 +101,7 @@ namespace Business.Repo
                 Stanje=o.Stanje,Lokacija=o.Lokacija
             }
             /* new Oglas(o.Id, o.Ime, o.Podkategorija, k.Ime, o.Polja, o.Kredit, o.DatumPostavljanja, o.Smer, o.Tip,
-            o.Cena, o.Kolicina, o.BrojPregleda, o.Vlasnik.Id, o.Vlasnik.UserName,o.Stanje,o.Lokacija) */);
+            o.Cena, o.Kolicina, o.BrojPregleda, o.Vlasnik.Id, o.Vlasnik.UserName,o.Stanje,o.Lokacija) */).OrderBy(o=>o.Id);
 
             var list = await tmp.ToListAsync();
             if(list==null)
