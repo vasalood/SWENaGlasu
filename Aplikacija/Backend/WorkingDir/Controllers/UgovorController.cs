@@ -80,11 +80,11 @@ public class UgovorController : ControllerBase
     
     [HttpDelete]
     [Route("ObrisiUgovor/{ugovorId}")]
-    public ActionResult ObrisiUgovor(long UgovorId)
+    public ActionResult ObrisiUgovor(long ugovorId)
     {
         try{
-                _service.ObrisiUgovor(UgovorId);
-            return Ok($"Ugovor sa id: {UgovorId} obrisan.");
+            _service.ObrisiUgovor(ugovorId);
+            return Ok($"Ugovor sa id: {ugovorId} obrisan.");
         }
         catch(Exception e)
         {

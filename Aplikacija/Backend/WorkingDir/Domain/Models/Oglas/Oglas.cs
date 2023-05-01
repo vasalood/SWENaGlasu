@@ -22,7 +22,7 @@ namespace Domain.Models
         [NotMapped]
         public Dictionary<string,string> Polja{ get; set; }
 
-
+        //public string Grad { get; set; }
         [Column("Polja",TypeName ="nvarchar(max)")]
         [System.Text.Json.Serialization.JsonIgnore]
         public string _DictionaryJSON 

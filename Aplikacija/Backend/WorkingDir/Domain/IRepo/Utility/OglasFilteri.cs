@@ -13,7 +13,7 @@ public class OglasFilteri
     public int[]? PodkategorijeId { get; set; }
     public string? Ime { get; set; }
 
-    //public string? Grad {get;set;}
+    public string? Lokacija {get;set;}
 
     public int? CenaOd { get; set; }
     public int? CenaDo { get; set; }
@@ -26,11 +26,9 @@ public class OglasFilteri
         Expression<Func<Oglas, bool>> id=  Id!=null? o => o.Vlasnik.Id == Id:_defaultLambda;
         Expression<Func<Oglas, bool>> cenaOd = CenaOd != null ? o => o.Cena >= CenaOd : _defaultLambda;
         Expression<Func<Oglas,bool>> cenaDo = CenaDo != null ? o => o.Cena <= CenaDo :_defaultLambda;
+        //Expression<Func<Oglas,bool>> lokacija = Lokacija != null ? o => o.Lokacija ==Lokacija :_defaultLambda;
         Expression<Func<Oglas, bool>> ime = Ime != null ?
          o => 
-            o.Ime.StartsWith(Ime) ||
-            o.Ime.EndsWith(Ime) ||
-            o.Ime == Ime || 
             o.Ime.Contains(Ime)
          : _defaultLambda;
         Expression<Func<Oglas, bool>> kategorija = KategorijaId != null ? o => o.Podkategorija.KategorijaId

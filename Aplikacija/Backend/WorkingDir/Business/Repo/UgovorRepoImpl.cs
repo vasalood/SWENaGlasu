@@ -28,9 +28,31 @@ public class UgovorRepoImpl : IUgovorRepo
 
     public async Task<List<Ugovor>> VratiSveUgovore(int korisnikId)
     {
-        /* var query = _context.Oglasi.Where(o=>o.Vlasnik.Id==korisnikId).Join(_context.Korisnici,
-        o=>o.Vlasnik.Id,k=>k.Id,) */
-        return await _context.Ugovori.Where(u => u.Oglas.Vlasnik.Id == korisnikId || u.Kupac.Id == korisnikId).ToListAsync();
+        var ugovoriZaOglasePostavljene= await _context.Oglasi.Where(o => o.Vlasnik.Id == korisnikId).Join(_context.Ugovori,
+        o => o.Id, u => u.Oglas.Id, (o, u) => new
+        {
+            Id=u.Id,
+            Kolicina = u.Kolicina,
+            DatumSklapanja = u.DatumSklapanja,
+            Opis = u.Opis,
+            Oglas = o,
+            Prihvacen=u.Prihvacen,
+            Kupac = u.Kupac,
+            VlasnikId=o.Vlasnik.Id
+        }).Where(aU=>aU.VlasnikId==korisnikId).Select(aU=>new Ugovor
+        {
+            Id=aU.Id,
+            Kolicina=aU.Kolicina,
+            DatumSklapanja=aU.DatumSklapanja,
+            Opis=aU.Opis,
+            Oglas=aU.Oglas,
+            Prihvacen=aU.Prihvacen,
+            Kupac=aU.Kupac
+        }).ToListAsync();
+        var ugovoriZaOglaseKupljene = await _context.Ugovori.Where(u=>u.Kupac.Id == korisnikId).ToListAsync();
+
+        return ugovoriZaOglaseKupljene.Concat(ugovoriZaOglasePostavljene).OrderBy(u=>u.DatumSklapanja).ToList();
+
     }
 
     public Ugovor? VratiUgovor(long Id)
