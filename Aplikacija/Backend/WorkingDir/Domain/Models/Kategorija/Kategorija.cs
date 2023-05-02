@@ -47,6 +47,12 @@ namespace Domain.Models
         public Kategorija()
         {}
 
+        public Kategorija(KategorijaDto dto)
+        {
+            Ime = dto.Ime;
+            Polja = dto.Polja;
+            Podkategorije = dto.Podkategorije.Select(ime => new Podkategorija { Ime = ime, KategorijaNaziv = dto.Ime }).ToList();
+        }
         public Kategorija(string ime,int id)
         {
             Id = id;
