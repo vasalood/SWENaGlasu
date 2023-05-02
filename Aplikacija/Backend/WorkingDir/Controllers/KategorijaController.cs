@@ -17,10 +17,10 @@ public class KategorijaController : ControllerBase
 
     [HttpPost]
     [Route("PostaviKategoriju")]
-    public async Task<ActionResult> PostaviKategoriju([FromBody]Kategorija kategorija)
+    public async Task<ActionResult> PostaviKategoriju([FromBody]KategorijaDto kategorija)
     {
         try{
-            await _service.DodajKategoriju(kategorija);
+                await _service.DodajKategoriju(new Kategorija(kategorija));
             return Ok("Kategorija dodata.");
         }
         catch(Exception e)
@@ -73,10 +73,12 @@ public class KategorijaController : ControllerBase
 
     [HttpPut]
     [Route("PromeniKategoriju")]
-    public async Task<ActionResult> PromeniKategoriju([FromBody] Kategorija kategorija)
+    public async Task<ActionResult> PromeniKategoriju([FromBody] KategorijaDto dto,int id)
     {
         try
         {
+            Kategorija kategorija = new Kategorija(dto);
+            kategorija.Id = id;
             await _service.AzurirajKategoriju(kategorija);
             return Ok("Kategorija uspesno promenjena.");
         }

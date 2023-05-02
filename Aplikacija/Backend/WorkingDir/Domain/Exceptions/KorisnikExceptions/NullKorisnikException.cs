@@ -2,7 +2,7 @@ namespace Domain.Exceptions
 {
     public class NullKorisnikException:Exception
     {
-        public NullKorisnikException(int id):base($"Ne postoji korisnik sa id = {id}.")
+        public NullKorisnikException(string id):base($"Ne postoji korisnik sa id = {id}.")
         {
         }
 
