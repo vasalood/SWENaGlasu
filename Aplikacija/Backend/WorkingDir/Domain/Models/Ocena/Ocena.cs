@@ -1,30 +1,31 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
 
     public class Ocena
     {
+        [Key]
         public long Id { get; set; }
         public int Vrednost { get; set; }
-        public Korisnik Vlasnik {get;set;}
-
-        [JsonIgnore]
-        public Oglas Oglas { get; set; }
+        public Ugovor Ugovor { get; set; }
         public String Komentar { get; set; }
+        public DateTime Datum{ get; set; }
 
         public Ocena(){}
 
         public Ocena(OcenaDto dto)
         {
             Vrednost = dto.Vrednost;
-            Vlasnik = new Korisnik();
-            Vlasnik.Id = dto.KorisnikId;
             Komentar = dto.Komentar;
-            Oglas = new Oglas();
-            Oglas.Id = dto.OglasId;
+            Datum = DateTime.Now;
+            Ugovor = new Ugovor
+            {
+                Id = dto.UgovorId
+            };
         }
     }
 }
