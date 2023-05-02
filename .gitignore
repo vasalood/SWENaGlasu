@@ -475,7 +475,6 @@ $RECYCLE.BIN/
 .vscode/tasks.json
 .vscode/
 *.json
-Program.cs
 Migrations/
 wwwroot/
 !wwwroot/test.txt
