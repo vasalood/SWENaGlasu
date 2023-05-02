@@ -10,10 +10,6 @@ namespace Models
     public class Korisnik:IdentityUser
     {
         
-        
-        [JsonIgnore]
-        [NotMapped]
-        public int Id { get; set; }
         [Required]
         [MaxLength(50)]
         public string Ime { get; set; }
