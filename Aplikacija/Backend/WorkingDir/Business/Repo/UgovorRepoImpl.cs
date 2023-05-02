@@ -26,9 +26,9 @@ public class UgovorRepoImpl : IUgovorRepo
         _context.SaveChanges();
     }
 
-    public async Task<List<Ugovor>> VratiSveUgovore(int korisnikId)
+    public async Task<List<Ugovor>> VratiMtihNUgovora(string username,int M,int N)
     {
-        var ugovoriZaOglasePostavljene= await _context.Oglasi.Where(o => o.Vlasnik.Id == korisnikId).Join(_context.Ugovori,
+        var ugovoriZaOglasePostavljene= await _context.Oglasi.Where(o => o.Vlasnik.UserName == username).Join(_context.Ugovori,
         o => o.Id, u => u.Oglas.Id, (o, u) => new
         {
             Id=u.Id,
@@ -38,8 +38,8 @@ public class UgovorRepoImpl : IUgovorRepo
             Oglas = o,
             Prihvacen=u.Prihvacen,
             Kupac = u.Kupac,
-            VlasnikId=o.Vlasnik.Id
-        }).Where(aU=>aU.VlasnikId==korisnikId).Select(aU=>new Ugovor
+            VlasnikUsername=o.Vlasnik.UserName
+        }).OrderBy(u=>u.DatumSklapanja).ThenBy(u=>u.Id).Select(aU=>new Ugovor
         {
             Id=aU.Id,
             Kolicina=aU.Kolicina,
@@ -49,7 +49,7 @@ public class UgovorRepoImpl : IUgovorRepo
             Prihvacen=aU.Prihvacen,
             Kupac=aU.Kupac
         }).ToListAsync();
-        var ugovoriZaOglaseKupljene = await _context.Ugovori.Where(u=>u.Kupac.Id == korisnikId).ToListAsync();
+        var ugovoriZaOglaseKupljene = await _context.Ugovori.Where(u => u.Kupac.UserName == username).Include(u => u.Oglas).ToListAsync();
 
         return ugovoriZaOglaseKupljene.Concat(ugovoriZaOglasePostavljene).OrderBy(u=>u.DatumSklapanja).ToList();
 
@@ -65,4 +65,6 @@ public class UgovorRepoImpl : IUgovorRepo
         _context.Update(ugovor);
         _context.SaveChanges();
     }
+
+ 
 }

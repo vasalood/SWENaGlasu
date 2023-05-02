@@ -13,9 +13,11 @@ namespace Controllers;
 public class UgovorController : ControllerBase
 {
     private readonly IUgovorService _service;
-    public UgovorController(IUgovorService service)
+    private readonly IKorisnikService _korisnikService;
+    public UgovorController(IUgovorService service,IKorisnikService korisnikService)
     {
         _service = service;
+        _korisnikService = korisnikService;
     }
 
     [HttpGet]
@@ -31,7 +33,7 @@ public class UgovorController : ControllerBase
                 Prihvacen = ugovor.Prihvacen,
                 DatumSklapanja = ugovor.DatumSklapanja,
                 Opis = ugovor.Opis,
-                KupacId = ugovor.Kupac.Id,
+                KupacUsername = ugovor.Kupac.UserName,
                 OglasId = ugovor.Oglas.Id
         });
         }
@@ -43,11 +45,27 @@ public class UgovorController : ControllerBase
 
     
     [HttpGet]
-    [Route("VratiSveUgovore/{korisnikId}")]
-    public async Task<ActionResult> VratiSveUgovore(int korisnikId)
+    [Route("VratiMtihNUgovora")]
+    public async Task<ActionResult> VratiMtihNUgovora(string username,int M, int N)
     {
         try{
-            return Ok(await _service.VratiSveUgovore(korisnikId));
+            //if(korisnik!=null&&korisnik.UserName==username)
+            {
+                var lista = await _service.VratiMtihNUgovora(username,M,N);
+                var lista2 = lista.Select(u=>new UgovorDto
+                {
+                    Id=u.Id,
+                    DatumSklapanja=u.DatumSklapanja,
+                    Opis=u.Opis,
+                    OglasId=u.Oglas.Id,
+                    KupacUsername=u.Kupac.UserName,
+                    Kolicina=u.Kolicina,
+                    Prihvacen=u.Prihvacen
+                }).ToList();
+                return Ok(lista2);
+            }
+                
+            //throw new UnauthorizedAccessException("Nedozvoljeni pristup privatnim resursima.");
         }
         catch(Exception e)
         {
@@ -66,7 +84,7 @@ public class UgovorController : ControllerBase
                 Kolicina = ugovorDto.Kolicina,
                 Prihvacen = ugovorDto.Prihvacen,
                 Opis = ugovorDto.Opis
-        };
+            };
             _service.AzurirajUgovor(ugovor);
             return Ok($"Ugovor sa id: {ugovor.Id} azuriran.");
 
@@ -97,9 +115,11 @@ public class UgovorController : ControllerBase
     public ActionResult PostaviUgovor(UgovorDto ugovorDto)
     {
         Oglas oglas = new Oglas();
-        oglas.Id = ugovorDto.OglasId;
+        if(ugovorDto.OglasId==null||ugovorDto.KupacUsername==null)
+            throw new ArgumentNullException("Ugovor mora da referencira korisnika i oglas.");
+        oglas.Id = (long)ugovorDto.OglasId;
         Korisnik kupac = new Korisnik();
-        kupac.Id = ugovorDto.KupacId;
+        kupac.UserName = ugovorDto.KupacUsername;
 
         try{
             Ugovor ugovor = new Ugovor
@@ -121,4 +141,6 @@ public class UgovorController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+
 }
