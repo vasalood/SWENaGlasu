@@ -42,6 +42,7 @@ namespace Business.Repo
 
             List<Slika> Slike = new List<Slika>(slike.Count);
 
+            int counter = 0;
             foreach(IFormFile slika in slike)
             {
                 //if(slika.ContentType!="image/jpeg"||slika.ContentType!="image/png") ne radi?
@@ -55,7 +56,7 @@ namespace Business.Repo
                 do {
                     fPath = Path.Combine(FOLDER_PATH,RandomString.GenerateFilename(extension));
                 } while (System.IO.File.Exists(fPath));
-                Slike.Add(new Slika(fPath));
+                Slike.Add(new Slika(fPath,counter++));
             }
 
         for (int i = 0; i != slike.Count;++i)
@@ -88,7 +89,7 @@ namespace Business.Repo
             Expression<Func<Oglas, bool>> predicate = (o) => true;
             if(filteri!=null)
                 predicate = filteri.Map();
-            var tmp = _context.Oglasi.Where(predicate).Skip(M * N).Take(N).Include(o => o.Podkategorija)
+            var tmp = _context.Oglasi.Where(predicate).OrderBy(o=>o.Id).Skip(M * N).Take(N).Include(o => o.Podkategorija)
             .Include(o => o.Vlasnik)
              .Join(_context.Kategorije,
             o => o.Podkategorija.KategorijaId, k => k.Id, (o, k) =>
@@ -99,9 +100,7 @@ namespace Business.Repo
                 Polja=o.Polja, Kredit=o.Kredit, DatumPostavljanja=o.DatumPostavljanja, Smer=o.Smer, Tip=o.Tip, Cena=o.Cena,
                 Kolicina=o.Kolicina,BrojPregleda=o.BrojPregleda, Vlasnik = new Korisnik {Id=o.Vlasnik.Id,UserName=o.Vlasnik.UserName},
                 Stanje=o.Stanje,Lokacija=o.Lokacija
-            }
-            /* new Oglas(o.Id, o.Ime, o.Podkategorija, k.Ime, o.Polja, o.Kredit, o.DatumPostavljanja, o.Smer, o.Tip,
-            o.Cena, o.Kolicina, o.BrojPregleda, o.Vlasnik.Id, o.Vlasnik.UserName,o.Stanje,o.Lokacija) */).OrderBy(o=>o.Id);
+            });
 
             var list = await tmp.ToListAsync();
             if(list==null)
@@ -130,6 +129,38 @@ namespace Business.Repo
         public void ObrisiOglas(Oglas oglas)
         {
             _context.Oglasi.Remove(oglas);
+            _context.SaveChanges();
+        }
+
+        public void DodajFavorita(FavoritSpoj favorit)
+        {
+            var korisnik = _context.Korisnici.Where(k => k.UserName == favorit.Korisnik.UserName).FirstOrDefault();
+            if(korisnik==null)
+                throw new NullKorisnikException(favorit.Korisnik.UserName);
+            var oglas = VratiOglas(favorit.Oglas.Id,null);
+            if(oglas==null)
+                throw new NullOglasException(favorit.Oglas.Id);
+            favorit.Oglas = oglas;
+            favorit.Korisnik = korisnik;
+            _context.Favoriti.Add(favorit);
+            _context.SaveChanges();
+        }
+
+        public void SkiniFavorita(int Id)
+        {
+            var fav = _context.Favoriti.Find(Id);
+            if(fav==null)
+                throw new NullFavoritSpojException();
+            _context.Remove(fav);
+            _context.SaveChanges();
+        }
+
+        public bool JelFavorit(long oglasId,string username)
+        {
+            return null!=_context.Favoriti.Where(f => f.Oglas.Id == oglasId).Join(_context.Korisnici, f => f.Korisnik.Id, u => u.Id, (f, u) => new
+            {
+                Username=u.UserName
+            }).Where(at=>at.Username==username).FirstOrDefault();
         }
     }
 }

@@ -18,6 +18,11 @@ namespace Domain.Models
         {
             Path = path;
         }
+        public Slika(string path,int redosled)
+        {
+            Path = path;
+            Redosled = redosled;
+        }
         
         public Slika(string path,byte[] data)
         {
@@ -29,5 +34,7 @@ namespace Domain.Models
         public byte[] Data{ get; set; }
 
         public long OglasId{ get; set; }
+
+        public int Redosled{ get; set; }
     }
 }

@@ -3,6 +3,8 @@ using Domain.IRepo.Utility;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abs;
+using Microsoft.AspNetCore.Authorization;
+using Domain.Exceptions;
 
 namespace Backend.Controllers;
 
@@ -25,7 +27,18 @@ public class OglasController : ControllerBase
         {
             List<Oglas> listaOglasa = await _service.VratiMtihNOglasa(N, M, filters);
             List<OglasDto> retLista = listaOglasa.Select(o => new OglasDto(o)).ToList();
-            return Ok(retLista);
+            object retObj = new {
+                Lista=retLista
+                };
+            if(M==0)
+            {
+                retObj = new
+                {
+                    Lista = retLista,
+                    UkupanBr = await _service.PrebrojiOglaseZaFiltere(filters)
+                };
+            }
+        return Ok(retObj);
         }
         catch (Exception e)
         {
@@ -52,11 +65,11 @@ public class OglasController : ControllerBase
 
     [HttpPost]
     [Route("PostaviOglas")]
-    public async Task<ActionResult> PostaviOglas([FromForm] OglasDto oglas)
+    public async Task<ActionResult> PostaviOglas([FromForm] OglasForm forma)
     {
         try
         {
-            await _service.PostaviOglas(oglas);
+            await _service.PostaviOglas(forma);
             return Ok("Oglas postavljen.");
         }
         catch (Exception e)
@@ -98,17 +111,34 @@ public class OglasController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("JelFavorit")]
+
+    public ActionResult JelFavorit([FromQuery]long oglasId,[FromQuery]string username)
+    {
+        try{
+            
+            return Ok(_service.JelFavorit(oglasId,username));
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    //[Authorize(Roles ="Korisnik")]
     [HttpPost]
     [Route("AzurirajOglas")]
-    public async Task<ActionResult> AzurirajOglas(OglasDto nOglas)
+    public async Task<ActionResult> AzurirajOglas([FromForm]OglasForm form,[FromQuery] long oglasId)
     {
+        
         try
         {
-            Oglas oglas = _service.VratiOglas(nOglas.Id);
+            Oglas oglas = _service.VratiOglas(oglasId);
+            //var u = HttpContext.User;
+            await _service.AzurirajOglas(oglas,form);
 
-            await _service.AzurirajOglas(oglas,nOglas);
-
-            return Ok($"Oglas sa id: {nOglas.Id} je uspesno azuriran.");
+            return Ok($"Oglas sa id: {oglas.Id} je uspesno azuriran.");
         }
         catch (Exception e)
         {
@@ -117,16 +147,52 @@ public class OglasController : ControllerBase
     }
 
     [HttpPost]
-    [Route("OceniOglas")]
-    public async Task<ActionResult> OceniOglas(OcenaDto ocena)
+    [Route("DodajFavorita")]
+
+    public ActionResult DodajFavorita(FavoritSpojDto favorit)
     {
-        try{
-            await _service.OceniOglas(ocena.OglasId, ocena);
-            return Ok($"Oglas sa id: {ocena.OglasId} uspesno ocenjen.");
+        try
+        {
+            var fav = new FavoritSpoj(favorit);
+            _service.DodajFavorita(fav);
+            return Ok($"Favorit zabelezen sa id {fav.Id}");
         }
         catch(Exception e)
         {
             return BadRequest(e.Message);
         }
     }
+
+    
+    [HttpPost]
+    [Route("SkiniFavorita")]
+    public ActionResult SkiniFavorita(int Id)
+    {
+        try
+        {
+            _service.SkiniFavorita(Id);
+            return Ok("Favorit skinut.");
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpPut]
+    [Route("InkrementOglasPregledi/{id}")]
+    public ActionResult InkrementOglasPregledi(long id)
+    {
+        try
+        {
+            _service.InkrementOglasPregledi(id);
+            return Ok("Pregledi povecani za jedan.");
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    
 }

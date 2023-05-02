@@ -13,40 +13,58 @@ namespace Services.Impl
         private readonly IOglasRepo _repo;
         private readonly IKorisnikService _korisnikService;
         private readonly IKategorijaService _kategorijaService;
-        public OglasService(IOglasRepo repo,IKorisnikService korisnikService,IKategorijaService kategorijaService)
+
+        private object lockobj = new object();
+        public OglasService(IOglasRepo repo, IKorisnikService korisnikService, IKategorijaService kategorijaService)
         {
             _repo = repo;
             _korisnikService = korisnikService;
             _kategorijaService = kategorijaService;
         }
 
-        public async Task AzurirajOglas(Oglas oglas,OglasDto nOglas)
+        public async Task AzurirajOglas(Oglas oglas, OglasForm form)
         {
-            oglas.Ime = nOglas.Ime;
-            oglas.BrojPregleda = nOglas.BrojPregleda;
-            oglas.Cena = nOglas.Cena;
-            oglas.Kolicina = nOglas.Kolicina;
-            oglas.Kredit = nOglas.Kredit;
-            oglas.Polja = nOglas.Polja;
-            Kategorija kat = _kategorijaService.VratiKategoriju(nOglas.Podkategorija.KategorijaId);
-            oglas.Podkategorija = kat.Podkategorije.Find(p=>p.Id==nOglas.Podkategorija.Id)??oglas.Podkategorija;
+            oglas.Ime = form.Ime??oglas.Ime;
+            oglas.Cena = form.Cena??oglas.Cena;
+            oglas.Kolicina = form.Kolicina??oglas.Kolicina;
+            oglas.Kredit = form.Kredit??oglas.Kredit;
+            if(form.StavkePoljaImena!=null&&form.StavkePoljaVrednosti!=null)
+            {
+                oglas.Polja = new Dictionary<string, string>();
+                int count = int.Min(form.StavkePoljaImena.Count(), form.StavkePoljaVrednosti.Count());
+                for (int i = 0; i != count;++i)
+                {
+                    oglas.Polja.Add(form.StavkePoljaImena[i], form.StavkePoljaVrednosti[i]);
+                }
+            }
+           
+            Kategorija? kat = form.KategorijaId!=null?_kategorijaService.VratiKategoriju((int)form.KategorijaId):null;
+            if(kat!=null)
+                oglas.Podkategorija = kat.Podkategorije.Find(p => p.Id == form.PodkategorijaId) ?? oglas.Podkategorija;
             await _repo.AzurirajOglas(oglas);
         }
-
-        public async Task PostaviOglas(OglasDto oglasDto)
+        public void PovecajBrojPregleda(long Id)
         {
-            Oglas oglas = new Oglas(oglasDto);
+            Oglas o = VratiOglas(Id);
+
+        }
+
+        public async Task PostaviOglas(OglasForm form)
+        {
+            
+            Oglas oglas = new Oglas(form);
+            
             oglas.DatumPostavljanja = DateTime.Now;
-            oglas.Vlasnik= _korisnikService.VratiKorisnika(oglas.Vlasnik.Id);
-            var kategorija = _kategorijaService.VratiKategoriju(oglasDto.Podkategorija.KategorijaId);
-            if(kategorija==null)
-                throw new NullKategorijaException(oglasDto.Podkategorija.KategorijaId);
-            var podkategorija = kategorija.Podkategorije.Find(p => p.Id == oglasDto.Podkategorija.Id);
-            if(podkategorija==null)
-                throw new NullPodkategorijaException(oglasDto.Podkategorija.Id);
+            oglas.Vlasnik = _korisnikService.VratiKorisnika(oglas.Vlasnik.UserName);
+            var kategorija = _kategorijaService.VratiKategoriju((int)form.KategorijaId);
+            if (kategorija == null)
+                throw new NullKategorijaException((int)form.KategorijaId);
+            var podkategorija = kategorija.Podkategorije.Find(p => p.Id == form.PodkategorijaId);
+            if (podkategorija == null)
+                throw new NullPodkategorijaException((int)form.PodkategorijaId);
             //podkategorija.KategorijaNaziv = kategorija.Ime;
-            oglas.Podkategorija =podkategorija;
-            oglas.Slike=oglasDto.PrimljeneSlike!=null?await _repo.PostaviSlike(oglasDto.PrimljeneSlike):null;
+            oglas.Podkategorija = podkategorija;
+            oglas.Slike = form.PrimljeneSlike != null ? await _repo.PostaviSlike(form.PrimljeneSlike) : null;
             await _repo.SacuvajOglas(oglas);
         }
 
@@ -57,8 +75,9 @@ namespace Services.Impl
 
         public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri? filters)
         {
+            //Ovo moze da se prepravi da se salje i korisnik i odma da se proveri da li su oglasi favoriti
             var tmp = await _repo.VratiMtihNOglasa(N, M, filters);
-            if(tmp==null)
+            if (tmp == null)
                 tmp = new List<Oglas>();
             return tmp;
         }
@@ -66,21 +85,22 @@ namespace Services.Impl
         public async Task<List<Slika>> VratiSlike(long oglasId)
         {
             var oglas = _repo.VratiOglas(oglasId, o => o.Slike);
-            if(oglas==null)
+            if (oglas == null)
                 throw new NullOglasException(oglasId);
-            if(oglas.Slike==null||oglas.Slike.Count==0)
-                return new List<Slika> ();
-            for(int i=0;i!=oglas.Slike.Count;++i)
+            if (oglas.Slike == null || oglas.Slike.Count == 0)
+                return new List<Slika>();
+            oglas.Slike=oglas.Slike.OrderBy(o => o.Redosled).ToList();
+            for (int i = 0; i != oglas.Slike.Count; ++i)
             {
                 oglas.Slike[i].Data = await System.IO.File.ReadAllBytesAsync(oglas.Slike[i].Path);
             }
             return oglas.Slike;
         }
 
-        public Oglas VratiOglas(long id,Expression<Func<Oglas,object>>? predicate=null)
+        public Oglas VratiOglas(long id, Expression<Func<Oglas, object>>? predicate = null)
         {
-            var oglas = predicate==null?_repo.VratiOglas(id, o => o.Podkategorija):_repo.VratiOglas(id,predicate);
-            if(oglas==null)
+            var oglas = predicate == null ? _repo.VratiOglas(id, o => o.Podkategorija) : _repo.VratiOglas(id, predicate);
+            if (oglas == null)
                 throw new NullOglasException(id);
             return oglas;
         }
@@ -88,9 +108,9 @@ namespace Services.Impl
         public async Task<List<Slika>> VratiNaslovneSlike(long[] oglasIds)
         {
             List<Oglas> tmp = await _repo.VratiOglase(oglasIds, o => o.Slike);
-            List<Slika>? slike = tmp.Where(o=>o.Slike!=null).Select(o=>o.Slike[0]).ToList();;
-            if(slike==null)
-               return new List<Slika>();
+            List<Slika>? slike = tmp.Where(o => o.Slike != null).Select(o => o.Slike[0]).ToList(); ;
+            if (slike == null)
+                return new List<Slika>();
             return slike;
 
 
@@ -106,15 +126,31 @@ namespace Services.Impl
             return await ZipCreator.ZipujSlike(await VratiSlike(oglasId));
         }
 
-        public async Task OceniOglas(long oglasId, OcenaDto ocenaDto)
+        public void DodajFavorita(FavoritSpoj favorit)
         {
-            Ocena ocena = new Ocena(ocenaDto);
-            ocena.Oglas = VratiOglas(oglasId,o=>o.Ocene);
-            ocena.Vlasnik = _korisnikService.VratiKorisnika(ocena.Vlasnik.Id);
+            _repo.DodajFavorita(favorit);
+        }
+        public void SkiniFavorita(int Id)
+        {
+            _repo.SkiniFavorita(Id);
+        }
 
-            ocena.Oglas.Ocene.Add(ocena);
+        public bool JelFavorit(long oglasId, string username)
+        {
+            return _repo.JelFavorit(oglasId, username);
+        }
 
-            await _repo.AzurirajOglas(ocena.Oglas);
+        public void InkrementOglasPregledi(long id)
+        {
+            lock(lockobj)
+            {
+                var oglas = _repo.VratiOglas(id,null);
+                if(oglas==null)
+                    throw new NullOglasException(id);
+                oglas.BrojPregleda++;
+                _repo.AzurirajOglas(oglas);
+            }
+            
         }
     }
 }

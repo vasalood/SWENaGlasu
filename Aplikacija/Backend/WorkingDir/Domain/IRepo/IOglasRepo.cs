@@ -15,5 +15,11 @@ namespace Domain.IRepo
         public Task SacuvajOglas(Oglas oglas);
         public Task AzurirajOglas(Oglas oglas);
         public void ObrisiOglas(Oglas oglas);
+
+        public void DodajFavorita(FavoritSpoj favorit);
+
+        public void SkiniFavorita(int Id);
+
+        public bool JelFavorit(long oglasId, string username);
     }
 }

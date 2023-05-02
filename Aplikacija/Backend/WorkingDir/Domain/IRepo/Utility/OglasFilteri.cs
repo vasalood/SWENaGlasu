@@ -8,7 +8,7 @@ namespace Domain.IRepo.Utility;
 [NotMapped]
 public class OglasFilteri
 {
-    public long? Id { get; set; }
+    public string? Username { get; set; }
     public int? KategorijaId { get; set; }
     public int[]? PodkategorijeId { get; set; }
     public string? Ime { get; set; }
@@ -23,10 +23,10 @@ public class OglasFilteri
      public Expression<Func<Oglas,bool>> Map()
     {
         
-        Expression<Func<Oglas, bool>> id=  Id!=null? o => o.Vlasnik.Id == Id:_defaultLambda;
+        Expression<Func<Oglas, bool>> username=  Username!=null? o => o.Vlasnik.UserName == Username:_defaultLambda;
         Expression<Func<Oglas, bool>> cenaOd = CenaOd != null ? o => o.Cena >= CenaOd : _defaultLambda;
         Expression<Func<Oglas,bool>> cenaDo = CenaDo != null ? o => o.Cena <= CenaDo :_defaultLambda;
-        //Expression<Func<Oglas,bool>> lokacija = Lokacija != null ? o => o.Lokacija ==Lokacija :_defaultLambda;
+        Expression<Func<Oglas,bool>> lokacija = Lokacija != null ? o => o.Lokacija ==Lokacija :_defaultLambda;
         Expression<Func<Oglas, bool>> ime = Ime != null ?
          o => 
             o.Ime.Contains(Ime)
@@ -37,7 +37,7 @@ public class OglasFilteri
             o.Podkategorija.Id):
         _defaultLambda;
 
-        return CombineAnd(id,cenaOd, cenaDo, ime, kategorija, podkategorija);
+        return CombineAnd(username,cenaOd, cenaDo, ime, kategorija, podkategorija,lokacija);
     }
 
     private Expression<Func<Oglas,bool>> CombineAnd( List<Expression<Func<Oglas,bool>>> list)
@@ -47,7 +47,7 @@ public class OglasFilteri
             if(list.Count()==1)
                 return list[0];
             else
-                throw new ArgumentNullException("BoolExpressionCombiner doesn't work with empty lists.");
+                throw new ArgumentNullException("Nemoguce je kombinovati izraze iz prazne liste.");
         }
         var e = list[0];
         for (int i = 1; i != list.Count();++i)

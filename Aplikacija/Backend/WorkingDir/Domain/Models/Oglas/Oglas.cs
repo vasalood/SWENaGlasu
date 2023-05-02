@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 using Models;
+using Domain.Exceptions;
 
 namespace Domain.Models
 {
@@ -62,11 +63,12 @@ namespace Domain.Models
         public List<FavoritSpoj> Favoriti{ get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
         public List<Slika>? Slike { get; set; }
-        public List<Ocena> Ocene{ get; set; }
 
         public String Lokacija { get; set; }
 
         public Stanje? Stanje { get; set; }
+
+        public String Opis{ get; set; }
         public Oglas()
         {
 
@@ -90,37 +92,44 @@ namespace Domain.Models
             Kolicina = oglas.Kolicina;
             BrojPregleda = oglas.BrojPregleda;
             Vlasnik = new Korisnik();
-            Vlasnik.Id = oglas.VlasnikId;
+            Vlasnik.UserName = oglas.VlasnikUsername;
             Lokacija = oglas.Lokacija;
             Stanje = oglas.Stanje;
         }
 
-
-        /* public Oglas(long id, string ime, Podkategorija podkategorija,string KategorijaIme, Dictionary<string,string> polja,
-         int kredit,DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,
-         int cena,int kolicina,int brojPregleda,int VlasnikId,string UsernameVlasnika,Stanje? stanje, String lokacija)
+        public Oglas(OglasForm forma)
         {
+            foreach (var property in forma.GetType().GetProperties())
+            {
+                if (property.Name != "PrimljeneSlike" && property.Name != "StavkePoljaImena" && property.Name != "StavkePoljaVrednosti")
+                {
+                    var value = property.GetValue(forma);
+                    if (value == null)
+                        throw new NullFormException(property.Name);
+                }
 
-            //o.Id, o.Ime, o.Podkategorija, k.Ime, o.Polja, o.Kredit, o.DatumPostavljanja, o.Smer, o.Tip,
-            //o.Cena, o.Kolicina, o.BrojPregleda, o.Vlasnik.Id, o.Vlasnik.UserName,o.Stanje,o.Lokacija
-            Id = id;
-            Ime = ime;
-            Podkategorija = podkategorija;
-            Podkategorija.KategorijaNaziv = KategorijaIme;
-            Polja = polja;
-            Kredit = kredit;
-            DatumPostavljanja = datumPostavljanja;
-            Smer = smer;
-            Tip = tip;
-            Cena = cena;
-            Kolicina = kolicina;
-            BrojPregleda = brojPregleda;
-            Vlasnik=new Korisnik();
-            Vlasnik.Id = VlasnikId;
-            Vlasnik.UserName = UsernameVlasnika;
-            Stanje = stanje;
-            Lokacija = lokacija;
-        } */
+            }
+            Id = 0;
+            Ime = forma.Ime;
+            Podkategorija = new Podkategorija() { Id = (int)forma.PodkategorijaId };
+            Polja = new Dictionary<string, string>();
+            int count = int.Min(forma.StavkePoljaImena != null ? forma.StavkePoljaImena.Count() : 0
+            , forma.StavkePoljaVrednosti != null ? forma.StavkePoljaVrednosti.Count() : 0);
+            for (int i = 0; i != count; ++i)
+            {
+                Polja.Add(forma.StavkePoljaImena[i], forma.StavkePoljaVrednosti[i]);
+            }
+            Kredit = (int)forma.Kredit;
+            Smer = (SmerOglasa)forma.Smer;
+            Tip = (TipOglasa)forma.Tip;
+            Cena = (int)forma.Cena;
+            Kolicina = (int)forma.Kolicina;
+            BrojPregleda = 0;
+            Vlasnik = new Korisnik() { UserName = forma.Username };
+            Lokacija = forma.Lokacija;
+            Stanje = forma.Stanje;
+            Opis = forma.Opis;
+        }
 
     }
 }
