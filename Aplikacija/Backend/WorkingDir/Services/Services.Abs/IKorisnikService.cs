@@ -4,5 +4,6 @@ namespace Services.Abs;
 
 public interface IKorisnikService
 {
-    Korisnik VratiKorisnika(int id);
+    Korisnik VratiKorisnikaPoId(string id);
+    Korisnik VratiKorisnika(string username);
 }
