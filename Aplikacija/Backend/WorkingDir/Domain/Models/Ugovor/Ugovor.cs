@@ -13,6 +13,7 @@ public class Ugovor
     public int Kolicina { get; set; }
     public string Opis { get; set; }
 
+    public Ocena Ocena{ get; set; }
     public bool Prihvacen{ get; set; }
 
 }

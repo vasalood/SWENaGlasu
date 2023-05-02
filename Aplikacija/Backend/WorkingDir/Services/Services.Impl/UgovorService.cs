@@ -28,7 +28,7 @@ public class UgovorService : IUgovorService
 
     public void UpisiUgovor(Ugovor ugovor)
     {
-        Korisnik Korisnik = _korisnikService.VratiKorisnika(ugovor.Kupac.Id);
+        Korisnik Korisnik = _korisnikService.VratiKorisnika(ugovor.Kupac.UserName);
         Oglas Oglas = _oglasService.VratiOglas(ugovor.Oglas.Id,o=>o.Vlasnik);
         if(ugovor.Kolicina>Oglas.Kolicina)
             throw new PrevelikaKolicinaException(Oglas.Kolicina);
@@ -37,9 +37,9 @@ public class UgovorService : IUgovorService
         _repo.UpisiUgovor(ugovor);
     }
 
-    public async Task<List<Ugovor>> VratiSveUgovore(int korisnikId)
+    public async Task<List<Ugovor>> VratiMtihNUgovora(string username,int M,int N)
     {
-        return await _repo.VratiSveUgovore(korisnikId);
+        return await _repo.VratiMtihNUgovora(username,M,N);
     }
 
     public Ugovor VratiUgovor(long Id)
@@ -63,7 +63,13 @@ public class UgovorService : IUgovorService
         stariUgovor.Opis = ugovor.Opis;
         stariUgovor.Prihvacen = ugovor.Prihvacen;
         if(ugovor.Prihvacen==true)
+        {
             stariUgovor.Oglas.Kolicina -= stariUgovor.Kolicina;
+            stariUgovor.DatumSklapanja = DateTime.Now;
+        }
+
         _repo.AzurirajUgovor(stariUgovor);
     }
+
+
 }
