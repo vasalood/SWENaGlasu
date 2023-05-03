@@ -47,11 +47,11 @@ public class AuthenticationController:ControllerBase
         {
             return BadRequest("Email vec postoji.");
         }
-        var userExist2 =await _userManager.FindByEmailAsync(korisnik.UserName);
+       /* var userExist2 =await _userManager.FindByEmailAsync(korisnik.UserName);
           if(userExist2!=null)
         {
             return BadRequest("UserName vec postoji.");
-        }
+        }*/
         Korisnik user = new()
         {
             Email = korisnik.Email,
@@ -255,6 +255,7 @@ public class AuthenticationController:ControllerBase
     public async Task<IActionResult>ChangeRole(string userName)
     {
         var userExist = await _userManager.FindByNameAsync(userName);
+        
         if(userExist==null)
         {
             return BadRequest("User ne postoji!");
@@ -322,7 +323,7 @@ public class AuthenticationController:ControllerBase
             return BadRequest("Neuspesno blokiran korisnik");
         }
     }
-    [Route("SuspendUserOnTime/{userName}/{Ime}/{Prezime}/{Adresa}/{Uplata}/{Telefon}")]
+    [Route("UpdateUser/{userName}/{Ime}/{Prezime}/{Adresa}/{Uplata}/{Telefon}")]
     [HttpPut]
     public async Task<IActionResult>UpdateUser(string userName,string Ime, string Prezime,string Adresa,int Uplata, string Telefon)
     {
@@ -350,9 +351,19 @@ public class AuthenticationController:ControllerBase
         await _signInManager.SignOutAsync();
         return Ok("Uspesno ste odjavljeni");//mozda treba ovde redirekcija na pocetnu stranicu nekako 
     }
+    [Route("GetUserName")]
+    [HttpGet]
+    public async Task<IActionResult>GetUserName()
+    {
+       var Identity = (ClaimsIdentity)User.Identity;
+       var claim = Identity.FindFirst(ClaimTypes.Name);
+       var userName=claim.Value;
+       return Ok(userName);
+       return BadRequest("Ne postoji");
 }
 
     
    
 
    
+}
