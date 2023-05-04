@@ -3,6 +3,7 @@ using Domain.Models;
 using Services.Abs;
 using Domain.Exceptions;
 using Models;
+using Utility;
 
 namespace Services.Impl;
 
@@ -28,7 +29,7 @@ public class UgovorService : IUgovorService
 
     public void UpisiUgovor(Ugovor ugovor)
     {
-        Korisnik Korisnik = _korisnikService.VratiKorisnika(ugovor.Kupac.UserName);
+        Korisnik Korisnik = _korisnikService.VratiKorisnika(ugovor.Kupac.Id);
         Oglas Oglas = _oglasService.VratiOglas(ugovor.Oglas.Id,o=>o.Vlasnik);
         if(ugovor.Kolicina>Oglas.Kolicina)
             throw new PrevelikaKolicinaException(Oglas.Kolicina);
@@ -37,9 +38,9 @@ public class UgovorService : IUgovorService
         _repo.UpisiUgovor(ugovor);
     }
 
-    public async Task<List<Ugovor>> VratiMtihNUgovora(string username,int M,int N)
+    public async Task<List<Ugovor>> VratiMtihNUgovora(string id,int M,int N,bool? zaKupca,bool? prihvaceni,Order order)
     {
-        return await _repo.VratiMtihNUgovora(username,M,N);
+        return await _repo.VratiMtihNUgovora(id,M,N,zaKupca,prihvaceni,order);
     }
 
     public Ugovor VratiUgovor(long Id)
@@ -71,5 +72,9 @@ public class UgovorService : IUgovorService
         _repo.AzurirajUgovor(stariUgovor);
     }
 
+    public int PrebrojiUgovore(string id,bool? zaKupca,bool? potvrdjeni)
+    {
+        return _repo.PrebrojiUgovore(id, zaKupca, potvrdjeni);
+    }
 
 }
