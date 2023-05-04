@@ -14,23 +14,27 @@ public class OcenaRepoImpl:IOcenaRepo
     {
         _context = context;
     }
-    public async Task<List<OcenaDto>> VratiOcene(string username, int M, int N)
+    public async Task<List<OcenaDto>> VratiMtihNOcena(string id, int M, int N)
     {
-        var list =await _context.Oglasi.Where(o => o.Vlasnik.UserName == username).Join(_context.Ugovori,
-        o => o.Id, u => u.Oglas.Id, (o, u) =>u).OrderBy(u=>u.DatumSklapanja).ThenBy(u=>u.Id).Skip(M*N).Take(N).Include(u=>u.Ocena).Include(u=>u.Kupac).Where(u=>u.Ocena!=null).
+        var list =await _context.Oglasi.Where(o => o.Vlasnik.Id == id).Join(_context.Ugovori.Where(u=>u.Ocena!=null),
+        o => o.Id, u => u.Oglas.Id, (o, u) =>u).Include(u=>u.Ocena).Include(u=>u.Kupac)
+        .OrderBy(u=>u.Ocena.Datum).ThenBy(u=>u.Id).Skip(M*N).Take(N).
         Select(u => new OcenaDto{
             Komentar = u.Ocena.Komentar,
             Vrednost = u.Ocena.Vrednost,
             Id = u.Ocena.Id,
             OglasIme = u.Oglas.Ime,
-            Username = u.Kupac.UserName
+            Username = u.Kupac.UserName,
+            UserId=u.Kupac.Id,
+            UgovorId=u.Id,
+            Datum=u.Ocena.Datum
         }).ToListAsync();
         return list;
     }
 
-    public int PrebrojOcene(string username)
+    public int PrebrojOcene(string id)
     {
-        return _context.Oglasi.Where(o => o.Vlasnik.UserName == username).Join(_context.Ugovori,
+        return _context.Oglasi.Where(o => o.Vlasnik.Id == id).Join(_context.Ugovori,
         o => o.Id, u => u.Oglas.Id, (o, u) => u).Where(u=>u.Ocena!=null).Count();
     }
 
