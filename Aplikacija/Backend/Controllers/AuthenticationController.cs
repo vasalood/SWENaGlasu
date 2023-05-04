@@ -37,10 +37,11 @@ public class AuthenticationController:ControllerBase
        _context=context;
        _signInManager=signInManager;
     }
-    [Route("Sign Up")]
+    [Route("SignUp")]
     [HttpPost]
-    public async Task<IActionResult>Register([FromBody]RegisterModel korisnik, string role)
+    public async Task<IActionResult>Register([FromBody]RegisterModel korisnik)
     {
+        
         ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
         var userExist= await _userManager.FindByEmailAsync(korisnik.Email);
         if(userExist!=null)
@@ -61,10 +62,10 @@ public class AuthenticationController:ControllerBase
             Prezime=korisnik.Prezime,
             Adresa=korisnik.Adresa,
             Telefon=korisnik.Telefon,
-            Uplata= korisnik.Uplata
+            Uplata= 0
 
         };
-        if(await _roleManager.RoleExistsAsync(role))
+        if(await _roleManager.RoleExistsAsync("User"))
         {
              var result = await _userManager.CreateAsync(user,korisnik.Password);
             if(!result.Succeeded)
@@ -72,7 +73,7 @@ public class AuthenticationController:ControllerBase
              var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
             return BadRequest($"Neuspesna registracija: {errorMessages}");
              }
-            await _userManager.AddToRoleAsync(user,role);
+            await _userManager.AddToRoleAsync(user,"User");
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmationLink=Url.Action(nameof(ConfirmEmail),"Authentication", new {token,email=user.Email}, Request.Scheme);
             var message = new Message(new string[] { user.Email! }, "Confirmation email link", confirmationLink!);
@@ -121,6 +122,7 @@ public class AuthenticationController:ControllerBase
     [Route("Login")]
     public async Task<IActionResult>Login([FromBody]LoginModel loginModel)
     {
+    
         //checking the user ...
         var user = await _userManager.FindByNameAsync(loginModel.UserName);
         if(user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
