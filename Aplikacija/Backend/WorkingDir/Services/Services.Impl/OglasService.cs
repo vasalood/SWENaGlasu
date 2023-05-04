@@ -5,6 +5,7 @@ using Domain.Exceptions;
 using Domain.IRepo.Utility;
 using Services.Utility;
 using System.Linq.Expressions;
+using Utility;
 
 namespace Services.Impl
 {
@@ -14,7 +15,7 @@ namespace Services.Impl
         private readonly IKorisnikService _korisnikService;
         private readonly IKategorijaService _kategorijaService;
 
-        private object lockobj = new object();
+        private static object lockobj = new object();
         public OglasService(IOglasRepo repo, IKorisnikService korisnikService, IKategorijaService kategorijaService)
         {
             _repo = repo;
@@ -22,7 +23,7 @@ namespace Services.Impl
             _kategorijaService = kategorijaService;
         }
 
-        public async Task AzurirajOglas(Oglas oglas, OglasForm form)
+        public void AzurirajOglas(Oglas oglas, OglasForm form)
         {
             oglas.Ime = form.Ime??oglas.Ime;
             oglas.Cena = form.Cena??oglas.Cena;
@@ -41,7 +42,7 @@ namespace Services.Impl
             Kategorija? kat = form.KategorijaId!=null?_kategorijaService.VratiKategoriju((int)form.KategorijaId):null;
             if(kat!=null)
                 oglas.Podkategorija = kat.Podkategorije.Find(p => p.Id == form.PodkategorijaId) ?? oglas.Podkategorija;
-            await _repo.AzurirajOglas(oglas);
+            _repo.AzurirajOglas(oglas);
         }
         public void PovecajBrojPregleda(long Id)
         {
@@ -55,7 +56,7 @@ namespace Services.Impl
             Oglas oglas = new Oglas(form);
             
             oglas.DatumPostavljanja = DateTime.Now;
-            oglas.Vlasnik = _korisnikService.VratiKorisnika(oglas.Vlasnik.UserName);
+            oglas.Vlasnik = _korisnikService.VratiKorisnika(oglas.Vlasnik.Id);
             var kategorija = _kategorijaService.VratiKategoriju((int)form.KategorijaId);
             if (kategorija == null)
                 throw new NullKategorijaException((int)form.KategorijaId);
@@ -73,10 +74,10 @@ namespace Services.Impl
             return await _repo.PrebrojiOglaseZaFiltere(filters);
         }
 
-        public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri? filters)
+        public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri? filters,Order order)
         {
             //Ovo moze da se prepravi da se salje i korisnik i odma da se proveri da li su oglasi favoriti
-            var tmp = await _repo.VratiMtihNOglasa(N, M, filters);
+            var tmp = await _repo.VratiMtihNOglasa(N, M, filters,order);
             if (tmp == null)
                 tmp = new List<Oglas>();
             return tmp;
@@ -135,9 +136,9 @@ namespace Services.Impl
             _repo.SkiniFavorita(Id);
         }
 
-        public bool JelFavorit(long oglasId, string username)
+        public bool JelFavorit(long oglasId, string id)
         {
-            return _repo.JelFavorit(oglasId, username);
+            return _repo.JelFavorit(oglasId, id);
         }
 
         public void InkrementOglasPregledi(long id)
@@ -152,5 +153,15 @@ namespace Services.Impl
             }
             
         }
+        public async Task<List<Oglas>> VratiFavorite(string userId,int M, int N,Order order)
+        {
+            return await _repo.VratiFavorite(userId, M, N,order);
+        }
+
+        public int PrebrojiFavorite(string userId)
+        {
+            return _repo.PrebrojiFavorite(userId);
+        }
+    
     }
 }

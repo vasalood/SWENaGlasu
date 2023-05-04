@@ -22,6 +22,7 @@ namespace Domain.Models
         public int Kolicina { get; set; }
         public int BrojPregleda { get; set; }
         public string VlasnikUsername{ get; set; }
+        public string VlasnikId{ get; set; }
 
         [System.Text.Json.Serialization.JsonIgnore]
         public List<IFormFile>? PrimljeneSlike { get; set; }
@@ -33,7 +34,7 @@ namespace Domain.Models
 
         public OglasDto(long id,string ime,Podkategorija podkategorija,Dictionary<string,string> polja,int kredit,
         DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,int cena,int kolicina,int brojPregleda,
-        string vlasnikUsername,String lokacija,Stanje? stanje)
+        string vlasnikUsername,string vlasnikId,String lokacija,Stanje? stanje)
         {
             Id = id;
             Ime = ime;
@@ -47,12 +48,13 @@ namespace Domain.Models
             Kolicina = kolicina;
             BrojPregleda = brojPregleda;
             VlasnikUsername= vlasnikUsername;
+            VlasnikId = vlasnikId;
             Lokacija = lokacija;
             Stanje = stanje;
         }
 
         public OglasDto(Oglas oglas):this(oglas.Id,oglas.Ime,oglas.Podkategorija,oglas.Polja,oglas.Kredit,oglas.DatumPostavljanja,
-        oglas.Smer,oglas.Tip,oglas.Cena,oglas.Kolicina,oglas.BrojPregleda,oglas.Vlasnik.UserName,oglas.Lokacija,
+        oglas.Smer,oglas.Tip,oglas.Cena,oglas.Kolicina,oglas.BrojPregleda,oglas.Vlasnik.UserName,oglas.Vlasnik.Id,oglas.Lokacija,
         oglas.Stanje)
         {
 

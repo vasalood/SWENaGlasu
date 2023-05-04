@@ -7,6 +7,8 @@ namespace Domain.Models
         public int Id { get; set; }
         public Korisnik Korisnik{ get; set; }
         public Oglas Oglas { get; set; }
+
+        public DateTime Datum { get; set; }
         public FavoritSpoj(){}
 
         public FavoritSpoj(FavoritSpojDto dto)
@@ -14,7 +16,7 @@ namespace Domain.Models
             Id = 0;
             Korisnik = new Korisnik()
             {
-                UserName = dto.Username
+                Id = dto.KorisnikId
             };
 
             Oglas = new Oglas() { 
