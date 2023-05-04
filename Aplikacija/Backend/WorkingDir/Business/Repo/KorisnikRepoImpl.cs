@@ -11,11 +11,11 @@ public class KorisnikRepoImpl : IKorisnikRepo
     {
         _context = context;
     }
-    public Korisnik? VratiKorisnika(string UserName)
+    public Korisnik? VratiKorisnikaPoUsername(string UserName)
     {
         return _context.Korisnici.Where(k=>k.UserName==UserName).FirstOrDefault();
     }
-    public Korisnik? VratiKorisnikaPoId(string Id)
+    public Korisnik? VratiKorisnika(string Id)
     {
         return _context.Korisnici.Find(Id);
     }

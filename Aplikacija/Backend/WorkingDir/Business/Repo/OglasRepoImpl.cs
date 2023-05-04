@@ -5,8 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Exceptions;
 using System.Linq.Expressions;
 using Domain.IRepo.Utility;
-using Business.Repo.Utility;
+
 using Models;
+using Utility;
 
 namespace Business.Repo
 {
@@ -14,7 +15,6 @@ namespace Business.Repo
     public class OglasRepoImpl : IOglasRepo
     {
         private IWebHostEnvironment _environment;
-        private OrderByMapperOglas _orderByMapper;
         private const int  MAX_BR_SLIKA= 5;
         private const string SLIKE_FOLDER = "SlikeOglasa";
         private readonly string[] EXTENSIONS = new string[] {".jpg", ".png", ".jpeg" };
@@ -23,12 +23,26 @@ namespace Business.Repo
         private string FOLDER_PATH;
         private readonly NaGlasuContext _context;
 
+        private static Dictionary<string, dynamic> _orderByMapper = new Dictionary<string,dynamic>
+        {
+            {OrderBy.NAZIV,(Expression<Func<Oglas,string>>)((o)=>o.Ime)},
+            {OrderBy.DATUM,(Expression<Func<Oglas,DateTime>>)(o=>o.DatumPostavljanja)},
+            {OrderBy.POPULARNOST,(Expression<Func<Oglas,int>>)(o=>o.BrojPregleda)},
+            {OrderBy.CENA,(Expression<Func<Oglas,int>>)(o=>o.Cena)}
+        };
+        private static Dictionary<string, dynamic> _orderByMapperFavoriti = new Dictionary<string,dynamic>
+        {
+            {OrderBy.NAZIV,(Expression<Func<FavoritSpoj,string>>)((fs)=>fs.Oglas.Ime)},
+            {OrderBy.DATUM,(Expression<Func<FavoritSpoj,DateTime>>)(fs=>fs.Oglas.DatumPostavljanja)},
+            {OrderBy.POPULARNOST,(Expression<Func<FavoritSpoj,int>>)(fs=>fs.Oglas.BrojPregleda)},
+            {OrderBy.CENA,(Expression<Func<FavoritSpoj,int>>)(fs=>fs.Oglas.Cena)}
+        };
+
         public OglasRepoImpl(NaGlasuContext context,IWebHostEnvironment environment)
         {
             _context = context;
             _environment = environment;
             FOLDER_PATH = Path.Combine(_environment.WebRootPath,SLIKE_FOLDER);
-            _orderByMapper = new OrderByMapperOglas();
             if(!Directory.Exists(FOLDER_PATH))
             {
                 Directory.CreateDirectory(FOLDER_PATH);
@@ -84,14 +98,19 @@ namespace Business.Repo
             return await _context.Oglasi.Where(predicate).CountAsync();
         }
 
-        public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri? filteri)
+        public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri? filteri,Order order)
         {
             Expression<Func<Oglas, bool>> predicate = (o) => true;
             if(filteri!=null)
                 predicate = filteri.Map();
-            var tmp = _context.Oglasi.Where(predicate).OrderBy(o=>o.Id).Skip(M * N).Take(N).Include(o => o.Podkategorija)
-            .Include(o => o.Vlasnik)
-             .Join(_context.Kategorije,
+            var tmp = ((IOrderedQueryable<Oglas>)(
+                order.Type==OrderType.Ascending?
+                Queryable.OrderBy(_context.Oglasi.Where(predicate),_orderByMapper[order.By]):
+                Queryable.OrderByDescending(_context.Oglasi.Where(predicate),_orderByMapper[order.By]))).
+                ThenBy(o=>o.Id).
+                Skip(M * N).Take(N).Include(o => o.Podkategorija)
+                .Include(o => o.Vlasnik)
+                .Join(_context.Kategorije,
             o => o.Podkategorija.KategorijaId, k => k.Id, (o, k) =>
             new Oglas
             {
@@ -120,10 +139,10 @@ namespace Business.Repo
             _context.Oglasi.Where(o => oglasIds.Contains(o.Id)).ToListAsync());
         }
 
-        public async Task AzurirajOglas(Oglas oglas)
+        public void AzurirajOglas(Oglas oglas)
         {
             _context.Oglasi.Update(oglas);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public void ObrisiOglas(Oglas oglas)
@@ -134,14 +153,15 @@ namespace Business.Repo
 
         public void DodajFavorita(FavoritSpoj favorit)
         {
-            var korisnik = _context.Korisnici.Where(k => k.UserName == favorit.Korisnik.UserName).FirstOrDefault();
+            var korisnik = _context.Korisnici.Where(k => k.Id == favorit.Korisnik.Id).FirstOrDefault();
             if(korisnik==null)
-                throw new NullKorisnikException(favorit.Korisnik.UserName);
+                throw new NullKorisnikException(favorit.Korisnik.Id);
             var oglas = VratiOglas(favorit.Oglas.Id,null);
             if(oglas==null)
                 throw new NullOglasException(favorit.Oglas.Id);
             favorit.Oglas = oglas;
             favorit.Korisnik = korisnik;
+            favorit.Datum = DateTime.Now;
             _context.Favoriti.Add(favorit);
             _context.SaveChanges();
         }
@@ -155,12 +175,37 @@ namespace Business.Repo
             _context.SaveChanges();
         }
 
-        public bool JelFavorit(long oglasId,string username)
+        public bool JelFavorit(long oglasId,string userId)
         {
-            return null!=_context.Favoriti.Where(f => f.Oglas.Id == oglasId).Join(_context.Korisnici, f => f.Korisnik.Id, u => u.Id, (f, u) => new
-            {
-                Username=u.UserName
-            }).Where(at=>at.Username==username).FirstOrDefault();
+            return null!=_context.Favoriti.Where(f => f.Oglas.Id == oglasId&&f.Korisnik.Id==userId).FirstOrDefault();
         }
+
+        public async Task<List<Oglas>> VratiFavorite(string userId,int M, int N,Order order)
+        {
+            var baseQuery = _context.Favoriti.Where(fs => fs.Korisnik.Id == userId)
+            .Include(fs => fs.Oglas).ThenInclude(o=>o.Podkategorija);
+            var orderedQuery =(IOrderedQueryable<FavoritSpoj>) (order.Type == OrderType.Ascending ? 
+            (Queryable.OrderBy(baseQuery,_orderByMapperFavoriti[order.By])):
+            (Queryable.OrderByDescending(baseQuery,_orderByMapperFavoriti[order.By])));
+
+            var orderedQuery2 = ((IOrderedQueryable<FavoritSpoj>)(orderedQuery.ThenBy(fs => fs.Id))).Select(fs => fs.Oglas)
+            .Join(_context.Kategorije,o=>o.Podkategorija.KategorijaId,k=>k.Id,(o,k)=> new Oglas
+            {
+                Id = o.Id, Ime = o.Ime, Podkategorija = new Podkategorija{Id = o.Podkategorija.Id, Ime=o.Podkategorija.Ime,
+                    KategorijaId=o.Podkategorija.KategorijaId, KategorijaNaziv=k.Ime},
+                Polja=o.Polja, Kredit=o.Kredit, DatumPostavljanja=o.DatumPostavljanja, Smer=o.Smer, Tip=o.Tip, Cena=o.Cena,
+                Kolicina=o.Kolicina,BrojPregleda=o.BrojPregleda, Vlasnik = new Korisnik {Id=o.Vlasnik.Id,UserName=o.Vlasnik.UserName},
+                Stanje=o.Stanje,Lokacija=o.Lokacija
+            });
+
+            return await orderedQuery2.Skip(M * N).Take(N).ToListAsync();
+        }
+
+        public int PrebrojiFavorite(string userId)
+        {
+            return _context.Favoriti.Where(fs => fs.Korisnik.Id == userId).Count();
+        }
+
+
     }
 }

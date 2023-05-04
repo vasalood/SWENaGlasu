@@ -17,13 +17,13 @@ namespace Domain.Models
         [MaxLength(100)]
         public string Ime { get; set; }
 
-        //[System.Text.Json.Serialization.JsonIgnore]
+
         public Podkategorija Podkategorija{ get; set; }
 
         [NotMapped]
         public Dictionary<string,string> Polja{ get; set; }
 
-        //public string Grad { get; set; }
+
         [Column("Polja",TypeName ="nvarchar(max)")]
         [System.Text.Json.Serialization.JsonIgnore]
         public string _DictionaryJSON 
@@ -93,6 +93,7 @@ namespace Domain.Models
             BrojPregleda = oglas.BrojPregleda;
             Vlasnik = new Korisnik();
             Vlasnik.UserName = oglas.VlasnikUsername;
+            Vlasnik.Id = oglas.VlasnikId;
             Lokacija = oglas.Lokacija;
             Stanje = oglas.Stanje;
         }
@@ -125,7 +126,7 @@ namespace Domain.Models
             Cena = (int)forma.Cena;
             Kolicina = (int)forma.Kolicina;
             BrojPregleda = 0;
-            Vlasnik = new Korisnik() { UserName = forma.Username };
+            Vlasnik = new Korisnik() {Id=forma.KorisnikId};
             Lokacija = forma.Lokacija;
             Stanje = forma.Stanje;
             Opis = forma.Opis;

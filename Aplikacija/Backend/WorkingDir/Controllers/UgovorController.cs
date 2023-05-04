@@ -5,6 +5,7 @@ using Business.Contexts;
 
 using Services.Abs;
 using Models;
+using Utility;
 
 namespace Controllers;
 
@@ -34,7 +35,10 @@ public class UgovorController : ControllerBase
                 DatumSklapanja = ugovor.DatumSklapanja,
                 Opis = ugovor.Opis,
                 KupacUsername = ugovor.Kupac.UserName,
-                OglasId = ugovor.Oglas.Id
+                KupacId=ugovor.Kupac.Id,
+                OglasId = ugovor.Oglas.Id,
+                Cena=ugovor.Oglas.Cena,
+                Ukupna_Cena=ugovor.Oglas.Cena*ugovor.Kolicina
         });
         }
         catch(Exception e)
@@ -45,13 +49,14 @@ public class UgovorController : ControllerBase
 
     
     [HttpGet]
-    [Route("VratiMtihNUgovora")]
-    public async Task<ActionResult> VratiMtihNUgovora(string username,int M, int N)
+    [Route("VratiMtihNUgovora/{korisnikId}")]
+    public async Task<ActionResult> VratiMtihNUgovora([FromRoute]string korisnikId,int M, int N,bool? zaKupca,bool? prihvaceni,
+    string orderBy,OrderType orderType)
     {
         try{
             //if(korisnik!=null&&korisnik.UserName==username)
             {
-                var lista = await _service.VratiMtihNUgovora(username,M,N);
+                var lista = await _service.VratiMtihNUgovora(korisnikId,M,N,zaKupca,prihvaceni,new Order(orderBy,orderType));
                 var lista2 = lista.Select(u=>new UgovorDto
                 {
                     Id=u.Id,
@@ -59,10 +64,17 @@ public class UgovorController : ControllerBase
                     Opis=u.Opis,
                     OglasId=u.Oglas.Id,
                     KupacUsername=u.Kupac.UserName,
+                    KupacId=u.Kupac.Id,
                     Kolicina=u.Kolicina,
-                    Prihvacen=u.Prihvacen
+                    Prihvacen=u.Prihvacen,
+                    Cena=u.Oglas.Cena,
+                    Ukupna_Cena=u.Oglas.Cena*u.Kolicina
                 }).ToList();
-                return Ok(lista2);
+
+                object retobj = new { Lista = lista2 };
+                if(M==0)
+                    retobj = new { Lista = lista2, UkupanBr = _service.PrebrojiUgovore(korisnikId, zaKupca, prihvaceni) };
+                return Ok(retobj);
             }
                 
             //throw new UnauthorizedAccessException("Nedozvoljeni pristup privatnim resursima.");
@@ -115,11 +127,11 @@ public class UgovorController : ControllerBase
     public ActionResult PostaviUgovor(UgovorDto ugovorDto)
     {
         Oglas oglas = new Oglas();
-        if(ugovorDto.OglasId==null||ugovorDto.KupacUsername==null)
+        if(ugovorDto.OglasId==null||ugovorDto.KupacId==null)
             throw new ArgumentNullException("Ugovor mora da referencira korisnika i oglas.");
         oglas.Id = (long)ugovorDto.OglasId;
         Korisnik kupac = new Korisnik();
-        kupac.UserName = ugovorDto.KupacUsername;
+        kupac.Id = ugovorDto.KupacId;
 
         try{
             Ugovor ugovor = new Ugovor

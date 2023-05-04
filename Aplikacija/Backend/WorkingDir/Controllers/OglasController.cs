@@ -3,6 +3,7 @@ using Domain.IRepo.Utility;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abs;
+using Utility;
 using Microsoft.AspNetCore.Authorization;
 using Domain.Exceptions;
 
@@ -21,11 +22,11 @@ public class OglasController : ControllerBase
 
     [Route("VratiMtihNOglasa/{N}/{M}")]
     [HttpPost]
-    public async Task<ActionResult> VratiMtihNOglasa(int N, int M, [FromBody] OglasFilteri? filters)
+    public async Task<ActionResult> VratiMtihNOglasa(int N, int M, [FromBody] OglasFilteri? filters,string orderBy,OrderType orderType)
     {
         try
         {
-            List<Oglas> listaOglasa = await _service.VratiMtihNOglasa(N, M, filters);
+            List<Oglas> listaOglasa = await _service.VratiMtihNOglasa(N, M, filters,new Order(orderBy,orderType));
             List<OglasDto> retLista = listaOglasa.Select(o => new OglasDto(o)).ToList();
             object retObj = new {
                 Lista=retLista
@@ -114,11 +115,11 @@ public class OglasController : ControllerBase
     [HttpGet]
     [Route("JelFavorit")]
 
-    public ActionResult JelFavorit([FromQuery]long oglasId,[FromQuery]string username)
+    public ActionResult JelFavorit([FromQuery]long oglasId,[FromQuery]string id)
     {
         try{
             
-            return Ok(_service.JelFavorit(oglasId,username));
+            return Ok(_service.JelFavorit(oglasId,id));
         }
         catch(Exception e)
         {
@@ -136,7 +137,7 @@ public class OglasController : ControllerBase
         {
             Oglas oglas = _service.VratiOglas(oglasId);
             //var u = HttpContext.User;
-            await _service.AzurirajOglas(oglas,form);
+            _service.AzurirajOglas(oglas,form);
 
             return Ok($"Oglas sa id: {oglas.Id} je uspesno azuriran.");
         }
@@ -172,6 +173,33 @@ public class OglasController : ControllerBase
         {
             _service.SkiniFavorita(Id);
             return Ok("Favorit skinut.");
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("VratiFavorite/{userId}")]
+    public async Task<ActionResult> VratiFavorite(string userId,[FromQuery]int M, [FromQuery]int N,string orderBy,OrderType orderType)
+    {
+        try
+        {
+            List<Oglas> listaOglasa = await _service.VratiFavorite(userId, M, N, new Order(orderBy, orderType));
+            List<OglasDto> retLista = listaOglasa.Select(o => new OglasDto(o)).ToList();
+            object retObj = new {
+                Lista=retLista
+                };
+            if(M==0)
+            {
+                retObj = new
+                {
+                    Lista = retLista,
+                    UkupanBr = _service.PrebrojiFavorite(userId)
+            };
+            }
+        return Ok(retObj);
         }
         catch(Exception e)
         {

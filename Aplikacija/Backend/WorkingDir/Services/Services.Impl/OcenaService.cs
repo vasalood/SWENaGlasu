@@ -24,14 +24,14 @@ public class OcenaService:IOcenaService
         _repo.SacuvajOcenu(ocena);
     }
 
-    public async Task<List<OcenaDto>> VratiOcene(string username,int M, int N)
+    public async Task<List<OcenaDto>> VratiMtihNOcena(string id,int M, int N)
     {
-        return await _repo.VratiOcene(username,M,N);
+        return await _repo.VratiMtihNOcena(id,M,N);
     }
 
-    public int PrebrojOcene(string username)
+    public int PrebrojOcene(string id)
     {
-        return _repo.PrebrojOcene(username);
+        return _repo.PrebrojOcene(id);
     }
 
     public void ObrisiOcenu(long id)

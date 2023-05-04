@@ -9,6 +9,7 @@ namespace Domain.IRepo.Utility;
 public class OglasFilteri
 {
     public string? Username { get; set; }
+    public string? UserId{ get; set; }
     public int? KategorijaId { get; set; }
     public int[]? PodkategorijeId { get; set; }
     public string? Ime { get; set; }
@@ -24,6 +25,7 @@ public class OglasFilteri
     {
         
         Expression<Func<Oglas, bool>> username=  Username!=null? o => o.Vlasnik.UserName == Username:_defaultLambda;
+        Expression<Func<Oglas, bool>> userId=  UserId!=null? o => o.Vlasnik.Id == UserId:_defaultLambda;
         Expression<Func<Oglas, bool>> cenaOd = CenaOd != null ? o => o.Cena >= CenaOd : _defaultLambda;
         Expression<Func<Oglas,bool>> cenaDo = CenaDo != null ? o => o.Cena <= CenaDo :_defaultLambda;
         Expression<Func<Oglas,bool>> lokacija = Lokacija != null ? o => o.Lokacija ==Lokacija :_defaultLambda;

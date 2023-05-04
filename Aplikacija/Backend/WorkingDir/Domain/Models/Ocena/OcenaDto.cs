@@ -8,4 +8,6 @@ public class OcenaDto
     public long? Id{ get; set; }
     public string? OglasIme{ get; set; }
     public string? Username { get; set; }
+    public string? UserId{ get; set; }
+    public DateTime? Datum{ get; set; }
 }

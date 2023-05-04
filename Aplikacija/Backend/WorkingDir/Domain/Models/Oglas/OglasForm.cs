@@ -16,7 +16,7 @@ namespace Domain.Models
         public TipOglasa? Tip { get; set; }
         public int? Cena { get; set; }
         public int? Kolicina { get; set; }
-        public string? Username{ get; set; }
+        public string? KorisnikId{ get; set; }
         public List<IFormFile>? PrimljeneSlike { get; set; }
         public String? Lokacija { get; set; }
         public Stanje? Stanje { get; set; }

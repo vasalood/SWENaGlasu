@@ -33,11 +33,22 @@ public class OcenaController : ControllerBase
     }
 
     [HttpGet]
-    [Route("VratiOcene/{username}")]
-    public async Task<ActionResult> VratiOcene(string username,[FromQuery]int M, [FromQuery] int N)
+    [Route("VratiMtihNOcena/{id}")]
+    public async Task<ActionResult> VratiMtihNOcena(string id,[FromQuery]int M, [FromQuery] int N)
     {
         try{
-            return Ok((await _service.VratiOcene(username,M,N)));
+            List<OcenaDto> lista = await _service.VratiMtihNOcena(id, M, N);
+            object retObj = new
+            {
+                Lista = lista
+            };
+            if(M==0)
+                retObj = new
+                {
+                    Lista = lista,
+                    UkupanBr = _service.PrebrojOcene(id)
+                };
+            return Ok((retObj));
         }
         catch(Exception e)
         {
