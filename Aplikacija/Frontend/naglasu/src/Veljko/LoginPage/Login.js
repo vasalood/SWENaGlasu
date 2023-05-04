@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useRef } from "react";
 import classes from "../LoginPage/Login.module.css";
 const Login = (props) => {
-  const usernameInputRef = useRef();
+    const usernameInputRef = useRef();
   const passwordInputRef = useRef();
   const nameInputRef = useRef();
   const surnameInputRef = useRef();
@@ -12,6 +12,8 @@ const Login = (props) => {
   const [isLogin, setIsLogin] = useState(true);
   const [isValid, setIsValid] = useState(true);
   const switchPageHandler = () => {
+   console.log (classes.box)
+      
     setIsLogin((prevState) => !prevState);
   };
   const handler = (event) => {
@@ -59,87 +61,28 @@ const Login = (props) => {
           }
   };
   return (
-    <section className={classes.auth}>
-      <form>
-        <h1>{isLogin ? "Login" : "Sign Up"}</h1>
-        <div className={classes.control}>
-          {isLogin === false ? (
-            <div className={classes.control}>
-              <label htmlFor="name">Ime</label>
-              <input type="name" id="name" ref={nameInputRef} required />
-            </div>
-          ) : null}
-
-          {isLogin === false ? (
-            <div className={classes.control}>
-              <label htmlFor="surname">Prezime</label>
-              <input
-                type="surname"
-                id="surname"
-                ref={surnameInputRef}
-                required
-              />
-            </div>
-          ) : null}
-          {isLogin === false ? (
-            <div className={`${classes['control']} ${!isValid && classes.invalid}`}>
-             <label htmlFor="email">Email</label>
-              <input type="email" id="email" ref={emailInputRef} required />
-              {isValid ===false ?(<label htmlFor="poruka">Unesite ispravnu email adresu koja sadrzi @</label>):null}
-            </div>
-          ) : null}
-          {isLogin === false ? (
-            <div className={classes.control}>
-              <label htmlFor="address">Adresa</label>
-              <input
-                type="address"
-                id="address"
-                ref={adresaInputRef}
-                required
-              />
-            </div>
-          ) : null}
-          {isLogin === false ? (
-            <div className={classes.control}>
-              <label htmlFor="contect">Telefon</label>
-              <input
-                type="number"
-                id="contact"
-                ref={telefonInputRef}
-                required
-              />
-            </div>
-          ) : null}
-          <label htmlFor="username">Username</label>
-          <input
-            type="username"
-            id="username"
-            ref={usernameInputRef}
-            required
-          />
-        </div>
-
-        <div className={classes.control}>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            ref={passwordInputRef}
-            required
-          />
-        </div>
-        <div className={classes.actions}>
-          <button onClick={handler}>{isLogin ? "Login" : "Create Account"}</button>
-          <button
-            type="button"
-            className={classes.toggle}
-            onClick={switchPageHandler}
-          >
-            {isLogin ? "Create new account" : "Login with existing account"}
-          </button>
-        </div>
-      </form>
-    </section>
+    <body>
+    <div className={classes.box}>
+    <form>
+      <h2>Login</h2>
+      <div className = {classes.inputBox}>
+        <input type="text" required="required"></input>
+        <span>Username</span>
+        <i></i>
+      </div>
+      <div className = {classes.inputBox}>
+        <input type="password" required="required"></input>
+        <span>Password</span>
+        <i></i>
+      </div>
+      <div className = {classes.links}>
+        <a href="#" >Forgot Password </a>
+        <a href="#" onClick={switchPageHandler}>SignUp</a>
+      </div>
+      <input type = "submit" value="Login"></input>
+    </form>
+    </div>
+    </body>
   );
 };
 export default Login;
