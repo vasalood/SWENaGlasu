@@ -35,6 +35,7 @@ namespace Business.Contexts
             });
 
             modelBuilder.Entity<Ugovor>().HasOne(u => u.Ocena).WithOne(o=>o.Ugovor).HasForeignKey<Ocena>("UgovorId").OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Ocena>().HasAlternateKey("UgovorId");
             modelBuilder.Entity<FavoritSpoj>().HasAlternateKey("KorisnikId", "OglasId");
         }
         private static void SeedRoles(ModelBuilder builder)

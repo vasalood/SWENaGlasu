@@ -12,16 +12,16 @@ public class KorisnikService : IKorisnikService
     {
         _repo = repo;
     }
-    public Korisnik VratiKorisnikaPoId(string id)
+    public Korisnik VratiKorisnika(string id)
     {
-        var korisnik = _repo.VratiKorisnikaPoId(id);
+        var korisnik = _repo.VratiKorisnika(id);
         if(korisnik==null)
             throw new NullKorisnikException(id);
         return korisnik;
     }
-      public Korisnik VratiKorisnika(string username)
+      public Korisnik VratiKorisnikaPoUsername(string username)
     {
-        var korisnik = _repo.VratiKorisnika(username);
+        var korisnik = _repo.VratiKorisnikaPoUsername(username);
         if(korisnik==null)
             throw new NullKorisnikException(username);
         return korisnik;
