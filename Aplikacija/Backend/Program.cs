@@ -113,10 +113,14 @@ options=>
         "http://localhost:5105",
         "https://localhost:3001",
         "http://localhost:3001",
+         "https://localhost:3000",
+        "http://localhost:3000",
         "https://127.0.0.1:8080",
         "http://127.0.0.1:8080",
         "https://127.0.0.1:5105",
         "http://127.0.0.1:5105",
+        "https://127.0.0.1:3000",
+        "http://127.0.0.1:3000",
         "https://127.0.0.1:3001",
         "http://127.0.0.1:3001"
           ).AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();

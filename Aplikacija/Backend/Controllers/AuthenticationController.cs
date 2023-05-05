@@ -80,7 +80,7 @@ public class AuthenticationController:ControllerBase
                 _emailService.SendEmail(message);
                // _context.Korisnici.Add(korisnik);
                 //await _context.SaveChangesAsync();
-            return Ok("Uspesna registracija");
+            return Ok("Confirmation link je poslat na mejl adresu, molimo Vas potvrdite link.");
         }
         else
         {
@@ -125,7 +125,11 @@ public class AuthenticationController:ControllerBase
     
         //checking the user ...
         var user = await _userManager.FindByNameAsync(loginModel.UserName);
-        if(user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
+        if(user == null)
+        {
+            return BadRequest("Nepostojeći username");
+        }
+        else if(await _userManager.CheckPasswordAsync(user, loginModel.Password))
         {
             if(await _userManager.IsLockedOutAsync(user))
             {
@@ -151,8 +155,8 @@ public class AuthenticationController:ControllerBase
                 return BadRequest("Please confirm your email");
             }
         }
-
-        return Unauthorized();
+        else
+        return BadRequest("Neispravan password");
     }
     private JwtSecurityToken GetToken(List<Claim> authClaims)
     {

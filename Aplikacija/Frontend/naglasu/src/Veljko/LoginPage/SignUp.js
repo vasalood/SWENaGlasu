@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useRef } from "react";
 import classes from './SignUp.module.css';
 import ErrorModal from "./ErrorModal";
+import { Link } from "react-router-dom";
 const SignUp = props =>{
     const usernameInputRef = useRef();
     const passwordInputRef = useRef();
@@ -31,11 +32,10 @@ const SignUp = props =>{
                 telefon:telefonInputRef.current.value
             }),
           })
-            .then((response) => {
-              console.log(response.json().catch());
-            })
+          .then(odgovor => odgovor.text())
+          .then(odgovorTekst => console.log(odgovorTekst))
             .catch((error) => {
-              console.log(error.json().catch);
+              //console.log(error);
             });
           };
     return (
@@ -87,7 +87,7 @@ const SignUp = props =>{
           </div>
           <div className = {classes.links}>
             <a href="#" >Forgot Password </a>
-            <a href="#" onClick={switchPageHandler}>SignUp</a>
+            <Link to="/login" >Login</Link>
           </div>
           <input type = "submit" value="Sign Up" onClick={switchPageHandler}></input>
         </form>
