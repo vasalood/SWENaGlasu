@@ -39,7 +39,7 @@ const SignUp = props =>{
             });
           };
     return (
-        <body>
+       <div>
             {currValue==true ? (
             <ErrorModal></ErrorModal>) : null}
         <div className={classes.box}>
@@ -92,7 +92,7 @@ const SignUp = props =>{
           <input type = "submit" value="Sign Up" onClick={switchPageHandler}></input>
         </form>
         </div>
-        </body>
+        </div>
       );  
 };
 export default SignUp;

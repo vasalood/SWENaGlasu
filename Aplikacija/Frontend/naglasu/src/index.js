@@ -15,7 +15,6 @@ root.render(
     <Route path="/" element={<App></App>}/>
     <Route path="login" element={<Login></Login>}/>
     <Route path="signup" element = {<SignUp></SignUp>}/>
-    <Route path = "error" element={<ErrorModal></ErrorModal>}/>
    </Routes>
   </BrowserRouter>
 );

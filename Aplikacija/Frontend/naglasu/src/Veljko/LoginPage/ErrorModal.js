@@ -3,7 +3,7 @@ import classes from './ErrorModal.module.css';
 
 const ErrorModal = (props) => {
   return (
-    <body>
+    <div>
     <div className={classes.box}>
     <form>
       <h2>{props.title}</h2>
@@ -13,7 +13,7 @@ const ErrorModal = (props) => {
       <input type = "submit" value="Ok" ></input>
     </form>
     </div>
-    </body>);
+    </div>);
 };
 
 export default ErrorModal;
