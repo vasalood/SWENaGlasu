@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import classes from "../LoginPage/Login.module.css";
 import ErrorModal from "./ErrorModal";
 import { useNavigate } from "react-router-dom";
-import App from "../../App";
+import AuthContext from "../store/auth-context";
 const Login = (props) => {
+  const authCtx = useContext(AuthContext);
 const navigate =useNavigate();
     const usernameInputRef = useRef();
   const passwordInputRef = useRef();
@@ -86,7 +87,14 @@ const navigate =useNavigate();
           }
           else
           {
-            navigate('/');
+           
+            const startIndex = odgovorTekst.indexOf(':') + 2;
+             const endIndex = odgovorTekst.indexOf('"', startIndex);
+             const tokenValue = odgovorTekst.substring(startIndex, endIndex);
+             console.log(odgovorTekst);
+            authCtx.login(tokenValue);
+            console.log(tokenValue);
+            navigate('/test');
           }
           
           //setEmail(false);

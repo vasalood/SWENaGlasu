@@ -256,10 +256,12 @@ public class AuthenticationController:ControllerBase
             return BadRequest("Ne postoji korisnik sa tim userNameom");
         }
     }
-    [Route("PromeniRolu")]
+    [Authorize(Roles ="Moderator")]
+    [Route("PromeniRolu/{userName}")]
     [HttpPut]
     public async Task<IActionResult>ChangeRole(string userName)
     {
+       
         var userExist = await _userManager.FindByNameAsync(userName);
         
         if(userExist==null)
