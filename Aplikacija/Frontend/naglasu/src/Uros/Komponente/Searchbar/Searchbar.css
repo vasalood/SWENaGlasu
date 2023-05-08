@@ -1,0 +1,13 @@
+.naslovna--searchbar
+{
+    border: 1px solid black;
+    font-size: xx-large;
+    width:inherit;
+}
+
+.naslovna--searchbar_container
+{
+    width: 70vw;
+    position:sticky;
+    top:80px;
+}

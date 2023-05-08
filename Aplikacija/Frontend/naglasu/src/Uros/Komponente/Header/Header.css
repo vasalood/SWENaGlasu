@@ -1,0 +1,51 @@
+.header
+{
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+    
+    align-items: center;
+    height: 50vh;
+    background-color: var(--color_primary);
+}
+
+.header--logo
+{
+    width:40%;
+    aspect-ratio: 77/16;
+    margin-right: 10px;
+}
+
+.header--about
+{
+    color:var(--color_on_primary);
+    margin-left: 10px;
+    text-align: center;
+    font-size:xx-large;
+}
+
+@media(max-width:450px)
+{
+    .header
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content:center;
+        
+        align-items: center;
+        height: 100vh;
+        background-color: var(--color_primary);
+    }
+
+    .header--logo
+    {
+        width:50%;
+        aspect-ratio: 77/16;
+    }
+
+    .header--about
+    {
+        color:var(--color_on_primary);
+    
+    }
+}

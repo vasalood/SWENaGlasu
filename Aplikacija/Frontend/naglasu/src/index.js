@@ -9,13 +9,14 @@ import SignUp from './Veljko/LoginPage/SignUp';
 import ErrorModal from './Veljko/LoginPage/ErrorModal';
 import Test from './Veljko/LoginPage/Test';
 import { AuthContextProvider } from './Veljko/store/auth-context';
+import Naslovna from "./Uros/Stranice/Naslovna/Naslovna"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <AuthContextProvider>
   <BrowserRouter>
    <Routes>
-    <Route path="/" element={<App></App>}/>
+    <Route path="/" element={<Naslovna/>}/>
     <Route path="login" element={<Login></Login>}/>
     <Route path="signup" element = {<SignUp></SignUp>}/>
     <Route path="test" element = {<Test></Test>}/>

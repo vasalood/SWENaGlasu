@@ -5,9 +5,28 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: calc(100%);
+  background-color: var(--color_primary);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+#root
+{
+  display: flex;
+  flex-direction: column;
+  justify-content:start;
+  width:inherit;
+  height: inherit;
+  align-items: center;
+  background-color: var(--color_primary);
+
+
+  --color_primary: #001f3f;
+  --color_on_primary: #ffffff;
+  --color_secondary: #3d9970;
+  --color_on_secondary: #a8a8a9;
 }
