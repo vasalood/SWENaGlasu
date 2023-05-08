@@ -130,7 +130,7 @@ public class OglasController : ControllerBase
     //[Authorize(Roles ="Korisnik")]
     [HttpPost]
     [Route("AzurirajOglas")]
-    public async Task<ActionResult> AzurirajOglas([FromForm]OglasForm form,[FromQuery] long oglasId)
+    public ActionResult AzurirajOglas([FromForm]OglasForm form,[FromQuery] long oglasId)
     {
         
         try
