@@ -9,7 +9,7 @@
     max-height: 100px;
     padding-left: 50px;
     padding-top:5px;
-    box-shadow: 0 4px 3px -3px var(--color_on_secondary);
+    /*box-shadow: 0 4px 3px -3px #ffffff;*/
     margin-bottom: 4px;
     position: sticky;
     top: 0;

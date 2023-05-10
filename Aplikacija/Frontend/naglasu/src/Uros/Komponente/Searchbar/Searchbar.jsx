@@ -1,31 +1,31 @@
 import { Fragment } from "react";
 import "./Searchbar.css"
 import React from 'react'
+import { BsSearch,BsFilter,BsChevronRight,BsChevronLeft} from 'react-icons/bs'
 
-export default function SearchBar({classPrefix})
+export default function SearchBar()
 {
-    const stickyState = {
-        position: "static"
-    }
-    const [isSticky, setSticky] = React.useState(stickyState)
-    function searchBarScrollHandler()
+    const navButtonStyle = 
     {
-       /*  const y = window.scrollY
-        if (y >100)
-            setSticky({position: "sticky", top:y.toString()})
-        else
-            setSticky({position: "static"}) */
+        color:"white"
     }
-
-    React.useEffect(
-        () => {
-            window.addEventListener("scroll", searchBarScrollHandler)
-            return ()=>window.removeEventListener("scroll",searchBarScrollHandler)
-        },[]
-            
-    )
     return (
-        <div className={`${classPrefix}--searchbar_container`}>
-        <input type="text" className={`${classPrefix}--searchbar`} placeholder="Pretraga..." style={isSticky}></input>
+        <div className='searchbar--container'>
+            <button className="searchbar--nav_btn searchbar--prev_btn">
+                    <BsChevronLeft size={35} style={navButtonStyle} />
+                </button>
+            <div className='searchbar--wrapper'>
+                
+            <input type="text" className='searchbar--input' placeholder="Pretraga..." ></input>
+                <button className='searchbar--filter_btn'>
+                    <BsFilter size={30}/>
+        </button>
+            <button className='searchbar--search_btn'>
+                    <BsSearch size={30} />
+                </button>
+            </div>  
+            <button className="searchbar--nav_btn searchbar--next_btn" style={navButtonStyle}>
+            <BsChevronRight size={35} />
+        </button>
     </div>)
 }
