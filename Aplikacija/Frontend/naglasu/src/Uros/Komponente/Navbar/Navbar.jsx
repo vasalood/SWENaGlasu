@@ -1,40 +1,41 @@
-import BannerLogo from "../../Res/Slike/banner_logo.png"
+import BannerLogo from "../../Res/Slike/Logo/logo_color_transparent_hres.png"
 import "./Navbar.css"
 import React from "react"
+import DropDownMenu from '../DropDownMenu/DropDownMenu'
 
+import {BsChevronUp,BsChevronDown} from 'react-icons/bs'
+import NavBarContext  from '../../Contexts/NavBarContext'
 
 export default function Navbar()
 {
-    const mStyle = {
-        opacity: "0"
-    }
-    const [opacity, setOpacity] = React.useState(mStyle)
 
-    function navOnScroll()
-    {
-        const y = window.scrollY
-        const newOpacity = Math.max((y - 100) / 200, 0)
-        setOpacity({
-            opacity:newOpacity.toString()
-        })
-        
-    }   
+    const color_secondary = '#ff3333';
+    const {opacityStyle,isDropdownSelected,setDropdownSelected} = React.useContext(NavBarContext)
+    
+    
 
-    React.useEffect(
-        () =>
-        {
-            window.addEventListener("scroll", navOnScroll)
-            return ()=>window.removeEventListener("scroll",navOnScroll)
-        },[]
-    )
- 
-    return (<nav className="nav " style={opacity}>
+    const menuItems = [
+    <a href="/">PROFIL</a>,
+    <a href="/">FAVORITI</a>,
+    <a href="/">UGOVORI</a>,
+    <a href="/">ODJAVA</a>]
+
+    
+    return (<nav className="nav " style={opacityStyle}>
         <img className="nav--banner" src={BannerLogo}></img>
-        <ul className="nav--ul">
+       {/*  <ul className="nav--ul">
             <li>PROFIL</li>
             <li>FAVORITI</li>
             <li>UGOVORI</li>
             <li>ODJAVA</li>
-        </ul>
+        </ul> */}
+        <DropDownMenu
+            ButtonIconOn={<BsChevronUp size={35} color={color_secondary}/>}
+            ButtonIconOff={<BsChevronDown size={35} color={color_secondary}/>}
+            items={menuItems}
+            className="nav--dropdown"
+            isSelected={isDropdownSelected}
+            toggleSelected={setDropdownSelected}
+            buttonDisabled={Number.parseFloat(opacityStyle.opacity)<1.0}></DropDownMenu>
     </nav>)
 }

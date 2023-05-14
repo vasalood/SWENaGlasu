@@ -1,0 +1,13 @@
+
+@font-face {
+    font-family: 'LogoFont';
+    src: local('LogoFont'),
+         url('naglasu-raleway-semi-bold.ttf') format('truetype');
+}
+
+
+@font-face {
+    font-family: 'RegularFont';
+    src: local('RegularFont'),
+         url('naglasu-comfortaa-regular.ttf') format('truetype');
+}

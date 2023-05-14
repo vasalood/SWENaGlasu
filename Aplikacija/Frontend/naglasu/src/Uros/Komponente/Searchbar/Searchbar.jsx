@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import "./Searchbar.css"
 import React from 'react'
 import { BsSearch,BsFilter,BsChevronRight,BsChevronLeft} from 'react-icons/bs'
+import NavBarContext from "../../Contexts/NavBarContext"
 
 export default function SearchBar()
 {
@@ -9,8 +10,10 @@ export default function SearchBar()
     {
         color:"white"
     }
+
+    const {opacityStyle}=React.useContext(NavBarContext)
     return (
-        <div className='searchbar--container'>
+        <div className='searchbar--container' style={opacityStyle}>
             <button className="searchbar--nav_btn searchbar--prev_btn">
                     <BsChevronLeft size={35} style={navButtonStyle} />
                 </button>
