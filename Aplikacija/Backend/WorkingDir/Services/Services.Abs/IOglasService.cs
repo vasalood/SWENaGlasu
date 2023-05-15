@@ -11,6 +11,8 @@ namespace Services.Abs
         public Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri? filteri,Order order);
         public Task<List<Slika>> VratiNaslovneSlike(long[] oglasiIds);
         public Task<ZipFile> VratiNaslovneSlikeZIP(long[] oglasIds);
+
+        public byte[] VratiSliku(string path);
         public Task PostaviOglas(OglasForm form);
         public Task<int> PrebrojiOglaseZaFiltere(OglasFilteri? filteri);
         public void AzurirajOglas(Oglas oglas,OglasForm form);

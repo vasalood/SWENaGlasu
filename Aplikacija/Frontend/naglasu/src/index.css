@@ -1,3 +1,6 @@
+@import url("./res/fonts/fonts.css");
+
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,7 +9,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   width:100%;
-  background-color: var(--color_primary);
+
 }
 
 code {
@@ -25,8 +28,9 @@ code {
   background-color: var(--color_primary);
 
 
-  --color_primary: #001f3f;
-  --color_on_primary: #ffffff;
-  --color_secondary: #3d9970;
-  --color_on_secondary: #a8a8a9;
+  --color_primary: #ffffff;
+  --color_on_primary: #000000;
+  --color_secondary: #ff3333;
+  --color_on_secondary: #3d9970;
+  --color_gray: #aaaaaa;
 }

@@ -6,7 +6,6 @@
     align-items: center;
     flex-wrap: nowrap;
     width: inherit;
-    max-height: 100px;
     padding-left: 50px;
     padding-top:5px;
     /*box-shadow: 0 4px 3px -3px #ffffff;*/
@@ -14,6 +13,9 @@
     position: sticky;
     top: 0;
     background-color: var(--color_primary);
+    z-index: 999999;
+    overflow: visible;
+    padding-bottom: 20px;
 }
 
 
@@ -22,6 +24,7 @@
     flex-shrink: 1;
     min-width: 200px;
     max-width: 300px;
+    align-self: baseline;
 }
 
 .nav--ul

@@ -25,5 +25,7 @@ namespace Domain.IRepo
         public Task<List<Oglas>> VratiFavorite(string userId,int M, int N,Order order);
 
         public int PrebrojiFavorite(string userId);
+
+        public byte[] VratiSliku(string naziv);
     }
 }
