@@ -6,9 +6,12 @@ import OglasStavka from "../../Komponente/OglasStavka/OglasStavka"
 import React from 'react'
 import "./Naslovna.css"
 import SearchBarContext from '../../Contexts/NavBarContext'
+import { useLoaderData } from "react-router";
 
 const changeWindowWidth = 'change-window-width'
 const actionChangeWindowWidth = { type: changeWindowWidth }
+
+const ROOT_API_URL = "http://localhost:5105/"
 
 function reducer(state,action)
 {
@@ -20,24 +23,70 @@ function reducer(state,action)
 
 const oglasTemplate = 
 {
-        slika:
-        {
-            url:null,naziv:"1.jpg"
-        },
-        naziv: "Oglas za testiranje naziv oglasa",
-        vlasnik:
-        {
-            username: "user123",
-            id:"abcd"
-        },
-        opis: "opis",
-        cena: "123",
-        kolicina:1
+    id: 7,
+    ime: "oglas test",
+    podkategorija: {
+      ime: "string",
+      id: 1,
+      kategorijaId: 1,
+      kategorijaNaziv: "string"
+    },
+    polja: {
+      string: "string"
+    },
+    kredit: 1231231,
+    datumPostavljanja: "2023-05-14T22:42:03.2330115",
+    smer: 0,
+    tip: 0,
+    cena: 12321312,
+    kolicina: 12,
+    brojPregleda: 0,
+    vlasnikUsername: "VELJKO",
+    vlasnikId: "bcda",
+    lokacija: "Novi Sad",
+    stanje: 1,
+    slikeZaSlanje: [
+      {
+        naziv: "5fVVaFByxe5pUU09s9wQ.png",
+        redosled: 0
+      },
+      {
+        naziv: "ohPk1wonmR8oJjw41bGE.jpg",
+        redosled: 1
+        }
+    ]
 }
 
 
+export async function naslovnaLoader()
+{
+    console.log("log1")
+    const response1 =
+        await fetch("http://localhost:5105/Oglas/VratiMTihNOglasa/10/0/popularnost/0",
+            {
+                method: "POST",
+                headers:
+                {
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify(
+                    {
 
+                    }
+                )
+            })
+    const response1JSON = await response1.json()
 
+    console.log("RESPONSE1JSON "+response1JSON)
+    const oglasi = response1JSON.lista
+    const ukupanBr = response1JSON.ukupanBr
+    return oglasi
+}
+
+export async function naslovnaAction()
+{
+
+}
 export default function Naslovna()
 {
     
@@ -57,14 +106,14 @@ export default function Naslovna()
     
    
 
-    const oglasNiz = []
+    const oglasNiz = useLoaderData()/* []
     for (let i = 0; i !== 100; ++i)
-        oglasNiz.push(oglasTemplate)
-    
+        oglasNiz.push(oglasTemplate) */
     const oglasiStavke = oglasNiz.map((o,index) =>
     {
         return <OglasStavka oglas={o} key={index} />
     })
+
     
     const [opacityStyle, setOpacityStyle] = React.useState({
         opacity: "0"
