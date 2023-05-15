@@ -1,5 +1,4 @@
 import AuthContext from '../store/auth-context';
-import classes from './Test.module.css';
 import { useRef, useContext } from 'react';
 const Test = props =>{
     const authCtx=useContext(AuthContext);
@@ -30,15 +29,15 @@ const Test = props =>{
     }
    
     return(
-    <div>
+    <div className='body'>
   <form>
     <h2>Login</h2>
-    <div className = {classes.inputBox}>
+    <div className ="">
       <input type="text" required="required" ref={usernameInputRef}></input>
       <span  >Username</span>
       <i></i>
     </div>
-    <div className = {classes.links}>
+    <div className = "">
     </div>
     <input type = "submit" value="Login" onClick={handler}></input>
   </form>

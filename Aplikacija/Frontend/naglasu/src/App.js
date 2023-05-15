@@ -4,7 +4,6 @@ import { Fragment } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Login from './Veljko/LoginPage/Login';
 import SignUp from './Veljko/LoginPage/SignUp';
-
 function App() {
   return (
     <Fragment>
@@ -12,5 +11,4 @@ function App() {
     </Fragment>
   );
 }
-
 export default App;
