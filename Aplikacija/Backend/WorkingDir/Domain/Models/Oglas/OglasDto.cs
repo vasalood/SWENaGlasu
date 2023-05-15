@@ -26,6 +26,7 @@ namespace Domain.Models
 
         [System.Text.Json.Serialization.JsonIgnore]
         public List<IFormFile>? PrimljeneSlike { get; set; }
+        public List<SlikaDto>? SlikeZaSlanje{ get; set; }
         public String Lokacija { get; set; }
         public Stanje? Stanje { get; set; }
 
@@ -57,7 +58,11 @@ namespace Domain.Models
         oglas.Smer,oglas.Tip,oglas.Cena,oglas.Kolicina,oglas.BrojPregleda,oglas.Vlasnik.UserName,oglas.Vlasnik.Id,oglas.Lokacija,
         oglas.Stanje)
         {
-
+            SlikeZaSlanje = oglas.Slike?.Select(s => new SlikaDto
+            {
+                Redosled = s.Redosled,
+                Naziv = Path.GetFileName(s.Path)
+        }).ToList();
         }
      
     }

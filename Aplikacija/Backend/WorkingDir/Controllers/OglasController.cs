@@ -20,7 +20,7 @@ public class OglasController : ControllerBase
         _service = service;
     }
 
-    [Route("VratiMtihNOglasa/{N}/{M}")]
+    [Route("VratiMtihNOglasa/{N}/{M}/{orderBy}/{orderType}")]
     [HttpPost]
     public async Task<ActionResult> VratiMtihNOglasa(int N, int M, [FromBody] OglasFilteri? filters,string orderBy,OrderType orderType)
     {
@@ -48,6 +48,8 @@ public class OglasController : ControllerBase
 
     }
 
+
+    //DEPRECATED!!!!!!!!!!!!!
     [Route("VratiNaslovneSlike")]
     [HttpGet]
     public async Task<ActionResult> VratiNaslovneSlike([FromQuery] long[] oglasIds)
@@ -58,6 +60,21 @@ public class OglasController : ControllerBase
             return File(zipSlika.Data, ZipFile.CONTENT_TYPE, zipSlika.Name);
         }
         catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+
+    }
+
+    [Route("VratiSliku/{naziv}")]
+    [HttpGet]
+    public ActionResult VratiSliku(string naziv)
+    {
+        try{
+            byte[] slika = _service.VratiSliku(naziv);
+            return File(slika, $"image/{Path.GetExtension(naziv)}");
+        }
+        catch(Exception e)
         {
             return BadRequest(e.Message);
         }
@@ -81,6 +98,7 @@ public class OglasController : ControllerBase
     }
 
 
+    //DEPRECATED!!!!!!!!!!!!!
     [Route("VratiSlike/{oglasId}")]
     [HttpGet]
     public async Task<ActionResult> VratiSlike(long oglasId)

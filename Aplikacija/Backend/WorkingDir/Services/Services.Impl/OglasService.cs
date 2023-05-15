@@ -162,6 +162,10 @@ namespace Services.Impl
         {
             return _repo.PrebrojiFavorite(userId);
         }
-    
+
+        public byte[] VratiSliku(string naziv)
+        {
+            return _repo.VratiSliku(naziv);
+        }
     }
 }

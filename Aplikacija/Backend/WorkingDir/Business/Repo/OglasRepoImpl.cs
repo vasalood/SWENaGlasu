@@ -108,7 +108,7 @@ namespace Business.Repo
                 Queryable.OrderBy(_context.Oglasi.Where(predicate),_orderByMapper[order.By]):
                 Queryable.OrderByDescending(_context.Oglasi.Where(predicate),_orderByMapper[order.By]))).
                 ThenBy(o=>o.Id).
-                Skip(M * N).Take(N).Include(o => o.Podkategorija)
+                Skip(M * N).Take(N).Include(o => o.Podkategorija).Include(o=>o.Slike)
                 .Include(o => o.Vlasnik)
                 .Join(_context.Kategorije,
             o => o.Podkategorija.KategorijaId, k => k.Id, (o, k) =>
@@ -118,7 +118,7 @@ namespace Business.Repo
                     KategorijaId=o.Podkategorija.KategorijaId, KategorijaNaziv=k.Ime},
                 Polja=o.Polja, Kredit=o.Kredit, DatumPostavljanja=o.DatumPostavljanja, Smer=o.Smer, Tip=o.Tip, Cena=o.Cena,
                 Kolicina=o.Kolicina,BrojPregleda=o.BrojPregleda, Vlasnik = new Korisnik {Id=o.Vlasnik.Id,UserName=o.Vlasnik.UserName},
-                Stanje=o.Stanje,Lokacija=o.Lokacija
+                Stanje=o.Stanje,Lokacija=o.Lokacija,Slike=o.Slike
             });
 
             var list = await tmp.ToListAsync();
@@ -206,6 +206,16 @@ namespace Business.Repo
             return _context.Favoriti.Where(fs => fs.Korisnik.Id == userId).Count();
         }
 
+        public byte[] VratiSliku(string naziv)
+        {
+            using(FileStream slikaStream = new FileStream(Path.Combine(FOLDER_PATH,naziv), FileMode.Open))
+            {
+                byte[] slikaBytes = new byte[slikaStream.Length];
+                slikaStream.Read(slikaBytes,0, (int)slikaStream.Length);
+                return slikaBytes;
+            }
+        }
 
+  
     }
 }
