@@ -88,22 +88,32 @@ function fakeLoader()
 }
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<Naslovna/>} loader={naslovnaLoader} >
-          <Route path="login" element={<Login></Login>}/>
-          <Route path="signup" element = {<SignUp></SignUp>}/>
-    </Route>
-  )
+  [
+    {
+      path: "/",
+      element: <Naslovna />,
+      loader:naslovnaLoader
+    },
+    {
+      path: "login",
+      element: <Login/>
+    },
+    {
+      path: "signup",
+      element: <SignUp />
+    }
+  ]
+
    )
 root.render(
   <AuthContextProvider>
     <RouterProvider router={router}>
-
     </RouterProvider>
-{/*   <BrowserRouter>
+    {
+/*   <BrowserRouter>
       <Routes>
   
-    <Route path="/" element={<Naslovna/>} loader={naslovnaLoader} />
+    <Route path="/" element={<Naslovna/>}/>
     <Route path="login" element={<Login></Login>}/>
     <Route path="signup" element = {<SignUp></SignUp>}/>
     <Route path="test" element = {<Test></Test>}/>
@@ -112,7 +122,4 @@ root.render(
   </AuthContextProvider>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+

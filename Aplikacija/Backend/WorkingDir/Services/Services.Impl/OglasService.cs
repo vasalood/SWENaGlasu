@@ -167,5 +167,14 @@ namespace Services.Impl
         {
             return _repo.VratiSliku(naziv);
         }
+
+        public void ObrisiOglas(long id)
+        {
+            var o = _repo.VratiOglas(id,null);
+            if(o == null )
+                throw new NullOglasException(id);
+            else
+                _repo.ObrisiOglas(o);
+        }
     }
 }
