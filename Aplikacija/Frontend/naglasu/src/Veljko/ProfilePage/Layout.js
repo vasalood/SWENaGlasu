@@ -33,7 +33,7 @@ const Layout =() =>{
       </Sidebar>
       <main>
         <h1 style={{ color: "white", marginLeft: "5rem" }}>
-         Ovde ide prikazivanje informacija i ostalog jdskfha kjdfhskj hfdsakjfh ljksafjk shafkj dsjfnhakjfhlak fh
+         Ovde ide prijdshfjsadfkl;sahfjl shhdsf jhdfsk hdfskjh fkjdsh fkjsdhfk jdshjdfj dhfskj fhdsklja fksh sdkhf jskdfh sakjfh djs hakjf 
         </h1>
       </main>
       </div>
