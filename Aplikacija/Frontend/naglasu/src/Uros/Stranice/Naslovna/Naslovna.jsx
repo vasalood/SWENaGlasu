@@ -75,12 +75,15 @@ export async function naslovnaLoader()
                     }
                 )
             })
-    const response1JSON = await response1.json()
-
-    console.log("RESPONSE1JSON "+response1JSON)
-    const oglasi = response1JSON.lista
-    const ukupanBr = response1JSON.ukupanBr
-    return oglasi
+    if (response1.ok)
+    {
+            const response1JSON = await response1.json()
+            const oglasi = response1JSON.lista
+            const ukupanBr = response1JSON.ukupanBr
+            return oglasi
+    }
+    else
+        throw Error("Bad request.")
 }
 
 export async function naslovnaAction()

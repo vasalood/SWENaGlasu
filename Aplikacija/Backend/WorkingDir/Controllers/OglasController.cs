@@ -50,7 +50,7 @@ public class OglasController : ControllerBase
 
 
     //DEPRECATED!!!!!!!!!!!!!
-    [Route("VratiNaslovneSlike")]
+    /* [Route("VratiNaslovneSlike")]
     [HttpGet]
     public async Task<ActionResult> VratiNaslovneSlike([FromQuery] long[] oglasIds)
     {
@@ -65,7 +65,7 @@ public class OglasController : ControllerBase
         }
 
     }
-
+*/
     [Route("VratiSliku/{naziv}")]
     [HttpGet]
     public ActionResult VratiSliku(string naziv)
@@ -80,7 +80,7 @@ public class OglasController : ControllerBase
         }
 
     }
-
+ 
     [HttpPost]
     [Route("PostaviOglas")]
     public async Task<ActionResult> PostaviOglas([FromForm] OglasForm forma)
@@ -98,7 +98,7 @@ public class OglasController : ControllerBase
     }
 
 
-    //DEPRECATED!!!!!!!!!!!!!
+/*     //DEPRECATED!!!!!!!!!!!!!
     [Route("VratiSlike/{oglasId}")]
     [HttpGet]
     public async Task<ActionResult> VratiSlike(long oglasId)
@@ -114,7 +114,7 @@ public class OglasController : ControllerBase
         }
 
 
-    }
+    } */
 
     [HttpGet]
     [Route("VratiOglasTEST")]
@@ -233,6 +233,20 @@ public class OglasController : ControllerBase
         {
             _service.InkrementOglasPregledi(id);
             return Ok("Pregledi povecani za jedan.");
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpDelete]
+    [Route("ObrisiOglas/{id}")]
+    public ActionResult ObrisiOglas(long id)
+    {
+        try{
+            _service.ObrisiOglas(id);
+            return Ok("Oglas obrisan");
         }
         catch(Exception e)
         {
