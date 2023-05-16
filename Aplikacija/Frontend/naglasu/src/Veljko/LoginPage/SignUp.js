@@ -39,7 +39,7 @@ const SignUp = props =>{
             });
           };
     return (
-       <div>
+       <div className="klasa">
             {currValue==true ? (
             <ErrorModal></ErrorModal>) : null}
         <div className={classes.box}>

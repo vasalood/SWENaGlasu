@@ -3,7 +3,7 @@ import classes from './ErrorModal.module.css';
 
 const ErrorModal = (props) => {
   return (
-    <div>
+    <div className='klasa'>
     <div className={classes.box}>
     <form>
       <h2>{props.title}</h2>

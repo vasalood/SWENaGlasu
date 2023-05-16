@@ -30,5 +30,7 @@ namespace Services.Abs
 
         public int PrebrojiFavorite(string userId);
         public void InkrementOglasPregledi(long id);
+
+        public void ObrisiOglas(long id);
     }
 }
