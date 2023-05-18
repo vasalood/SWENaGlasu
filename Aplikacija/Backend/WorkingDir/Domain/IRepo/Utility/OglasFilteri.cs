@@ -8,6 +8,7 @@ namespace Domain.IRepo.Utility;
 [NotMapped]
 public class OglasFilteri
 {
+
     public string? Username { get; set; }
     public string? UserId{ get; set; }
     public int? KategorijaId { get; set; }
@@ -18,6 +19,11 @@ public class OglasFilteri
 
     public int? CenaOd { get; set; }
     public int? CenaDo { get; set; }
+
+    public SmerOglasa? Smer{ get; set; }
+    public TipOglasa? Tip{ get; set; }
+    
+    public List<Stanje>? Stanja{ get; set; }
 
     private static readonly Expression<Func<Oglas, bool>> _defaultLambda = o => true;
 
@@ -39,7 +45,14 @@ public class OglasFilteri
             o.Podkategorija.Id):
         _defaultLambda;
 
-        return CombineAnd(username,cenaOd, cenaDo, ime, kategorija, podkategorija,lokacija);
+        Expression<Func<Oglas, bool>> tip = Tip != null ? o => o.Tip == Tip : _defaultLambda;
+
+        Expression<Func<Oglas, bool>> smer = Smer != null ? o => o.Smer == Smer : _defaultLambda;
+
+        //Ako kresuje nesto, mozda je ovaj kast dole. 
+        Expression<Func<Oglas, bool>> stanja = Stanja != null ? o => Stanja.Contains((Stanje)o.Stanje) : _defaultLambda;
+
+        return CombineAnd(username,cenaOd, cenaDo, ime, kategorija, podkategorija,lokacija,tip,smer,stanja);
     }
 
     private Expression<Func<Oglas,bool>> CombineAnd( List<Expression<Func<Oglas,bool>>> list)

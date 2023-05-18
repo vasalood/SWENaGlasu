@@ -60,7 +60,6 @@ const oglasTemplate =
 
 export async function naslovnaLoader()
 {
-    console.log("log1")
     const response1 =
         await fetch("http://localhost:5105/Oglas/VratiMTihNOglasa/10/0/popularnost/0",
             {
