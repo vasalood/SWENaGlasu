@@ -29,7 +29,7 @@ const Test = props =>{
     }
    
     return(
-    <div className='body'>
+    <div className='klasa'>
   <form>
     <h2>Login</h2>
     <div className ="">

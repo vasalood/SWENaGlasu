@@ -149,7 +149,7 @@ public class AuthenticationController:ControllerBase
             if(user.EmailConfirmed)
             return Ok(new{
                 token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
-                expiration=jwtToken.ValidTo
+                expiration=jwtToken.ValidTo,
             });
             else{
                 return BadRequest("Please confirm your email");
@@ -369,7 +369,17 @@ public class AuthenticationController:ControllerBase
        return Ok(userName);
        return BadRequest("Ne postoji");
 }
+[Route("GetUser")]
+    [HttpGet]
+    public async Task<IActionResult>GetUser()
+    {
+       var Identity = (ClaimsIdentity)User.Identity;
+       var claim = Identity.FindFirst(ClaimTypes.Name);
+       var userName=claim.Value;
 
+       Korisnik korisnik = await _userManager.FindByNameAsync(userName);
+       return Ok(korisnik);
+    }
     
    
 

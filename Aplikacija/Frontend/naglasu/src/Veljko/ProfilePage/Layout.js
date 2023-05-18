@@ -6,9 +6,19 @@ import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import  './Layout.css';
+import { useState } from "react";
+import  './Layout.module.css';
+import EditPage from "./EditPage";
 const Layout =() =>{
-    const { collapseSidebar } = useProSidebar();
+  const [isPromena,SetPromena]=useState(true);
+  const handler = ()=>{
+    console.log("okinava");
+    if(isPromena===true)
+   SetPromena(false);
+    else
+    SetPromena(true);
+  }
+  const { collapseSidebar } = useProSidebar();
     return (
       <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
         <Sidebar style={{ height: "100vh" }}>
@@ -23,7 +33,7 @@ const Layout =() =>{
             {" "}
             <h2>Admin</h2>
           </MenuItem>
-          <MenuItem icon={<HomeOutlinedIcon />}>Pocetna stranica</MenuItem>
+          <MenuItem icon={<HomeOutlinedIcon></HomeOutlinedIcon>}onClick ={handler}>Pocetna stranica</MenuItem>
           <MenuItem icon={<PeopleOutlinedIcon />}>Moji podaci</MenuItem>
           <MenuItem icon={<ContactsOutlinedIcon />}>Moji oglasi</MenuItem>
           <MenuItem icon={<ReceiptOutlinedIcon />}>Praceni oglasi</MenuItem>
@@ -31,10 +41,10 @@ const Layout =() =>{
           <MenuItem icon={<CalendarTodayOutlinedIcon />}>O nama</MenuItem>
         </Menu>
       </Sidebar>
-      <main>
-        <h1 style={{ color: "white", marginLeft: "5rem" }}>
-         Ovde ide prijdshfjsadfkl;sahfjl shhdsf jhdfsk hdfskjh fkjdsh fkjsdhfk jdshjdfj dhfskj fhdsklja fksh sdkhf jskdfh sakjfh djs hakjf 
-        </h1>
+      <main style={{ width: '100%', height: '100%' }}>
+        {isPromena?(<h1 style={{ color: "white", marginLeft: "5rem" }}>
+          React-Pro-Sidebar
+        </h1>):<EditPage></EditPage>}
       </main>
       </div>
     );

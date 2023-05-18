@@ -106,8 +106,7 @@ const navigate =useNavigate();
   };
   return (
   
-    
-      <div>
+      <div className = {classes.klasa}>
       {isValidEmail?<ErrorModal title={promenaStrane.title} ></ErrorModal>: <div className={classes.box}>
     <form>
       <h2>Login</h2>
@@ -150,8 +149,8 @@ const navigate =useNavigate();
       <input type = "submit" value="Login" onClick={handler}></input>
     </form>
     </div>}
-    </div>
-   
+    
+    </div> 
   
   );
 };
