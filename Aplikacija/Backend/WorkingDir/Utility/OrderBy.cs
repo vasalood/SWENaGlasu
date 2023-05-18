@@ -6,6 +6,8 @@ public static class OrderBy
     public readonly static string CENA = "cena";
     public readonly static string POPULARNOST = "popularnost";
     public readonly static string DATUM = "datum";
+    public readonly static string UKUPNA_CENA = "ukupna_cena"; //kolicina puta cena, za ugovore
+    public readonly static string KREDIT = "kredit";
+    public readonly static string KOLICINA = "kolicina";
 
-    public readonly static string UKUPNA_CENA = "ukupna_cena";
 }

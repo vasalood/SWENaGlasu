@@ -3,7 +3,6 @@ import placeholder_image from '../../Res/Slike/placeholder.jpg'
 import "./OglasStavka.css"
 export default function OglasStavka({ oglas })
 {
-    console.log(oglas)
     const slikaKontrolerMetoda = "http://localhost:5105/Oglas/VratiSliku/" 
     const slika = oglas.slikeZaSlanje.filter(s => s.redosled == 0)[0]
     return (

@@ -28,14 +28,18 @@ namespace Business.Repo
             {OrderBy.NAZIV,(Expression<Func<Oglas,string>>)((o)=>o.Ime)},
             {OrderBy.DATUM,(Expression<Func<Oglas,DateTime>>)(o=>o.DatumPostavljanja)},
             {OrderBy.POPULARNOST,(Expression<Func<Oglas,int>>)(o=>o.BrojPregleda)},
-            {OrderBy.CENA,(Expression<Func<Oglas,int>>)(o=>o.Cena)}
+            {OrderBy.CENA,(Expression<Func<Oglas,int>>)(o=>o.Cena)},
+            {OrderBy.KOLICINA,(Expression<Func<Oglas,int>>)(o=>o.Kolicina)},
+            {OrderBy.KREDIT,(Expression<Func<Oglas,int>>)(o=>o.Kredit)}
         };
         private static Dictionary<string, dynamic> _orderByMapperFavoriti = new Dictionary<string,dynamic>
         {
             {OrderBy.NAZIV,(Expression<Func<FavoritSpoj,string>>)((fs)=>fs.Oglas.Ime)},
             {OrderBy.DATUM,(Expression<Func<FavoritSpoj,DateTime>>)(fs=>fs.Oglas.DatumPostavljanja)},
             {OrderBy.POPULARNOST,(Expression<Func<FavoritSpoj,int>>)(fs=>fs.Oglas.BrojPregleda)},
-            {OrderBy.CENA,(Expression<Func<FavoritSpoj,int>>)(fs=>fs.Oglas.Cena)}
+            {OrderBy.CENA,(Expression<Func<FavoritSpoj,int>>)(fs=>fs.Oglas.Cena)},
+            {OrderBy.KOLICINA,(Expression<Func<FavoritSpoj,int>>)(fs=>fs.Oglas.Kolicina)},
+            {OrderBy.KREDIT,(Expression<Func<FavoritSpoj,int>>)(fs=>fs.Oglas.Kredit)}
         };
 
         public OglasRepoImpl(NaGlasuContext context,IWebHostEnvironment environment)

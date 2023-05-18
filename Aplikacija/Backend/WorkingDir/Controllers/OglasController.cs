@@ -117,8 +117,8 @@ public class OglasController : ControllerBase
     } */
 
     [HttpGet]
-    [Route("VratiOglasTEST")]
-    public ActionResult VratiOglastTEST(long id)
+    [Route("VratiOglas")]
+    public ActionResult VratiOglast(long id)
     {
         try
         {

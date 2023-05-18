@@ -20,4 +20,6 @@ namespace Domain.Models
             Polovno,
             Polovno_Neupotrebivo
         }
+
+     
 }
