@@ -13,6 +13,10 @@ import Profile from './Veljko/ProfilePage/Profile';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import Layout from './Veljko/ProfilePage/Layout';
 import {naslovnaLoader} from './Uros/Stranice/Naslovna/Naslovna'
+import ForgotPassword from './Veljko/LoginPage/ForgotPassword';
+import EmailSentForgot from './Veljko/LoginPage/EmailSentForgot';
+import { Provider } from 'react-redux';
+import store from './Veljko/store';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const router = createBrowserRouter(
   [
@@ -32,11 +36,20 @@ const router = createBrowserRouter(
     {
       path: 'test',
       element:<Layout/>
+    },
+    {
+      path:'forgot',
+      element:<ForgotPassword></ForgotPassword>
+    },
+    {
+      path:'email',
+      element:<EmailSentForgot></EmailSentForgot>
     }
   ]
 
    )
 root.render(
+  <Provider store = {store}>
   <AuthContextProvider>
     <ProSidebarProvider>
       <RouterProvider router={router}>
@@ -52,6 +65,7 @@ root.render(
   </BrowserRouter> */}
   </ProSidebarProvider>
   </AuthContextProvider>
+  </Provider>
 );
 
 

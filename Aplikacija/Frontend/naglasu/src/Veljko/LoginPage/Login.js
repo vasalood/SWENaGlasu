@@ -1,11 +1,24 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { useSelector,useDispatch } from "react-redux";
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import classes from "../LoginPage/Login.module.css";
 import ErrorModal from "./ErrorModal";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../store/auth-context";
+import { getListSubheaderUtilityClass } from "@mui/material";
+import { userActions } from "../store/user";
 const Login = (props) => {
+  const dispatch=useDispatch();
+  const user = useSelector(state =>({
+    name:state.user.uname,
+    surname:state.user.usurname,
+    username:state.user.uusername,
+    address:state.user.uaddress,
+    email:state.user.uemail,
+    phone:state.user.uphone,
+    uplata:state.user.uuplata
+  }));
   const authCtx = useContext(AuthContext);
 const navigate =useNavigate();
     const usernameInputRef = useRef();
@@ -19,9 +32,46 @@ const navigate =useNavigate();
   const[errorPass,setErrorPass]=useState();
   const[promenaStrane,setPromenaStrane]=useState();
   const [isLogin, setLogin] = useState(false);
-  var text ="a";
+  useEffect(()=>{
+    if(authCtx.token)
+    {
+    console.log(authCtx.token);
+    fetch("http://localhost:5105/Authentication/GetUser",{
+      headers:{
+        "Authorization":`Bearer ${authCtx.token}`
+      }
+    })
+    .then(odgovor => odgovor.json())
+      .then(odgovorTekst =>  {
+            console.log(odgovorTekst);
+            console.log(odgovorTekst.ime);
+            const obj = {
+              name:odgovorTekst.ime,
+              surname:odgovorTekst.prezime,
+              address:odgovorTekst.adresa,
+              email:odgovorTekst.email,
+              phone:odgovorTekst.telefon,
+              username:odgovorTekst.userName,
+              uplata:odgovorTekst.uplata
+            };
+            dispatch(userActions.setValues(obj));
+            dispatch(userActions.getValues());
+            localStorage.setItem('userState', JSON.stringify(obj));
+            console.log(user.name+" "+user.address+" "+user.surname);
+            navigate('/test');
+
+       } )
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+  },[authCtx.token])
+  const getUser = () =>{
+    
+      }
   const handler = (event) => {
     event.preventDefault();
+    let test=-1;
     const pass = passwordInputRef.current.value;
     const username = usernameInputRef.current.value;
          if(username.trim().length===0)
@@ -94,7 +144,7 @@ const navigate =useNavigate();
              console.log(odgovorTekst);
             authCtx.login(tokenValue);
             console.log(tokenValue);
-            navigate('/test');
+           // navigate('/test');
           }
           
           //setEmail(false);
@@ -102,7 +152,6 @@ const navigate =useNavigate();
         .catch((error) => {
           console.log(error);
         });
-     //style={{color:!isValidForm?'red':'#8f8f8f'}}
   };
   return (
   
@@ -143,7 +192,7 @@ const navigate =useNavigate();
       </div>:null
         }
       <div className = {classes.links}>
-        <a href="#" >Forgot Password </a>
+        <a href="/email" >Forgot Password </a>
         <Link to="/signup" >SignUp</Link>
       </div>
       <input type = "submit" value="Login" onClick={handler}></input>

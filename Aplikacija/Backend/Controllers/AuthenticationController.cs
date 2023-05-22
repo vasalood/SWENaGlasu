@@ -171,10 +171,10 @@ public class AuthenticationController:ControllerBase
         );
         return token;
     }
-    [Route("Forgot Password")]
+    [Route("ForgotPassword/{email}")]
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> ForgotPassword([Required]string  email)
+    public async Task<IActionResult> ForgotPassword(string  email)
     {
         ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
         var user = await _userManager.FindByEmailAsync(email);
@@ -353,7 +353,7 @@ public class AuthenticationController:ControllerBase
         }
     }
     [Route("LogOut")]
-    [HttpGet]
+    [HttpPost]
     public async Task<IActionResult>LogOut()
     {
         await _signInManager.SignOutAsync();
@@ -364,12 +364,13 @@ public class AuthenticationController:ControllerBase
     public async Task<IActionResult>GetUserName()
     {
        var Identity = (ClaimsIdentity)User.Identity;
-       var claim = Identity.FindFirst(ClaimTypes.Name);
+       var claim =   Identity.FindFirst(ClaimTypes.Name);
        var userName=claim.Value;
        return Ok(userName);
        return BadRequest("Ne postoji");
-}
-[Route("GetUser")]
+    }
+    [Authorize(Roles ="PremiumUser")]
+    [Route("GetUser")]
     [HttpGet]
     public async Task<IActionResult>GetUser()
     {
@@ -378,10 +379,10 @@ public class AuthenticationController:ControllerBase
        var userName=claim.Value;
 
        Korisnik korisnik = await _userManager.FindByNameAsync(userName);
+        
        return Ok(korisnik);
     }
     
-   
 
-   
+
 }
