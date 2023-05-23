@@ -17,6 +17,7 @@ import ForgotPassword from './Veljko/LoginPage/ForgotPassword';
 import EmailSentForgot from './Veljko/LoginPage/EmailSentForgot';
 import { Provider } from 'react-redux';
 import store from './Veljko/store';
+import  MenuItem  from './Veljko/ProfilePage/MenuItemm';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const router = createBrowserRouter(
   [
@@ -45,6 +46,7 @@ const router = createBrowserRouter(
       path:'email',
       element:<EmailSentForgot></EmailSentForgot>
     }
+    
   ]
 
    )

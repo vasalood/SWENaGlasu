@@ -11,13 +11,25 @@ import { useState } from "react";
 import  './Layout.module.css';
 import EditPage from "./EditPage";
 import { useNavigate } from "react-router-dom";
+import MenuItemm from "./MenuItemm";
+import Oglasi from "./Oglasi";
 const Layout =() =>{
+  const[promenaUgovora,setPromenaUgovora]=useState(true);
+  const handlerUgovora =() =>{
+    if(promenaUgovora===true)
+    setPromenaUgovora(false);
+    else
+    setPromenaUgovora(true);
+    console.log("aaaaaaa");
+  }
   console.log("profilnasidebar");
   const [isPromena,SetPromena]=useState(true);
   const handler = ()=>{
     console.log("okinava");
     if(isPromena===true)
+    {
    SetPromena(false);
+    }
     else
     SetPromena(true);
   }
@@ -46,15 +58,20 @@ const Layout =() =>{
           <MenuItem icon={<PeopleOutlinedIcon />}>Moji podaci</MenuItem>
           <MenuItem icon={<ContactsOutlinedIcon />}>Moji oglasi</MenuItem>
           <MenuItem icon={<ReceiptOutlinedIcon />}>Praceni oglasi</MenuItem>
-          <MenuItem icon={<HelpOutlineOutlinedIcon />}>Ugovori</MenuItem>
+          <MenuItem icon={<HelpOutlineOutlinedIcon />}onClick={handlerUgovora}>Ugovori</MenuItem>
           <MenuItem icon={<CalendarTodayOutlinedIcon />}>O nama</MenuItem>
           <MenuItem icon = {<SettingsIcon></SettingsIcon>}onClick ={handler}>Settings</MenuItem>
         </Menu>
       </Sidebar>
       <main style={{ width: '100%', height: '100%' }}>
         {isPromena?(<h1 style={{ color: "white", marginLeft: "5rem" }}>
-          React-Pro-Sidebar
+          
         </h1>):<EditPage></EditPage>}
+      </main>
+      <main style={{ width: '100%', height: '100%' }}>
+        {promenaUgovora?(<h1 style={{ color: "white", marginLeft: "5rem" }}>
+          
+        </h1>):<Oglasi></Oglasi>}
       </main>
       </div>
     );
