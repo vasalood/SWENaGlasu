@@ -146,14 +146,14 @@ public class AuthenticationController:ControllerBase
                 authClaims.Add(new Claim(ClaimTypes.Role,role));
             }
             var jwtToken= GetToken(authClaims);
-            if(user.EmailConfirmed)
+           // if(user.EmailConfirmed)
             return Ok(new{
                 token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
                 expiration=jwtToken.ValidTo,
             });
-            else{
-                return BadRequest("Please confirm your email");
-            }
+           // else{
+            //    return BadRequest("Please confirm your email");
+           // }
         }
         else
         return BadRequest("Neispravan password");
@@ -256,7 +256,7 @@ public class AuthenticationController:ControllerBase
             return BadRequest("Ne postoji korisnik sa tim userNameom");
         }
     }
-    [Authorize(Roles ="Moderator")]
+   // [Authorize(Roles ="Moderator")]
     [Route("PromeniRolu/{userName}")]
     [HttpPut]
     public async Task<IActionResult>ChangeRole(string userName)
@@ -273,7 +273,7 @@ public class AuthenticationController:ControllerBase
            var result = await _userManager.RemoveFromRoleAsync(userExist,"User");
                 if(result.Succeeded)
                 {
-                    result=await _userManager.AddToRoleAsync(userExist,"PremiumUser");
+                    result=await _userManager.AddToRoleAsync(userExist,"Moderator");
                     return Ok("Uspesno promenjena rola");
                 }
                 else
@@ -282,7 +282,7 @@ public class AuthenticationController:ControllerBase
                 }
         }
     }
-[Route("SuspendujKorisnika")]
+    [Route("SuspendujKorisnika/{userName}")]
     [HttpPut]
     public async Task<IActionResult>SuspendUser(string userName)
     {
@@ -298,7 +298,7 @@ public class AuthenticationController:ControllerBase
             return BadRequest("Neuspesno blokiran korisnik");
         }
     }
-    [Route("UnBlockUser")]
+    [Route("UnBlockUser/{userName}")]
     [HttpPut]
     public async Task<IActionResult>UnSuspendUser(string userName)
     {
@@ -336,6 +336,7 @@ public class AuthenticationController:ControllerBase
     public async Task<IActionResult>UpdateUser(string userName,string Ime, string Prezime,string Adresa,int Uplata, string Telefon)
     {
         Korisnik userExist=await _userManager.FindByNameAsync(userName);
+        
         if(userExist== null)
         {
             return BadRequest("User ne postoji");
@@ -356,8 +357,17 @@ public class AuthenticationController:ControllerBase
     [HttpPost]
     public async Task<IActionResult>LogOut()
     {
-        await _signInManager.SignOutAsync();
+         var Identity = (ClaimsIdentity)User.Identity;
+       var claim = Identity.FindFirst(ClaimTypes.Name);
+       var userName=claim.Value;
+
+       Korisnik korisnik = await _userManager.FindByNameAsync(userName);
+        if(korisnik!=null)
+       { await _signInManager.SignOutAsync();
         return Ok("Uspesno ste odjavljeni");//mozda treba ovde redirekcija na pocetnu stranicu nekako 
+       }
+       else
+       return BadRequest();
     }
     [Route("GetUserName")]
     [HttpGet]
@@ -369,7 +379,6 @@ public class AuthenticationController:ControllerBase
        return Ok(userName);
        return BadRequest("Ne postoji");
     }
-    [Authorize(Roles ="PremiumUser")]
     [Route("GetUser")]
     [HttpGet]
     public async Task<IActionResult>GetUser()
@@ -379,10 +388,43 @@ public class AuthenticationController:ControllerBase
        var userName=claim.Value;
 
        Korisnik korisnik = await _userManager.FindByNameAsync(userName);
-        
-       return Ok(korisnik);
+       IList<string> rola = await _userManager.GetRolesAsync(korisnik);
+       RegisterModel model = new(){
+                Ime = korisnik.Ime,
+                Prezime=korisnik.Prezime,
+                UserName=korisnik.UserName,
+              Adresa=korisnik.Adresa,
+            Telefon=korisnik.Telefon,
+             Uplata= korisnik.Uplata,
+              Email = korisnik.Email,
+              Rola=rola[0]
+            };
+       return Ok(model);
     }
-    
-
+   
+    [Route("GetAllUsers")]
+    [HttpGet]
+    public async Task<IActionResult>GetAllUsers()
+    {
+        List<Korisnik> korisnici =await _userManager.Users.ToListAsync();
+        List<RegisterModel> registrovani = new List<RegisterModel>();
+        foreach(Korisnik korisnik in korisnici)
+        {
+                   IList<string> rola = await _userManager.GetRolesAsync(korisnik);
+            RegisterModel model = new(){
+                 Ime = korisnik.Ime,
+                Prezime=korisnik.Prezime,
+                UserName=korisnik.UserName,
+              Adresa=korisnik.Adresa,
+            Telefon=korisnik.Telefon,
+             Uplata= korisnik.Uplata,
+              Email = korisnik.Email,
+              Rola=rola[0]
+            };
+            registrovani.Add(model);
+        }
+        return Ok(registrovani);
+        
+    }
 
 }

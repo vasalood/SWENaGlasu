@@ -23,6 +23,7 @@ namespace Models
         public string Adresa { get; set; }
          [Required]
         public string Telefon { get; set; }
+        public string? Rola {get;set;}
 
     }
 }

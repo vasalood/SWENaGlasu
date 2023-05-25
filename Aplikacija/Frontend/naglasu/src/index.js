@@ -18,6 +18,7 @@ import EmailSentForgot from './Veljko/LoginPage/EmailSentForgot';
 import { Provider } from 'react-redux';
 import store from './Veljko/store';
 import  MenuItem  from './Veljko/ProfilePage/MenuItemm';
+import DataTable from './Veljko/ProfilePage/Datatable';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const router = createBrowserRouter(
   [

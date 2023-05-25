@@ -17,7 +17,8 @@ const Login = (props) => {
     address:state.user.uaddress,
     email:state.user.uemail,
     phone:state.user.uphone,
-    uplata:state.user.uuplata
+    uplata:state.user.uuplata,
+    role:state.user.urole
   }));
   const authCtx = useContext(AuthContext);
 const navigate =useNavigate();
@@ -43,8 +44,6 @@ const navigate =useNavigate();
     })
     .then(odgovor => odgovor.json())
       .then(odgovorTekst =>  {
-            console.log(odgovorTekst);
-            console.log(odgovorTekst.ime);
             const obj = {
               name:odgovorTekst.ime,
               surname:odgovorTekst.prezime,
@@ -52,12 +51,13 @@ const navigate =useNavigate();
               email:odgovorTekst.email,
               phone:odgovorTekst.telefon,
               username:odgovorTekst.userName,
-              uplata:odgovorTekst.uplata
+              uplata:odgovorTekst.uplata,
+              role:odgovorTekst.rola
             };
             dispatch(userActions.setValues(obj));
             dispatch(userActions.getValues());
             localStorage.setItem('userState', JSON.stringify(obj));
-            console.log(user.name+" "+user.address+" "+user.surname);
+            console.log(odgovorTekst);
             navigate('/test');
 
        } )
@@ -66,9 +66,6 @@ const navigate =useNavigate();
             });
         }
   },[authCtx.token])
-  const getUser = () =>{
-    
-      }
   const handler = (event) => {
     event.preventDefault();
     let test=-1;

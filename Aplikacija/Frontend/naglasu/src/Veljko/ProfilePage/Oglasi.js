@@ -6,7 +6,7 @@ const Oglasi = (props) =>{
             id:1,
             naslov:"Prvi oglas",
             opis:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus minus incidunt id!"
-        },
+        },,
         {
             id:2,
             naslov:"Drugi oglas",
