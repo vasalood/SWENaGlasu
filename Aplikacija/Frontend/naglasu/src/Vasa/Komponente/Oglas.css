@@ -9,11 +9,14 @@ hr {
 }
 
 .oglas {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   border: 1px solid #7b7572;
   border-radius: 10px;
   margin-top: 100px;
-  margin-left: 120px;
-  margin-right: 190px;
+  /* margin-left: 120px;
+  margin-right: 120px; */
   font-family: Roboto, Arial, Helvetica, sans-serif;
 }
 
@@ -23,6 +26,8 @@ hr {
   align-items: center;
   justify-content: space-between;
   margin-top: 15px;
+
+  flex-shrink: 0;
 }
 
 .oglas-header > h1 {
@@ -53,6 +58,7 @@ hr {
 
 .oglas-prikaz {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
   margin-top: 50px;
 }
@@ -86,6 +92,25 @@ hr {
   margin-top: 100px;
 }
 
+.oglas-pet-slika > button {
+  font-family: Roboto;
+  font-size: 40px;
+  font-weight: 500;
+  background-color: transparent;
+  border: none;
+  transition: background-color 0.15s, 
+              color 0.15s;
+}
+
+.oglas-pet-slika > button:hover{
+  background-color: rgb(181, 183, 185);
+  color: white;
+}
+
+.oglas-pet-slika > button:active{
+  opacity: 0.7;
+}
+
 .oglas-slika {
   height: 500px;
   width: 500px;
@@ -105,7 +130,7 @@ hr {
   width: 300px;
   background-color: rgb(2, 158, 255);
   color: white;
-  border: none;
+  border: 1px solid rgb(2, 158, 255);
   padding-top: 9px;
   padding-bottom: 9px;
   padding-left: 16px;
