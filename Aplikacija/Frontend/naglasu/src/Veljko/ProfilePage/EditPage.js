@@ -1,5 +1,4 @@
 import './EditPage.css';
-import slika from './mango.jpg';
 import { userActions } from "../store/user";
 import { useSelector,useDispatch } from "react-redux";
 import { localStorageAvailable } from '@mui/x-data-grid/utils/utils';
@@ -13,10 +12,11 @@ const EditPage = () =>{
     email:state.user.uemail,
     phone:state.user.uphone,
     uplata:state.user.uuplata,
-    role:state.user.urole
+    role:state.user.urole,
+    slika:state.user.uslika
     //<span className="text-black-50">veljkoveljovic13@gmail.com</span>
   }));
-  //console.log(user.name+" "+user.surname);
+  console.log(user.slika);
   const savedUserState=localStorage.getItem('userState');
   const handler = () =>{
     console.log("aaa");
@@ -30,7 +30,7 @@ const EditPage = () =>{
 return(<div className="container rounded bg-white mt-5 mb-5" style={{ width: '100%', height: '100%' }}>
     <div className="row">
         <div className="col-md-3 border-right">
-            <div className="d-flex flex-column align-items-center text-center p-3 py-5"><img className="rounded-circle mt-5" width="150px" src={slika}/><span className="font-weight-bold">{user.username}</span><span> </span></div>
+            <div className="d-flex flex-column align-items-center text-center p-3 py-5"><img className="rounded-circle mt-5" width="150px" src={`data:image/jpeg;base64, ${user.slika}`} alt="Slika"/><span className="font-weight-bold">{user.username}</span><span> </span></div>
         </div>
         <div className="col-md-5 border-right">
             <div className="p-3 py-5">

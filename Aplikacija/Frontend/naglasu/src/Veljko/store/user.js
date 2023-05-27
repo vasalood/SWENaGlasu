@@ -7,7 +7,8 @@ const initialUserValues = {
     uusername:"",
     uphone:"",
     uuplata:-1,
-    urole:""
+    urole:"",
+    uslika:""
 };
 const userSlice = createSlice({
     name: 'user',
@@ -22,6 +23,7 @@ const userSlice = createSlice({
              state.uphone=action.payload.phone;
              state.uuplata=action.payload.uplata;
              state.urole=action.payload.role;
+             state.uslika=action.payload.slika;
         },
         getValues(state)
         {

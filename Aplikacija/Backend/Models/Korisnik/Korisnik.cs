@@ -23,6 +23,6 @@ namespace Models
         
         public int Uplata { get; set; } =   0;
         public string Adresa { get; set; }
-
+        public string Slika{get;set;}="";
     }
 }

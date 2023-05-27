@@ -37,6 +37,24 @@ public class AuthenticationController:ControllerBase
        _context=context;
        _signInManager=signInManager;
     }
+    [HttpPost]
+    [Route("UploadImage")]
+    public async Task<IActionResult>UploadImage([FromForm]IFormFile slika,[FromForm]string userName)
+    {
+        Korisnik korisnik = await _userManager.FindByNameAsync(userName);
+        if(korisnik == null)
+        return BadRequest("Nema ga");
+        using (var memoryStream = new MemoryStream())
+            {
+                slika.CopyTo(memoryStream);
+                byte[] imageBytes = memoryStream.ToArray();
+                 string base64String = Convert.ToBase64String(imageBytes);
+                
+                korisnik.Slika=base64String;
+               await _userManager.UpdateAsync(korisnik);
+            }
+            return Ok(korisnik);
+    }
     [Route("SignUp")]
     [HttpPost]
     public async Task<IActionResult>Register([FromBody]RegisterModel korisnik)
@@ -53,6 +71,7 @@ public class AuthenticationController:ControllerBase
         {
             return BadRequest("UserName vec postoji.");
         }*/
+       
         Korisnik user = new()
         {
             Email = korisnik.Email,
@@ -63,7 +82,6 @@ public class AuthenticationController:ControllerBase
             Adresa=korisnik.Adresa,
             Telefon=korisnik.Telefon,
             Uplata= 0
-
         };
         if(await _roleManager.RoleExistsAsync("User"))
         {
@@ -118,6 +136,7 @@ public class AuthenticationController:ControllerBase
         else
             return BadRequest();
     }
+    
      [HttpPost]
     [Route("Login")]
     public async Task<IActionResult>Login([FromBody]LoginModel loginModel)
@@ -397,7 +416,8 @@ public class AuthenticationController:ControllerBase
             Telefon=korisnik.Telefon,
              Uplata= korisnik.Uplata,
               Email = korisnik.Email,
-              Rola=rola[0]
+              Rola=rola[0],
+              Slika=korisnik.Slika
             };
        return Ok(model);
     }

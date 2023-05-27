@@ -5,6 +5,7 @@ import ErrorModal from "./ErrorModal";
 import { Link } from "react-router-dom";
 const SignUp = props =>{
     const usernameInputRef = useRef();
+    const confInputSlika = useRef();
     const passwordInputRef = useRef();
     const nameInputRef = useRef();
     const surnameInputRef = useRef();
@@ -13,32 +14,62 @@ const SignUp = props =>{
     const adresaInputRef = useRef();
     const confInputRef = useRef();
     const [currValue,setCurrValue]=useState(false);
-    const switchPageHandler = (event) => {
-        event.preventDefault();
-        if(confInputRef.current.value!= passwordInputRef.current.value)
-                setCurrValue(true);
-        fetch("http://localhost:5105/Authentication/SignUp",{
-            method:"POST",
-            headers:{
-              "Content-Type":"application/json",
-            },
-            body:JSON.stringify({
-                ime:nameInputRef.current.value,
-                prezime:surnameInputRef.current.value,
-                userName:usernameInputRef.current.value,
-                password:passwordInputRef.current.value,
-                email:emailInputRef.current.value,
-                adresa:adresaInputRef.current.value,
-                telefon:telefonInputRef.current.value
-            }),
+    const handlerSlike = () =>{
+      const formDataSlika=new FormData();
+      formDataSlika.append('slika', confInputSlika.current.files[0]);
+      formDataSlika.append('userName', usernameInputRef.current.value);
+      fetch("http://localhost:5105/Authentication/UploadImage",{
+        method:"POST",
+            body:formDataSlika
           })
           .then(odgovor => odgovor.text())
           .then(odgovorTekst => console.log(odgovorTekst))
             .catch((error) => {
+              console.log(error);
+            });
+          };    
+    
+    const switchPageHandler = (event) => {
+         event.preventDefault();
+         const formDataSlika=new FormData();
+         const formData = new FormData();
+        formData.append('Ime', nameInputRef.current.value);
+        formData.append('Prezime', surnameInputRef.current.value);
+        formData.append('UserName', usernameInputRef.current.value);
+        formData.append('Password', passwordInputRef.current.value);
+        formData.append('Email', emailInputRef.current.value);
+        formData.append('Adresa', adresaInputRef.current.value);
+        formData.append('Telefon', telefonInputRef.current.value);
+        formDataSlika.append('slika', confInputSlika.current.files[0]);
+        formDataSlika.append('userName', usernameInputRef.current.value);
+        console.log(confInputSlika.current.files[0]);
+        if(confInputRef.current.value!= passwordInputRef.current.value)
+                setCurrValue(true);
+        fetch("http://localhost:5105/Authentication/SignUp",{
+          method: "POST", // HTTP metoda koja se koristi za zahtev
+          headers: {
+            "Content-Type": "application/json", // Tip sadržaja koji se šalje
+          },
+          body: JSON.stringify({
+            // Objekat koji se šalje kao sadržaj
+            ime:nameInputRef.current.value,
+            prezime:surnameInputRef.current.value,
+            userName:usernameInputRef.current.value,
+            password:passwordInputRef.current.value,
+            email:emailInputRef.current.value,
+            adresa:adresaInputRef.current.value,
+            telefon:telefonInputRef.current.value
+          }),
+        })
+          .then(odgovor => odgovor.text())
+          .then(odgovorTekst => {console.log(odgovorTekst)
+          handlerSlike();})
+            .catch((error) => {
               //console.log(error);
             });
-          };
-    return (
+             
+    }
+        return (
        <div className={classes.klasa}>
             {currValue==true ? (
             <ErrorModal></ErrorModal>) : null}
@@ -86,6 +117,9 @@ const SignUp = props =>{
             <i></i>
           </div>
           <div className = {classes.links}>
+          <input type="file" required="required" ref={confInputSlika}></input>
+            <span>Slika</span>
+            <i></i>
             <a href="#" >Forgot Password </a>
             <Link to="/login" >Login</Link>
           </div>

@@ -97,7 +97,7 @@ const Layout =() =>{
           {user.role=="PremiumUser"?(<MenuItem icon ={<AdminPanelSettingsIcon></AdminPanelSettingsIcon>}onClick={handlerTabela}>AdminSettings</MenuItem>):<></>}
         </Menu>
       </Sidebar>
-      {/* <main style={{ width: '100%', height: '100%' }}>
+      <main style={{ width: '100%', height: '100%' }}>
         {isPromena?(<h1 style={{ color: "white", marginLeft: "5rem" }}>
           
         </h1>):<EditPage></EditPage>}
@@ -106,7 +106,7 @@ const Layout =() =>{
         {promenaUgovora?(<h1 style={{ color: "white", marginLeft: "5rem" }}>
           
         </h1>):<Oglasi></Oglasi>}
-      </main> */}
+      </main>
       <main style={{ width: '100%', height: '100%' }}>
         {promenaTabela?(<h1 style={{ color: "white", marginLeft: "5rem" }}>
           

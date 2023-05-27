@@ -18,7 +18,8 @@ const Login = (props) => {
     email:state.user.uemail,
     phone:state.user.uphone,
     uplata:state.user.uuplata,
-    role:state.user.urole
+    role:state.user.urole,
+    slika:state.user.uslika
   }));
   const authCtx = useContext(AuthContext);
 const navigate =useNavigate();
@@ -52,12 +53,14 @@ const navigate =useNavigate();
               phone:odgovorTekst.telefon,
               username:odgovorTekst.userName,
               uplata:odgovorTekst.uplata,
-              role:odgovorTekst.rola
+              role:odgovorTekst.rola,
+              slika:odgovorTekst.slika
             };
+            console.log(odgovorTekst);
             dispatch(userActions.setValues(obj));
             dispatch(userActions.getValues());
             localStorage.setItem('userState', JSON.stringify(obj));
-            console.log(odgovorTekst);
+            console.log(odgovorTekst.slika);
             navigate('/test');
 
        } )
