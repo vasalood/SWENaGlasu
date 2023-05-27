@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../store/auth-context";
 import { getListSubheaderUtilityClass } from "@mui/material";
 import { userActions } from "../store/user";
+import PopUpModal from './PopUpModal';
 const Login = (props) => {
   const dispatch=useDispatch();
   const user = useSelector(state =>({
@@ -34,6 +35,7 @@ const navigate =useNavigate();
   const[errorPass,setErrorPass]=useState();
   const[promenaStrane,setPromenaStrane]=useState();
   const [isLogin, setLogin] = useState(false);
+  const[errorPop,setErrorPop]=useState();
   useEffect(()=>{
     if(authCtx.token)
     {
@@ -59,8 +61,8 @@ const navigate =useNavigate();
             console.log(odgovorTekst);
             dispatch(userActions.setValues(obj));
             dispatch(userActions.getValues());
-            localStorage.setItem('userState', JSON.stringify(obj));
             console.log(odgovorTekst.slika);
+            localStorage.setItem('userState', JSON.stringify(obj));
             navigate('/test');
 
        } )
@@ -76,7 +78,7 @@ const navigate =useNavigate();
     const username = usernameInputRef.current.value;
          if(username.trim().length===0)
         {
-          setError({
+          setErrorPop({
             title:"Please enter valid username"
           });
           setIsValidForm(false);
@@ -85,7 +87,7 @@ const navigate =useNavigate();
         else if(pass.trim().length===0)
         {
           setIsValidForm(true);
-          setError({
+          setErrorPop({
             title:"Please enter valid password"
           });
           setIsValidForm2(false);
@@ -107,9 +109,10 @@ const navigate =useNavigate();
         {
           if(odgovorTekst.includes('username'))
           {
-         setError({
-          title:odgovorTekst,
-          
+           
+            setErrorPop({
+          title:"Greska",
+          message:odgovorTekst
          // message:odgovorTekst
          });
          setIsValidForm(false);
@@ -117,8 +120,9 @@ const navigate =useNavigate();
           }
           else if(odgovorTekst.includes('password'))
           {
-            setError({
-              title:odgovorTekst,
+            setErrorPop({
+              title:"Greska",
+          message:odgovorTekst
               
              // message:odgovorTekst
              });
@@ -128,7 +132,8 @@ const navigate =useNavigate();
           else if(odgovorTekst.includes('confirm') || odgovorTekst.includes('suspendovan'))
           {
             setPromenaStrane({
-              title:odgovorTekst,
+              title:"Greska",
+              message:odgovorTekst
               
              // message:odgovorTekst
              });
@@ -153,10 +158,14 @@ const navigate =useNavigate();
           console.log(error);
         });
   };
+  const errorHandler = () =>{
+    setErrorPop(null);
+  }
   return (
   
       <div className = {classes.klasa}>
-      {isValidEmail?<ErrorModal title={promenaStrane.title} ></ErrorModal>: <div className={classes.box}>
+        {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
+         <div className={classes.box}>
     <form>
       <h2>Login</h2>
       <div className = {classes.inputBox}>
@@ -164,16 +173,6 @@ const navigate =useNavigate();
         <span  >Username</span>
         <i></i>
       </div>
-      {!isValidFormOba?
-      <div>
-        <span style={{color:'red'}}>{error.title}</span>
-      </div>:null
-        }
-      {!isValidForm?
-      <div>
-        <span style={{color:'red'}}>{error.title}</span>
-      </div>:null
-        }
       <div className = {classes.links}>
       </div>
       <div className = {classes.inputBox}>
@@ -181,24 +180,14 @@ const navigate =useNavigate();
         <span>Password</span>
         <i></i>
       </div>
-      {!isValidFormOba?
-      <div>
-        <span style={{color:'red'}}>{error.title2}</span>
-      </div>:null
-        }
-      {!isValidForm2?
-      <div>
-        <span style={{color:'red'}}>{error.title}</span>
-      </div>:null
-        }
       <div className = {classes.links}>
         <a href="/email" >Forgot Password </a>
         <Link to="/signup" >SignUp</Link>
       </div>
       <input type = "submit" value="Login" onClick={handler}></input>
     </form>
-    </div>}
-    
+    </div>
+
     </div> 
   
   );
