@@ -3,6 +3,7 @@ import { useRef } from "react";
 import classes from './SignUp.module.css';
 import ErrorModal from "./ErrorModal";
 import { Link } from "react-router-dom";
+import PopUpModal from './PopUpModal';
 const SignUp = props =>{
     const usernameInputRef = useRef();
     const confInputSlika = useRef();
@@ -14,6 +15,7 @@ const SignUp = props =>{
     const adresaInputRef = useRef();
     const confInputRef = useRef();
     const [currValue,setCurrValue]=useState(false);
+    const [errorPop,setErrorPop]=useState();
     const handlerSlike = () =>{
       const formDataSlika=new FormData();
       formDataSlika.append('slika', confInputSlika.current.files[0]);
@@ -31,6 +33,84 @@ const SignUp = props =>{
     
     const switchPageHandler = (event) => {
          event.preventDefault();
+         const username = usernameInputRef.current.value;
+         const ime = nameInputRef.current.value;
+         const prezime = nameInputRef.current.value;
+        const email = emailInputRef.current.value;
+        const adresa = adresaInputRef.current.value;
+        const password = passwordInputRef.current.value;
+        const confpassword=confInputRef.current.value;
+        let f = -1;
+         if(username.trim().length===0)
+        {
+          setErrorPop({
+            title:"Please enter valid username"
+          });
+          f=1;
+        }
+        if(ime.trim().length<2)
+        {
+          setErrorPop({
+            title:"Vase ime mora da sadrzi barem 2 karaktera"
+          });
+          f=1;
+        }
+        if(prezime.trim().length<2)
+        {
+          setErrorPop({
+            title:"Vase prezime mora da sadrzi barem 2 karaktera"
+          });
+          f=1;
+        }
+        if(adresa.trim().length<2)
+        {
+          setErrorPop({
+            title:"Vase adresa mora da sadrzi barem 2 karaktera"
+          });
+          f=1;
+        }
+        if(/\d/.test(ime))
+        {
+          setErrorPop({
+            title:"Vase ime ne sme da sadrzi cifru."
+          });
+          f=1;
+        }
+        if(/\d/.test(prezime))
+        {
+          setErrorPop({
+            title:"Vase prezime ne sme da sadrzi cifru."
+          });
+          f=1;
+        }
+        if(email.trim().length<5)
+        {
+          setErrorPop({
+            title:"Vase email mora da sadrzi barem 5 karaktera."
+          });
+          f=1;
+        }
+        if (!email.includes("@") || !email.includes("."))
+        {
+          setErrorPop({
+            title:"Vas email nije validan"
+          });
+          f=1;
+        }
+        // if (/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/.test(password))
+        // {
+        //   setErrorPop({
+        //     title:"Nevalidna lozinka"
+        //   });
+        //   f=1;
+        // }
+        if(password!=confpassword)
+        {
+          setErrorPop({
+            title:"Lozinke se ne poklapaju"
+          });
+          f=1;
+        }
          const formDataSlika=new FormData();
          const formData = new FormData();
         formData.append('Ime', nameInputRef.current.value);
@@ -45,6 +125,7 @@ const SignUp = props =>{
         console.log(confInputSlika.current.files[0]);
         if(confInputRef.current.value!= passwordInputRef.current.value)
                 setCurrValue(true);
+                if(f===-1){
         fetch("http://localhost:5105/Authentication/SignUp",{
           method: "POST", // HTTP metoda koja se koristi za zahtev
           headers: {
@@ -67,12 +148,14 @@ const SignUp = props =>{
             .catch((error) => {
               //console.log(error);
             });
-             
+                }
+    }
+    const errorHandler = () =>{
+      setErrorPop(null);
     }
         return (
        <div className={classes.klasa}>
-            {currValue==true ? (
-            <ErrorModal></ErrorModal>) : null}
+            {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
         <div className={classes.box}>
         <form>
           <h2>Sign Up</h2>
