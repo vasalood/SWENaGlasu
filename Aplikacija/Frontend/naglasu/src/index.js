@@ -19,6 +19,9 @@ import { Provider } from 'react-redux';
 import store from './Veljko/store';
 import  MenuItem  from './Veljko/ProfilePage/MenuItemm';
 import DataTable from './Veljko/ProfilePage/Datatable';
+import Neka from './Veljko/ProfilePage/Neka';
+import  Payment  from './Veljko/ProfilePage/Payment';
+import QuickFilteringGrid from './Veljko/ProfilePage/NovaTabela';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const router = createBrowserRouter(
   [
@@ -45,7 +48,11 @@ const router = createBrowserRouter(
     },
     {
       path:'email',
-      element:<EmailSentForgot></EmailSentForgot>
+      element:<Payment></Payment>
+    },
+    {
+      path:'neka',
+      element:<QuickFilteringGrid></QuickFilteringGrid>
     }
     
   ]

@@ -4,12 +4,15 @@ import { DataGrid } from '@mui/x-data-grid';
 import mango from './mango.jpg';
 import { useState,useEffect } from 'react';
 import { Button } from '@mui/material';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
+import { GridToolbarContainer,GridToolbarColumnsButton,GridToolbarFilterButton,GridToolbarDensitySelector,GridToolbarQuickFilter   } from '@mui/x-data-grid';
 const columns = [
   {field:"user",headerName:"User",width:230,
     renderCell:(params)=>{
         return(
             <div className="cellWithImg">
-                <img className="cellImg" src ={mango} alt="avatar"/>
+                <img className ="cellImg" src={`data:image/jpeg;base64, ${params.row.slika}`} alt="Slika"/>
                 {params.row.username}
             </div>
         )
@@ -25,11 +28,27 @@ const columns = [
     field:"email", headerName:"Email",width:230
 },
 {
-    field:"rola", headerName:"Rola",width:160,
+    field:"rola", headerName:"Rola",width:120,
     cellRender:(params)=>{
         return(<div className={`cellWithStatus${params.row.rola}}`}></div>)
     }
 },
+{
+field: "suspendovan",
+headerName: "Suspendovan",
+width: 120,
+hide: true, 
+renderCell: (params) => {
+  const isSuspended = params.row.suspendOnTime;
+  const isSuspended2 = params.row.suspendForEver;
+  if(isSuspended || isSuspended2)
+  {
+    return <DoneIcon></DoneIcon>
+  }
+  else
+  return <CloseIcon></CloseIcon>
+},
+}
 ];
 
 
@@ -71,37 +90,34 @@ export default function DataTable() {
      console.log(error);
    });
   }
-    const actionColun = [
-        {
-            field:"action",
-            headerName:"SuspendUser",
-            width:250,
-            renderCell:(params)=>{
-                return(
-                    <div className="cellAction">
-                        <Button variant="outlined" color="error"onClick={() => handleActionClick(params.row)}>SuspendUser</Button>
-                    </div>
-                )
-            }
-        }
-    ]
+    
     //                        <button type="button" class="btn btn-outline-success">Success</button>
 
-    const actionColun2 = [
-        {
-            field:"action2",
-            headerName:"SetModerator",
-            width:250,
-            renderCell:(params)=>{
-                return(
-                    <div className="cellAction">
-                        <Button variant="outlined"onClick={() => postaviModeratoraOnClick(params.row)}>SetAsModerator</Button>
+    // const actionColun2 = [
+    //     {
+    //         field:"action2",
+    //         headerName:"SetModerator",
+    //         width:250,
+    //         renderCell:(params)=>{
+    //             return(
+                    
+    //                     <Button variant="outlined"onClick={() => postaviModeratoraOnClick(params.row)}>SetAsModerator</Button>
 
-                    </div>
-                )
-            }
-        }
-    ]
+                    
+    //             )
+    //         }
+    //     }
+    // ]
+
+    const CustomToolbar = () => {
+      return (
+        <GridToolbarContainer>
+          <GridToolbarQuickFilter ></GridToolbarQuickFilter> 
+          <GridToolbarColumnsButton />
+          <GridToolbarDensitySelector />
+        </GridToolbarContainer>
+      );
+    };
     const unblockHandler = (rowData) =>{
         console.log(rowData.username);
         fetch("http://localhost:5105/Authentication/UnBlockUser/"+rowData.username, {
@@ -119,21 +135,23 @@ export default function DataTable() {
          console.log(error);
        });
     }
-    const actionColun3 = [
-        {
-            field:"action3",
-            headerName:"UnBlockUser",
-            width:250,
-            renderCell:(params)=>{
-                return(
-                    <div className="cellAction">
-                        <button type="button" class="btn btn-outline-success" onClick={() => unblockHandler(params.row)}>Odblokiraj korisnika</button>
+    // const actionColun3 = [
+    //     {
+    //         field:"action3",
+    //         headerName:"UnBlockUser",
+    //         width:250,
+    //         renderCell:(params)=>{
+    //             return(
+    //                 <div className="cellAction">
+    //                     <button type="button" class="btn btn-outline-success" onClick={() => unblockHandler(params.row)}>Odblokiraj korisnika</button>
 
-                    </div>
-                )
-            }
-        }
-    ]
+    //                 </div>
+    //             )
+    //         }
+    //     }
+    // ]
+    const [userRole, setUserRole] = useState('');
+
     const [users,SetUsers]=useState([]);
     const fetchUsers = () =>{
         fetch("http://localhost:5105/Authentication/GetAllUsers",{
@@ -149,10 +167,14 @@ export default function DataTable() {
                     rola:user.rola,
                     telefon:user.telefon,
                     adresa:user.adresa,
-                    uplata:user.uplata
+                    uplata:user.uplata,
+                    slika:user.slika,
+                    suspendOnTime:user.suspendOnTime,
+                    suspendForEver:user.suspendForEver
                   }));
                   console.log(fetchedUsers);
                   SetUsers(fetchedUsers);
+                  setUserRole(fetchedUsers[0].rola);
              } )
                   .catch((error) => {
                     console.log(error);
@@ -164,18 +186,41 @@ export default function DataTable() {
         fetchUsers();
         console.log(users[0]);
     },[]);
-   
+
+    const actionColun = [
+      {
+          field:"action",
+          headerName:"Akcije",
+          width:600,
+          renderCell:(params)=>{
+            const isAdmin = params.row.rola ==="Admin";
+            const isModerator = params.row.rola ==="Moderator";
+            const suspended = params.row.suspendOnTime ;
+            const suspended2 = params.row.suspendForEver;
+              return(
+                  <div className="cellAction">
+                      <Button variant="outlined" color="error"onClick={() => handleActionClick(params.row)} disabled={isAdmin|| suspended || suspended2} >BLOCK ON TIME</Button>
+                      <button type="button" class="btn btn-outline-success" onClick={() => unblockHandler(params.row) } disabled={isAdmin || !suspended || !suspended2}>UNBLOCK</button>
+                      <Button variant="outlined"onClick={() => postaviModeratoraOnClick(params.row)} disabled={isAdmin|| isModerator||suspended || suspended2}>SetAsModerator</Button>
+                      <button type="button" class="btn btn-outline-dark" disabled={suspended||isAdmin} >Black List</button>
+                  </div>
+              )
+          }
+      }
+  ]
 
   return (
     <div className='datatable'>
       <DataGrid
         rows={users}
-        columns={columns.concat(actionColun).concat(actionColun2).concat(actionColun3)}
-       pageSize={5}
+        columns={columns.concat(actionColun)}
+       pageSize={3}
        rowsPerPageOptions={[5]}
-       checkboxSelection
        getRowId={Math.random}
-     
+       components={{
+        Toolbar: CustomToolbar
+      }}
+      
       />
       
     </div>

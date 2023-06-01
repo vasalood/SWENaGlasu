@@ -7,6 +7,7 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import SettingsIcon from '@mui/icons-material/Settings';
+import WavingHandIcon from '@mui/icons-material/WavingHand';
 import { useState } from "react";
 import  './Layout.module.css';
 import EditPage from "./EditPage";
@@ -18,7 +19,21 @@ import Oglasi from "./Oglasi";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import Table2 from './Table2';
 import DataTable from "./Datatable";
+import Neka from "./Neka";
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import GavelIcon from '@mui/icons-material/Gavel';
+import PedalBikeIcon from '@mui/icons-material/PedalBike';
+import Ugovori from "./Ugovori";
+import Expenses from "./Expenses";
 const Layout =() =>{
+  const [page, setPage] = useState({
+    favoriti:"",
+    tabele:"",
+    ugovori:"",
+    oglasi:"",
+    korisnik:"",
+    ocene:""
+  });
   const dispatch=useDispatch();
   const user = useSelector(state =>({
     name:state.user.uname,
@@ -41,30 +56,61 @@ const Layout =() =>{
   console.log(user.name+" "+user.surname+""+user.role);
   const[promenaUgovora,setPromenaUgovora]=useState(true);
   const [promenaTabela,setPromenaTabela]= useState(true);
-  const handlerTabela = () =>{
-    if(promenaTabela===true)
-    setPromenaTabela(false);
-    else
-    setPromenaTabela(true);
-    console.log("aaaaaaa");
+  console.log(page);
+  const handlerUgovora = () =>{
+    setPage({
+      ugovori:"a",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:""
+    });
   }
-  const handlerUgovora =() =>{
-    if(promenaUgovora===true)
-    setPromenaUgovora(false);
-    else
-    setPromenaUgovora(true);
+  const handlerTabela =() =>{
     console.log("aaaaaaa");
+    setPage({
+      ugovori:"",
+      korisnik:"1",
+      favoriti:"",
+      oglasi:"",
+      tabela:"1",
+      ocene:""
+    });
   }
   console.log("profilnasidebar");
   const [isPromena,SetPromena]=useState(true);
+  const handlerOglasa = ()=>{
+    setPage({
+      ugovori:"",
+      korisnik:"1",
+      favoriti:"",
+      oglasi:"1",
+      tabele:"",
+      ocene:""
+    })
+  }
   const handler = ()=>{
-    console.log("okinava");
-    if(isPromena===true)
-    {
-   SetPromena(false);
-    }
-    else
-    SetPromena(true);
+    console.log("2");
+    setPage({
+      ugovori:"",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:"2"
+    });
+  }
+  const handlerOcena = () =>{
+    console.log("2");
+    setPage({
+      ugovori:"",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:"2"
+    });
   }
   let navigacija = useNavigate();
   const routeChange = () =>{
@@ -85,32 +131,28 @@ const Layout =() =>{
             style={{ textAlign: "center" }}
           >
             {" "}
-            <h2>Admin</h2>
+            
+            <h3>Profile</h3>
           </MenuItem>
           <MenuItem icon={<HomeOutlinedIcon></HomeOutlinedIcon>}onClick={routeChange}>Pocetna stranica</MenuItem>
-          <MenuItem icon={<PeopleOutlinedIcon />}>Moji podaci</MenuItem>
-          <MenuItem icon={<ContactsOutlinedIcon />}>Moji oglasi</MenuItem>
-          <MenuItem icon={<ReceiptOutlinedIcon />}>Praceni oglasi</MenuItem>
-          <MenuItem icon={<HelpOutlineOutlinedIcon />}onClick={handlerUgovora}>Ugovori</MenuItem>
-          <MenuItem icon={<CalendarTodayOutlinedIcon />}>O nama</MenuItem>
-          <MenuItem icon = {<SettingsIcon></SettingsIcon>}onClick ={handler}>Settings</MenuItem>
-          {user.role=="PremiumUser"?(<MenuItem icon ={<AdminPanelSettingsIcon></AdminPanelSettingsIcon>}onClick={handlerTabela}>AdminSettings</MenuItem>):<></>}
+          {/* <MenuItem icon={<PeopleOutlinedIcon />}>Moji podaci</MenuItem> */}
+          <MenuItem icon={<PedalBikeIcon />}onClick={handlerOglasa}>Moji oglasi</MenuItem>
+          <MenuItem icon={<GavelIcon />}onClick={handlerUgovora}>Ugovori</MenuItem>
+          {/* <MenuItem icon={<CalendarTodayOutlinedIcon />}>O nama</MenuItem> */}
+          <MenuItem icon={<ContactsOutlinedIcon />}onClick={handlerOcena}>Ocene</MenuItem>
+          <MenuItem icon = {<SettingsIcon></SettingsIcon>}>Settings</MenuItem>
+          <MenuItem icon = {<ModeEditIcon></ModeEditIcon>}>Izmena podataka</MenuItem>
+
+          {user.role=="Admin"?(<MenuItem icon ={<AdminPanelSettingsIcon></AdminPanelSettingsIcon>}onClick={handlerTabela}>AdminSettings</MenuItem>):<></>}
         </Menu>
       </Sidebar>
       <main style={{ width: '100%', height: '100%' }}>
-        {isPromena?(<h1 style={{ color: "white", marginLeft: "5rem" }}>
-          
-        </h1>):<EditPage></EditPage>}
-      </main>
-      <main style={{ width: '100%', height: '100%' }}>
-        {promenaUgovora?(<h1 style={{ color: "white", marginLeft: "5rem" }}>
-          
-        </h1>):<Oglasi></Oglasi>}
-      </main>
-      <main style={{ width: '100%', height: '100%' }}>
-        {promenaTabela?(<h1 style={{ color: "white", marginLeft: "5rem" }}>
-          
-        </h1>):<DataTable style = {{float:"left", width:"100%" }}></DataTable>}
+        {page.ugovori==""?(<></>):<Ugovori></Ugovori>}
+        {page.tabele==""?(<></>):<DataTable></DataTable>}
+        {page.favoriti==""?(<></>):<Oglasi></Oglasi>}
+        {page.oglasi==""?(<></>):<Oglasi></Oglasi>}
+        {page.korisnik!=""?(<></>):<Neka></Neka>}
+        {page.ocene==""?(<></>):<Expenses></Expenses>}
       </main>
       </div>
     );
