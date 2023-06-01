@@ -21,8 +21,8 @@ export default function Navbar()
     <a href="/">ODJAVA</a>]
 
     
-    return (<nav className="nav " style={opacityStyle}>
-        <img className="nav--banner" src={BannerLogo}></img>
+    return (<nav className="mnavbar" style={opacityStyle}>
+        <img className="mnavbar--banner" src={BannerLogo}></img>
        {/*  <ul className="nav--ul">
             <li>PROFIL</li>
             <li>FAVORITI</li>
@@ -33,7 +33,7 @@ export default function Navbar()
             ButtonIconOn={<BsChevronUp size={35} color={color_secondary}/>}
             ButtonIconOff={<BsChevronDown size={35} color={color_secondary}/>}
             items={menuItems}
-            className="nav--dropdown"
+            className="mnavbar--dropdown"
             isSelected={isDropdownSelected}
             toggleSelected={setDropdownSelected}
             buttonDisabled={Number.parseFloat(opacityStyle.opacity)<1.0}></DropDownMenu>

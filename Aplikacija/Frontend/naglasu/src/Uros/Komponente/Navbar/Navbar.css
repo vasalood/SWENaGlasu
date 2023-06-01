@@ -1,4 +1,4 @@
-.nav
+.mnavbar
 {
     display: flex;
     flex-direction: row;
@@ -19,7 +19,7 @@
 }
 
 
-.nav--banner
+.mnavbar--banner
 {
     flex-shrink: 1;
     min-width: 200px;
@@ -27,14 +27,14 @@
     align-self: baseline;
 }
 
-.nav--ul
+.mnavbar--ul
 {
     display: flex;
     flex-direction: row;
     list-style-type: none;
 }
 
-.nav--ul>li
+.mnavbar--ul>li
 {
     margin-right: 30px;
     color: var(--color_on_primary);
@@ -43,7 +43,7 @@
 
 @media(max-width:450px)
 {
-    .nav
+    .mnavbar
     {
         padding-left: 15px;
         padding-right: 5px;

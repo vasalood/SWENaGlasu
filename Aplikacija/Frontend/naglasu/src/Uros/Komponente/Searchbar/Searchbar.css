@@ -46,3 +46,9 @@
     margin-left:40px;
     margin-right: 40px;
 }
+
+.searchbar--container button
+{
+    outline: none !important;
+    box-shadow: none !important;
+}

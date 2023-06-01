@@ -7,6 +7,7 @@ import React from 'react'
 import "./Naslovna.css"
 import SearchBarContext from '../../Contexts/NavBarContext'
 import { useLoaderData } from "react-router";
+import NavBarContext from "../../Contexts/NavBarContext";
 
 const changeWindowWidth = 'change-window-width'
 const actionChangeWindowWidth = { type: changeWindowWidth }
@@ -58,10 +59,40 @@ const oglasTemplate =
 }
 
 
-export async function naslovnaLoader()
+export async function naslovnaLoader({params})
 {
+    const requestUrl = ROOT_API_URL + `Oglas/VratiMtihNOglasa/${params.N != undefined ? params.N : 20}/
+    ${params.M != undefined ? params.M : 0}/${params.orderBy != undefined ? params.orderBy : 'kredit'}/
+    ${params.orderType != undefined ? params.orderType :
+            0}`
+    const filtersArray = params.filters != undefined ? params.filters.split('&') : []
+    
+    const filters = {}
+    if (filtersArray.length != 0)
+    {
+        filtersArray.forEach(kv =>
+        {
+                
+            const kvTmp = kv.split('=')
+            if (kvTmp[0] === 'stanja' || kvTmp[0] === 'podkategorijeId')
+            {
+                kvTmp[1] = kvTmp[1].split('_')
+                kvTmp[1] = kvTmp[1].map(v => {
+                    return Number.parseInt(v)
+                })
+            }
+            else if(!isNaN(kvTmp[1]))
+            {
+                kvTmp[1]=Number.parseInt(kvTmp[1])     
+            }
+            filters[kvTmp[0]] =kvTmp[1]
+            
+            })
+        
+    }
+    console.log(filters)
     const response1 =
-        await fetch("http://localhost:5105/Oglas/VratiMTihNOglasa/10/0/popularnost/0",
+        await fetch(requestUrl,
             {
                 method: "POST",
                 headers:
@@ -69,9 +100,7 @@ export async function naslovnaLoader()
                     "Content-Type":"application/json"
                 },
                 body: JSON.stringify(
-                    {
-
-                    }
+                    filters
                 )
             })
     if (response1.ok)
@@ -79,16 +108,17 @@ export async function naslovnaLoader()
             const response1JSON = await response1.json()
             const oglasi = response1JSON.lista
             const ukupanBr = response1JSON.ukupanBr
-            return oglasi
+            return {oglasNiz:oglasi,ukupanBr:ukupanBr,trenutnaStranica:params.M}
     }
     else
-        throw Error("Bad request.")
+    {
+        response1.text().then(text=>console.log('Error is '+text))
+        throw Error('Bad Request!')
+    }
+
 }
 
-export async function naslovnaAction()
-{
 
-}
 export default function Naslovna()
 {
     
@@ -108,9 +138,8 @@ export default function Naslovna()
     
    
 
-    const oglasNiz = useLoaderData()/* []
-    for (let i = 0; i !== 100; ++i)
-        oglasNiz.push(oglasTemplate) */
+    const { oglasNiz, trenutnaStranica } = useLoaderData()
+
     const oglasiStavke = oglasNiz.map((o,index) =>
     {
         return <OglasStavka oglas={o} key={index} />
@@ -149,16 +178,22 @@ export default function Naslovna()
     )
 
     const [isDropdownSelected, setDropdownSelected] = React.useState(false)
-
+    const [contextNaslovne, setContextNaslovne] = React.useState(
+        {
+            brStranice:0,ukupanBr:null
+        }
+    )
 
 
     return (
-        <SearchBarContext.Provider value=
+        <div className="naslovna">
+        <NavBarContext.Provider value=
             {
             {
                 opacityStyle: opacityStyle,
                 isDropdownSelected: isDropdownSelected,
-                setDropdownSelected: setDropdownSelected
+                setDropdownSelected: setDropdownSelected,
+                trenutnaStranica:trenutnaStranica
             }
         }>
         <Navbar></Navbar>
@@ -171,5 +206,7 @@ export default function Naslovna()
 
 
 
-    </SearchBarContext.Provider>)
+    </NavBarContext.Provider>
+        </div>
+    )
 }

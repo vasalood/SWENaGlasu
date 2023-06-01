@@ -1,17 +1,83 @@
 import { Fragment } from "react";
 import "./Searchbar.css"
 import React from 'react'
-import { BsSearch,BsFilter,BsChevronRight,BsChevronLeft} from 'react-icons/bs'
+import { BsSearch,BsFilter,BsChevronRight,BsChevronLeft,BsSortDownAlt} from 'react-icons/bs'
 import NavBarContext from "../../Contexts/NavBarContext"
+import FilterWindow from "../FilterWindow/FilterWindow";
+import { Link } from 'react-router-dom'
+import SortWindow from "../SortWindow/SortWindow";
 
 export default function SearchBar()
 {
+
+    const emptykat = {id:'',ime:'Prazno', podkategorije: [
+           
+    ]}
+    const filterStanjaTemplate =
+    {
+        ime:'',
+        kategorije:[emptykat],
+        selectedKat: emptykat,
+        selectedPodkat: [],
+        selectedSmer: '',
+        selectedTip: '',
+        selectedStanja: [],
+        cenaOd: '',
+        cenaDo: '',
+        lokacija: '',
+        stringify: function () 
+        {
+            let retValue = ''
+            retValue+=this.ime!==''?'ime='+this.ime:''
+            retValue += this.selectedKat.id != '' ? `kategorijaId=${this.selectedKat.id}` : ''
+            if (this.selectedPodkat.length > 0)
+            {
+                let selectedPodkatString='&podkategorijeId='
+                this.selectedPodkat.forEach((pk,index) =>
+                {
+                    selectedPodkatString += pk.id
+                    selectedPodkatString+=index!=this.selectedPodkat.length-1?'_':''
+                    })
+                retValue+=selectedPodkatString
+            }
+            retValue += this.selectedSmer!=''?`&smer=${this.selectedSmer}`:''
+            retValue +=this.selectedTip!=''? `&tip=${this.selectedTip}`:''
+            if (this.selectedStanja.length > 0)
+            {
+                let selectedStanjaString='&stanja='
+                this.selectedStanja.forEach((s,index) =>
+                {
+                    selectedStanjaString += s
+                    selectedStanjaString+=index!=this.selectedStanja.length-1?'_':''
+                    })
+                retValue+=selectedStanjaString
+            }
+            retValue += this.cenaDo !== '' ? `&cenaDo=${this.cenaDo}` : ''
+            retValue += this.cenaOd !== '' ? `&cenaOd=${this.cenaOd}` : ''
+            retValue+=this.lokacija!==''?`&lokacija=${this.lokacija}`:''
+            return retValue
+        }
+    }
+    
     const navButtonStyle = 
     {
         color:"white"
     }
 
-    const {opacityStyle}=React.useContext(NavBarContext)
+
+    const [filterStanja, seterFilterStanja] = React.useState(filterStanjaTemplate)
+    const [sortStanja, seterSortStanja] = React.useState(
+        {
+            orderBy: '',
+            orderType: 0,
+            brojOglasa:20
+        }
+    )
+    const stringFilterStanja = filterStanja.stringify()
+
+    const [filterWindowActive, setFilterWindowActive] = React.useState(false)
+    const [sortWindowActive,setSortWindowActive]=React.useState(false)
+    const {opacityStyle,trenutnaStranica}=React.useContext(NavBarContext)
     return (
         <div className='searchbar--container' style={opacityStyle}>
             <button className="searchbar--nav_btn searchbar--prev_btn">
@@ -19,16 +85,41 @@ export default function SearchBar()
                 </button>
             <div className='searchbar--wrapper'>
                 
-            <input type="text" className='searchbar--input' placeholder="Pretraga..." ></input>
-                <button className='searchbar--filter_btn'>
+                <input type="text" className='searchbar--input' placeholder="Pretraga..."
+                    onChange={(ev) => {
+                        seterFilterStanja(oldValue => {
+                            return {
+                                ...oldValue,
+                                ime: ev.target.value
+                            }
+                        })
+                    }}
+                    value={filterStanja.ime}></input>
+                <button className='searchBar--sort_btn'>
+                    <BsSortDownAlt size={30} onClick={(ev) => setSortWindowActive(
+                        oldValue=>!oldValue
+                    )} />
+                </button>
+                <button className='searchbar--filter_btn' onClick={(ev) => {
+                    setFilterWindowActive(oldValue => !oldValue)
+                }
+                }>
                     <BsFilter size={30}/>
-        </button>
-            <button className='searchbar--search_btn'>
+                </button>
+                <Link to={`/20/0/kredit/0/${
+                            stringFilterStanja
+                    }`}>
+                <button className='searchbar--search_btn'>
                     <BsSearch size={30} />
                 </button>
+                </Link>
+           
             </div>  
             <button className="searchbar--nav_btn searchbar--next_btn" style={navButtonStyle}>
             <BsChevronRight size={35} />
-        </button>
+            </button>
+            <FilterWindow active={filterWindowActive} setActive={setFilterWindowActive} stanja={filterStanja}
+                seterStanja={seterFilterStanja} />
+            <SortWindow active={sortWindowActive} setActive={setSortWindowActive} stanja={sortStanja } seterStanja={seterSortStanja} />
     </div>)
 }
