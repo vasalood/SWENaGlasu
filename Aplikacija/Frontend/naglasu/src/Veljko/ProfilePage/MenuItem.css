@@ -23,13 +23,13 @@ html {
 }
 
 main {
-    display: flex;
+    /* --display: flex; */
     width: 90%;
     justify-content: space-around;
     gap: 2rem;
 }
 
-.card {
+.cardd {
     width: 400px;
     height: 400px;
     padding: 2rem 1rem;
@@ -41,11 +41,11 @@ main {
     transition: 0.5s ease;
 }
 
-.card:hover {
+.cardd:hover {
     transform: translateY(20px);
 }
 
-.card:before {
+.cardd:before {
     content: "";
     position: absolute;
     top: 0;
@@ -59,11 +59,11 @@ main {
     opacity: 0;
 }
 
-.card:hover:before {
+.cardd:hover:before {
     opacity: 1;
 }
 
-.card > img {
+.cardd > img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -72,7 +72,7 @@ main {
     left: 0;
 }
 
-.card .info {
+.cardd .info {
     position: relative;
     z-index: 3;
     color: #fff;
@@ -81,22 +81,22 @@ main {
     transition: all 0.5s;
 }
 
-.card:hover .info {
+.cardd:hover .info {
     opacity: 1;
     transform: translateY(0px);
 }
 
-.card .info h1 {
+.cardd .info h1 {
     margin: 0;
 }
 
-.card .info p {
+.cardd .info p {
     letter-spacing: 1px;
     font-size: 15px;
     margin: 8px 0 20px;
 }
 
-.card .info .btn {
+.cardd .info .btn {
     text-decoration: none;
     padding: 0.5rem 1rem;
     background: #fff;
@@ -107,6 +107,6 @@ main {
     transition: 0.4s ease;
 }
 
-.card .info .btn:hover {
+.cardd .info .btn:hover {
     box-shadow: 0px 7px 10px rgba(0,0,0,0.5);
 }

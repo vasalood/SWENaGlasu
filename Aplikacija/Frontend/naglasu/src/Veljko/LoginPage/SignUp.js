@@ -4,7 +4,9 @@ import classes from './SignUp.module.css';
 import ErrorModal from "./ErrorModal";
 import { Link } from "react-router-dom";
 import PopUpModal from './PopUpModal';
+import { useNavigate } from "react-router-dom";
 const SignUp = props =>{
+  const navigate =useNavigate();
     const usernameInputRef = useRef();
     const confInputSlika = useRef();
     const passwordInputRef = useRef();
@@ -16,6 +18,7 @@ const SignUp = props =>{
     const confInputRef = useRef();
     const [currValue,setCurrValue]=useState(false);
     const [errorPop,setErrorPop]=useState();
+
     const handlerSlike = () =>{
       const formDataSlika=new FormData();
       formDataSlika.append('slika', confInputSlika.current.files[0]);
@@ -25,10 +28,11 @@ const SignUp = props =>{
             body:formDataSlika
           })
           .then(odgovor => odgovor.text())
-          .then(odgovorTekst => console.log(odgovorTekst))
+          .then(odgovorTekst => {console.log(odgovorTekst); navigate('/login');})
             .catch((error) => {
               console.log(error);
             });
+            
           };    
     
     const switchPageHandler = (event) => {

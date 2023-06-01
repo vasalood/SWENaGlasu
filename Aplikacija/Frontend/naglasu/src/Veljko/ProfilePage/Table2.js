@@ -25,9 +25,13 @@ function Table2() {
                     rola:user.rola,
                     telefon:user.telefon,
                     adresa:user.adresa,
-                    uplata:user.uplata
+                    uplata:user.uplata,
+                    slika:user.slika
                   }));
-                  console.log(fetchedUsers);
+                  fetchedUsers.forEach(element => {
+                    console.log(element.slika);
+});                 
+ console.log(fetchedUsers);
                   SetUsers(fetchedUsers);
              } )
                   .catch((error) => {
@@ -61,7 +65,7 @@ function Table2() {
                   key={row.username}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                  <TableCell className ="tableCell" ><div className='cellWrapper'><img src={mango} alt ="" className='image'/>{row.username}</div></TableCell>
+                  <TableCell className ="tableCell" ><div className='cellWrapper'><img src={`data:image/jpeg;base64, ${row.slika}`} alt="Slika" className='image'/>{row.username}</div></TableCell>
                   <TableCell className ="tableCell">{row.firstName}</TableCell>
                   <TableCell className ="tableCell">{row.lastName}</TableCell>
                   <TableCell className ="tableCell">{row.email}</TableCell>

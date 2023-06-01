@@ -12,9 +12,8 @@ using UserManagementService;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
-
+using Stripe;
 var builder = WebApplication.CreateBuilder(args);
-
 
 // Add services to the container.
 
@@ -49,7 +48,6 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
-
 builder.Services.AddScoped<IKategorijaRepo, KategorijaRepoImpl>();
 builder.Services.AddScoped<IOglasRepo, OglasRepoImpl>();
 
@@ -74,6 +72,7 @@ builder.Services.AddDbContext<NaGlasuContext>(options=>
 builder.Services.AddIdentity<Korisnik, IdentityRole>()
         .AddEntityFrameworkStores<NaGlasuContext>()
         .AddDefaultTokenProviders();
+
 
 //Add Config for Required Email
 builder.Services.Configure<IdentityOptions>(opts=>opts.SignIn.RequireConfirmedEmail=true);

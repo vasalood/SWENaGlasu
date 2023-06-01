@@ -1,12 +1,14 @@
 import './MenuItem.css';
+import { useState,useEffect } from 'react';
 const MenuItemm = (props) =>{
+ 
 return(
     <main>
-        <div class="card">
-            <img src="https://user-images.githubusercontent.com/13468728/230662929-3ad798fd-5d35-43c7-9867-5a1302153bac.jpg" alt=""/>
+        <div class="cardd">
+            <img src={"http://localhost:5105/Oglas/VratiSliku/"+props.slika} alt=""/>
             <div class="info">
-                <h1>{props.oglas.naslov}</h1>
-                <p>{props.oglas.opis}</p>
+                <h1>{props.oglas.ime}</h1>
+                <p>{props.oglas.cena}</p>
                 <a href="#" class="btn">Read More</a>
             </div>
         </div>

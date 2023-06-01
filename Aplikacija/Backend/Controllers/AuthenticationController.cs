@@ -355,7 +355,6 @@ public class AuthenticationController:ControllerBase
     public async Task<IActionResult>UpdateUser(string userName,string Ime, string Prezime,string Adresa,int Uplata, string Telefon)
     {
         Korisnik userExist=await _userManager.FindByNameAsync(userName);
-        
         if(userExist== null)
         {
             return BadRequest("User ne postoji");
@@ -427,11 +426,25 @@ public class AuthenticationController:ControllerBase
     public async Task<IActionResult>GetAllUsers()
     {
         List<Korisnik> korisnici =await _userManager.Users.ToListAsync();
-        List<RegisterModel> registrovani = new List<RegisterModel>();
+        List<AdminVrati> registrovani = new List<AdminVrati>();
+        bool suspendzauvek,suspendOnTime;
         foreach(Korisnik korisnik in korisnici)
         {
+            var a = await _userManager.GetLockoutEndDateAsync(korisnik);
+            if(a==DateTimeOffset.MaxValue)
+            {
+                suspendzauvek=true;
+            }
+            else
+            suspendzauvek=false;
+            if(a>DateTimeOffset.UtcNow)
+            {
+                suspendOnTime=true;
+            }
+            else
+            suspendOnTime=false;
                    IList<string> rola = await _userManager.GetRolesAsync(korisnik);
-            RegisterModel model = new(){
+            AdminVrati model = new(){
                  Ime = korisnik.Ime,
                 Prezime=korisnik.Prezime,
                 UserName=korisnik.UserName,
@@ -439,7 +452,10 @@ public class AuthenticationController:ControllerBase
             Telefon=korisnik.Telefon,
              Uplata= korisnik.Uplata,
               Email = korisnik.Email,
-              Rola=rola[0]
+              Rola=rola[0],
+              Slika=korisnik.Slika,
+              SuspendOnTime=suspendOnTime,
+              SuspendForEver=suspendzauvek
             };
             registrovani.Add(model);
         }
