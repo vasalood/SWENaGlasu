@@ -102,7 +102,10 @@ namespace Domain.Models
         {
             foreach (var property in forma.GetType().GetProperties())
             {
-                if (property.Name != "PrimljeneSlike" && property.Name != "StavkePoljaImena" && property.Name != "StavkePoljaVrednosti")
+                if (property.Name != "PrimljeneSlike" && 
+                property.Name != "StavkePoljaImena" && 
+                property.Name != "StavkePoljaVrednosti" &&
+                property.Name !="Stanje")
                 {
                     var value = property.GetValue(forma);
                     if (value == null)

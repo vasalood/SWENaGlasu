@@ -34,13 +34,7 @@ namespace Business.Repo
 
         public async Task<List<Kategorija>?> VratiKategorije(OrderType orderType)
         {
-            var query = _context.Kategorije.Where(k => 1 == 1).OrderBy(k => k.Ime).Include(k => k.Podkategorije).Select(k => new
-            Kategorija
-            {
-                Ime = k.Ime,
-                Id = k.Id,
-                Podkategorije = k.Podkategorije
-            });
+            var query = _context.Kategorije.Where(k => 1 == 1).OrderBy(k => k.Ime).Include(k => k.Podkategorije);
             if(orderType==OrderType.Ascending)
             {
                 var tmp = await query.OrderBy(k=>k.Ime).ToListAsync();

@@ -18,7 +18,7 @@ namespace Services.Abs
         public void AzurirajOglas(Oglas oglas,OglasForm form);
         public Task<List<Slika>> VratiSlike(long oglasId);
         public Task<ZipFile> VratiSlikeZIP(long oglasId);
-        public Oglas VratiOglas(long oglasId,Expression<Func<Oglas,object>>? predicate=null);
+        public Oglas VratiOglas(long oglasId, params Expression<Func<Oglas,object>>[]? predicate);
 
         public void DodajFavorita(FavoritSpoj favorit);
         

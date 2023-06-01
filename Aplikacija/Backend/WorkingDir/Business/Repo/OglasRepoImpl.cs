@@ -131,16 +131,30 @@ namespace Business.Repo
             return list;
         }
 
-        public Oglas? VratiOglas(long oglasId,Expression<Func<Oglas,object>>? lambda)
+        public Oglas? VratiOglas(long oglasId,params Expression<Func<Oglas,object>>[]? lambdas)
         {
-            return lambda!=null?_context.Oglasi.Where(o=>o.Id==oglasId).Include(lambda).FirstOrDefault()
-            :_context.Oglasi.Where(o=>o.Id==oglasId).FirstOrDefault();
+            IQueryable<Oglas> query =_context.Oglasi.Where(o => o.Id == oglasId);
+            if(lambdas!=null)
+            {
+                foreach(var l in lambdas)
+                {
+                    query = query.Include(l);
+                }
+            }
+            return query.FirstOrDefault();
         }
 
-        public async Task<List<Oglas>> VratiOglase(long[] oglasIds, Expression<Func<Oglas, object>>? lambdaInclude)
+        public async Task<List<Oglas>> VratiOglase(long[] oglasIds, params Expression<Func<Oglas, object>>[]? lambdas)
         {
-            return await (lambdaInclude != null ? _context.Oglasi.Where(o => oglasIds.Contains(o.Id)).Include(lambdaInclude).ToListAsync() :
-            _context.Oglasi.Where(o => oglasIds.Contains(o.Id)).ToListAsync());
+            IQueryable<Oglas> query =_context.Oglasi.Where(o => oglasIds.Contains(o.Id));
+            if(lambdas!=null)
+            {
+                foreach(var l in lambdas)
+                {
+                    query = query.Include(l);
+                }
+            }
+            return await query.ToListAsync();
         }
 
         public void AzurirajOglas(Oglas oglas)
@@ -199,7 +213,7 @@ namespace Business.Repo
                     KategorijaId=o.Podkategorija.KategorijaId, KategorijaNaziv=k.Ime},
                 Polja=o.Polja, Kredit=o.Kredit, DatumPostavljanja=o.DatumPostavljanja, Smer=o.Smer, Tip=o.Tip, Cena=o.Cena,
                 Kolicina=o.Kolicina,BrojPregleda=o.BrojPregleda, Vlasnik = new Korisnik {Id=o.Vlasnik.Id,UserName=o.Vlasnik.UserName},
-                Stanje=o.Stanje,Lokacija=o.Lokacija
+                Stanje=o.Stanje,Lokacija=o.Lokacija,Opis=o.Opis,Slike=o.Slike
             });
 
             return await orderedQuery2.Skip(M * N).Take(N).ToListAsync();

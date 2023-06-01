@@ -49,23 +49,7 @@ public class OglasController : ControllerBase
     }
 
 
-    //DEPRECATED!!!!!!!!!!!!!
-    /* [Route("VratiNaslovneSlike")]
-    [HttpGet]
-    public async Task<ActionResult> VratiNaslovneSlike([FromQuery] long[] oglasIds)
-    {
-        try
-        {
-            ZipFile zipSlika = await _service.VratiNaslovneSlikeZIP(oglasIds);
-            return File(zipSlika.Data, ZipFile.CONTENT_TYPE, zipSlika.Name);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
 
-    }
-*/
     [Route("VratiSliku/{naziv}")]
     [HttpGet]
     public ActionResult VratiSliku(string naziv)
@@ -98,31 +82,22 @@ public class OglasController : ControllerBase
     }
 
 
-/*     //DEPRECATED!!!!!!!!!!!!!
-    [Route("VratiSlike/{oglasId}")]
     [HttpGet]
-    public async Task<ActionResult> VratiSlike(long oglasId)
+    [Route("VratiOglas/{id}")]
+    public ActionResult VratiOglas([FromRoute]long id)
     {
         try
         {
-            ZipFile zipFile = await _service.VratiSlikeZIP(oglasId);
-            return File(zipFile.Data, ZipFile.CONTENT_TYPE, zipFile.Name);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-
-
-    } */
-
-    [HttpGet]
-    [Route("VratiOglas")]
-    public ActionResult VratiOglast(long id)
-    {
-        try
-        {
-            return Ok(_service.VratiOglas(id));
+            Oglas o =_service.VratiOglas(id, o => o.Vlasnik,o=>o.Podkategorija,o=>o.Vlasnik);
+            OglasDto oDto = new OglasDto(o)
+            {
+                SlikeZaSlanje = o.Slike.Select(s => new SlikaDto
+                {
+                    Naziv = Path.GetFileName(s.Path),
+                    Redosled = s.Redosled
+                }).ToList()
+            };
+            return Ok(oDto);
         }
         catch (Exception e)
         {

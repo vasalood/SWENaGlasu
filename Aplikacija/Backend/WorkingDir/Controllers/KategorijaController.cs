@@ -43,13 +43,8 @@ public class KategorijaController : ControllerBase
             Kategorija tmp = _service.VratiKategoriju(id);
 
             //TODO: KategorijaDto, Mapper?
-            object ret = new 
-            {
-                Id=tmp.Id,
-                Ime=tmp.Ime,
-                Podkategorije=tmp.Podkategorije
-            };
-            return Ok(ret);
+ 
+            return Ok(tmp);
         }
         catch(Exception e)
         {
@@ -89,6 +84,8 @@ public class KategorijaController : ControllerBase
 
     }
 
+
+    /* //DEPRECATED
     [HttpGet]
     [Route("VratiPoljaKategorije/{id}")]
     public ActionResult VratiPoljaKategorije([FromRoute] int id)
@@ -100,7 +97,7 @@ public class KategorijaController : ControllerBase
         {
             return BadRequest(e.Message);
         }
-    }
+    } */
 
     [HttpDelete]
     [Route("ObrisiKategoriju/{id}")]

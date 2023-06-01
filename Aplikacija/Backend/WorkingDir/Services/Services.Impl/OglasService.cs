@@ -44,11 +44,6 @@ namespace Services.Impl
                 oglas.Podkategorija = kat.Podkategorije.Find(p => p.Id == form.PodkategorijaId) ?? oglas.Podkategorija;
             _repo.AzurirajOglas(oglas);
         }
-        public void PovecajBrojPregleda(long Id)
-        {
-            Oglas o = VratiOglas(Id);
-
-        }
 
         public async Task PostaviOglas(OglasForm form)
         {
@@ -98,9 +93,9 @@ namespace Services.Impl
             return oglas.Slike;
         }
 
-        public Oglas VratiOglas(long id, Expression<Func<Oglas, object>>? predicate = null)
+        public Oglas VratiOglas(long id, params Expression<Func<Oglas, object>>[]? lambdas)
         {
-            var oglas = predicate == null ? _repo.VratiOglas(id, o => o.Podkategorija) : _repo.VratiOglas(id, predicate);
+            var oglas = _repo.VratiOglas(id, lambdas);
             if (oglas == null)
                 throw new NullOglasException(id);
             return oglas;

@@ -30,12 +30,14 @@ namespace Domain.Models
         public String Lokacija { get; set; }
         public Stanje? Stanje { get; set; }
 
+        public string Opis{ get; set; }
+
         public OglasDto()
         {}
 
         public OglasDto(long id,string ime,Podkategorija podkategorija,Dictionary<string,string> polja,int kredit,
         DateTime datumPostavljanja,SmerOglasa smer,TipOglasa tip,int cena,int kolicina,int brojPregleda,
-        string vlasnikUsername,string vlasnikId,String lokacija,Stanje? stanje)
+        string vlasnikUsername,string vlasnikId,String lokacija,Stanje? stanje,string opis)
         {
             Id = id;
             Ime = ime;
@@ -52,11 +54,12 @@ namespace Domain.Models
             VlasnikId = vlasnikId;
             Lokacija = lokacija;
             Stanje = stanje;
+            Opis = opis;
         }
 
         public OglasDto(Oglas oglas):this(oglas.Id,oglas.Ime,oglas.Podkategorija,oglas.Polja,oglas.Kredit,oglas.DatumPostavljanja,
         oglas.Smer,oglas.Tip,oglas.Cena,oglas.Kolicina,oglas.BrojPregleda,oglas.Vlasnik.UserName,oglas.Vlasnik.Id,oglas.Lokacija,
-        oglas.Stanje)
+        oglas.Stanje,oglas.Opis)
         {
             SlikeZaSlanje = oglas.Slike?.Select(s => new SlikaDto
             {

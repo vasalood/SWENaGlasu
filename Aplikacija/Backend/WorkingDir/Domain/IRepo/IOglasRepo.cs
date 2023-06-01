@@ -7,8 +7,8 @@ namespace Domain.IRepo
 {
     public interface IOglasRepo
     {
-        public Oglas? VratiOglas(long oglasId,Expression<Func<Oglas,object>>? lambdaInclude);
-        public Task<List<Oglas>> VratiOglase(long[] oglasIds, Expression<Func<Oglas, object>>? lambdaInclude);
+        public Oglas? VratiOglas(long oglasId, params Expression<Func<Oglas, object>>[]? lambdas);
+        public Task<List<Oglas>> VratiOglase(long[] oglasIds, params Expression<Func<Oglas, object>>[]? lambdas);
         public Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri? filteri,Order order);
         public Task<List<Slika>> PostaviSlike(List<IFormFile> slike);
         public Task<int> PrebrojiOglaseZaFiltere(OglasFilteri? filteri);

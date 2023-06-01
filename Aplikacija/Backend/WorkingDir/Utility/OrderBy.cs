@@ -10,4 +10,10 @@ public static class OrderBy
     public readonly static string KREDIT = "kredit";
     public readonly static string KOLICINA = "kolicina";
 
+    //ZA UGOVORE
+    // CENA, UKUPNA_CENA, DATUM
+
+    //ZA OGLASE
+    //NAZIV,CENA,POPULARNOST,DATUM,KREDIT,KOLICINA
+
 }
