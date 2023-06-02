@@ -10,8 +10,23 @@ export default function Oglas() {
 
   const nizSlika = [bicikla1, bicikla2, bicikla3, bicikla4, bicikla5]
 
-  const [dugmePrati, setDugmePrati] = useState('Prati oglas');
+  const [dugmePrati, setDugmePrati] = useState('Prati oglas!');
   const [slika, setSlika] = useState(0);
+
+  let stanje;
+  let prikazSlika = true;  
+  
+  if(data.slikeZaSlanje.length === 0){
+    prikazSlika = false;
+  }
+
+  if(data.stanje === 0){
+    stanje = 'Novo';
+  } else if(data.stanje === 1){
+    stanje = 'Kao novo - nekorisceno';
+  } else if(data.stanje === 2){
+    stanje = 'Polovno'
+  }
 
   function napraviDatum(datumJson) {
     const datum = new Date(datumJson);
@@ -28,10 +43,10 @@ export default function Oglas() {
   function handleDugmePrati() {
     setDugmePrati(prevDugmePrati => {
       let novo;
-      if(prevDugmePrati === 'Prati oglas') {
-        novo = `Ukupan broj pratilaca: ${data.brojPregleda}`;
+      if(prevDugmePrati === 'Prati oglas!') {
+        novo = 'Oglas pracen!';
       } else {
-        novo = 'Prati oglas';
+        novo = 'Prati oglas!';
       }
       return novo;
     })
@@ -50,6 +65,15 @@ export default function Oglas() {
       else return prevSlika + 1
     })
   }
+  
+  function popuniPolja(){
+    let nizPolja = [];
+    for (const key in data.polja) {
+      nizPolja.push(<li key={key}>{key}: {data.polja[key]}</li>);
+    }
+    return nizPolja;
+  }
+
 
   return (
     <>
@@ -58,12 +82,12 @@ export default function Oglas() {
           <h1>{data.ime}</h1>
           <button className="button-prvi-tip">Postavi oglas</button>
         </div>
-        <hr></hr>
+        {/* <hr></hr> */}
         <div className="oglas-prikaz">
           
-          <div className="oglas-slika-div">
-            <img src={bicikla1} /*className="oglas-slika"*/ alt=""/>
-          </div>
+          {prikazSlika && <div className="oglas-slika-div">
+            <img src={bicikla1} alt=""/>
+          </div>}
 
           <div className="oglas-informacije">
 
@@ -84,24 +108,24 @@ export default function Oglas() {
 
             <div className="oglas-informacije-red">
               <label>Stanje:</label>
-              <label>{data.stanje}</label>
+              <label>{stanje}</label>
             </div>
 
             <div className="oglas-informacije-red">
-              <button onClick={handleDugmePrati}>{dugmePrati}</button>
+              <button className="button-drugi-tip" onClick={handleDugmePrati}>{dugmePrati}</button>
             </div>
 
           </div>
 
           <div className="oglas-informacije">
 
-            <div className="oglas-informacije-red">
+            <div className="oglas-informacije-red-korisnik">
               <label>Korisnik:</label>
-              <label>{data.vlasnikKorisnickoIme}</label>
+              <button className="button-prvi-tip">{data.vlasnikUsername}</button>
             </div>
 
             <div className="oglas-informacije-red">
-              <button>Poruka</button>
+              <button  className="button-drugi-tip">Poruka</button>
             </div>
             
             <div className="oglas-informacije-red">
@@ -110,29 +134,34 @@ export default function Oglas() {
             </div>
 
             <div className="oglas-informacije-red">
-              {/*odakle se racuna ocena?*/}
-              <label>Ocena</label>
-              <label>4.5</label>
-            </div>
-
-            <div className="oglas-informacije-red-ocena">
-              <input type="number" min="1" max="5"></input>
-              <button className="button-prvi-tip">Oceni</button>
+              <label>Broj pregleda oglasa: </label>
+              <label>{data.brojPregleda}</label>
             </div>
 
           </div>
           
         </div>
 
-        <div className="oglas-pet-slika">
+        <div className="pet-slika-i-polja">
+          {prikazSlika && 
+            <div className="oglas-pet-slika">
 
-            <button onClick={handleSlikaLevo}> {'<'} </button>
-            <img src={nizSlika[slika]} className="oglas-slika" />
-            <button onClick={handleSlikaDesno}> {'>'}</button>
+              <button onClick={handleSlikaLevo}> {'<'} </button>
+              <img src={nizSlika[slika]} className="oglas-slika" />
+              <button onClick={handleSlikaDesno}> {'>'}</button>
+
+            </div>
+          }
+          
+          <ul className="polja">
+            {popuniPolja()}
+          </ul>
 
         </div>
         
-        {/*polja? opis?*/}
+        <div className="oglas-opis">
+          {data.opis}
+        </div>
 
       </div>
     </>

@@ -1,4 +1,4 @@
-hr {
+/* hr {
   border:none;
  	width: 91%;
 	height: 65px;
@@ -6,36 +6,15 @@ hr {
 	border-bottom: 1px solid #7b7572;
 	box-shadow: 0 20px 20px -20px #404040;
   margin: -50px auto 10px; 
-}
+} */
 
-.oglas {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border: 1px solid #7b7572;
-  border-radius: 10px;
-  margin-top: 100px;
-  /* margin-left: 120px;
-  margin-right: 120px; */
-  font-family: Roboto, Arial, Helvetica, sans-serif;
-}
-
-.oglas-header {
-  display: flex;
-  height: 30px;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 15px;
-
-  flex-shrink: 0;
-}
-
-.oglas-header > h1 {
-  margin-left: 55px;
+button{
+  cursor: pointer;
+  font-family: Robotom, Arial, Helvetica, sans-serif;
+  font-size: 16px;
 }
 
 .button-prvi-tip {
-  margin-right: 60px;
   background-color: rgb(210, 0, 0);
   color: white;
   border: none;
@@ -56,77 +35,7 @@ hr {
   opacity: 0.4;
 }
 
-.oglas-prikaz {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  margin-top: 50px;
-}
-
-.oglas-slika-div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 370px;
-  width: 350;
-  border: 1px solid #7b7572;
-  border-radius: 5px;
-}
-
-.oglas-slika-div > img {
-  height: 350px;
-  width: 300px;
-}
-
-.oglas-informacije {
-  display: flex;
-  flex-direction: column;
-  align-items:flex-start;
-  justify-content: space-around;
-  font-size: 20px;
-}
-
-.oglas-pet-slika {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 100px;
-}
-
-.oglas-pet-slika > button {
-  font-family: Roboto;
-  font-size: 40px;
-  font-weight: 500;
-  background-color: transparent;
-  border: none;
-  transition: background-color 0.15s, 
-              color 0.15s;
-}
-
-.oglas-pet-slika > button:hover{
-  background-color: rgb(181, 183, 185);
-  color: white;
-}
-
-.oglas-pet-slika > button:active{
-  opacity: 0.7;
-}
-
-.oglas-slika {
-  height: 500px;
-  width: 500px;
-}
-
-.oglas-informacije-red {
-  display: flex;
-  width: 300px;
-  justify-content: space-between;
-}
-
-.oglas-informacije-cena {
-  font-weight: 500;
-}
-
-.oglas-informacije-red > button {
+.button-drugi-tip {
   width: 300px;
   background-color: rgb(2, 158, 255);
   color: white;
@@ -143,7 +52,7 @@ hr {
   vertical-align: top;
 }
 
-.oglas-informacije-red > button:hover{
+.button-drugi-tip:hover{
   border-color: rgb(41, 118, 211);
   border-style: solid;
   border-width: 1px;
@@ -151,27 +60,148 @@ hr {
   color: rgb(2, 158, 255);
 }
 
-.oglas-informacije-red > button:active{
+.button-drugi-tip:active{
   opacity: 0.7;
 }
 
-.oglas-informacije-red-ocena {
+.oglas {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border: 1px solid #dedcdb;
+  border-radius: 10px;
+  margin-top: 100px;
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+  background-color: #dedcdb;
+}
+
+.oglas-header {
+  display: flex;
+  height: 30px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 30px;
+  margin-right: 92px;
+  margin-left: 92px;
+  flex-shrink: 0;
+}
+
+.oglas-prikaz {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 50px;
+}
+
+.oglas-slika-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 370px;
+  width: 350;
+  border: 1px solid white;
+  border-radius: 5px;
+  background-color: white;
+  margin-bottom: 70px;
+}
+
+.oglas-slika-div > img {
+  height: 350px;
+  width: 300px;
+}
+
+.oglas-informacije {
+  display: flex;
+  flex-direction: column;
+  align-items:flex-start;
+  justify-content: space-around;
+  height: 332px;
+  font-size: 20px;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 15px;
+  background-color: white;
+  margin-bottom: 70px;
+
+}
+
+.oglas-informacije-red {
   display: flex;
   width: 300px;
   justify-content: space-between;
 }
 
-.oglas-informacije-red-ocena > input {
-  width: 200px;
+.oglas-informacije-cena {
+  font-weight: 500;
 }
 
-.oglas-informacije-red-ocena > button {
-  width: 100px;
-  margin-right: auto;
+.oglas-informacije-red-korisnik {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 300px;
 }
 
-button{
-  cursor: pointer;
-  font-family: Robotom, Arial, Helvetica, sans-serif;
-  font-size: 16px;
+.pet-slika-i-polja{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-right: 92px;
+  margin-left: 92px;
+  margin-bottom: 70px;
+  border: 1px solid white;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.oglas-pet-slika {
+  display: flex;
+  justify-content: space-around;
+}
+
+.oglas-pet-slika > button {
+  font-family: Roboto;
+  font-size: 40px;
+  font-weight: 500;
+  background-color: transparent;
+  border: none;
+  transition: background-color 0.15s, 
+              color 0.15s;
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+.oglas-pet-slika > button:hover{
+  background-color: #dedcdb;
+  border-radius: 5px;
+}
+
+.oglas-pet-slika > button:active{
+  opacity: 0.7;
+}
+
+.oglas-slika {
+  height: 400px;
+  width: 350px;
+}
+
+.polja{
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+  justify-content: space-around;
+  list-style-type: square;
+  font-size: 20px;
+}
+
+.oglas-opis{
+  background-color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 20px;
+  margin-left: 92px;
+  margin-right: 92px;
+  margin-bottom: 70px;
 }
