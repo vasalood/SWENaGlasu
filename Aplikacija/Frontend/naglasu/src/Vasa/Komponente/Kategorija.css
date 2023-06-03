@@ -1,0 +1,144 @@
+.kategorija {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  /* align-items: center;
+  justify-content: space-around; */
+  width: 600px;
+  margin: 0 auto;
+  font-family: Roboto;
+  font-size: 20px;
+  background-color: rgb(233, 232, 232);
+  border-radius: 5px;
+}
+
+.kategorija-naslov {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: -4.92px;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+.kategorija-polja-naslov {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: -18.72px;
+  margin-bottom: -3.72px;
+  margin-right: 60px;
+}
+
+.kategorija-polja {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+.select-i-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 232px;
+}
+
+.kategorija-postavi {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-bottom: 15px;
+}
+
+input, select{
+  height: 36px;
+  font-size: 20px;
+  font-family: Roboto;
+  border: 1px solid rgb(192,192,192);
+  border-radius: 2px;
+  box-shadow: inset 1px 2px 3px rgba(0,0,0,0.05);
+}
+
+select {
+  height: 39.6px;
+  width: 150px;
+}
+
+button {
+  font-family: Roboto;
+  cursor: pointer;
+}
+
+.dodaj-kategoriju-button{
+  background-color: rgb(210, 0, 0);
+  color: white;
+  border: none;
+  border-radius: 2px;
+  font-size: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
+  transition: opacity 0.15s;
+  vertical-align: top;
+}
+
+.dodaj-kategoriju-button:hover{
+  opacity: 0.7;
+}
+
+.dodaj-kategoriju-button:active{
+  opacity: 0.4;
+}
+
+.add-button {
+  background-color: rgb(178, 178, 178);
+  border: none;
+  width: 39.6px;
+  height: 39.6px;
+  border-radius: 19.8px;
+  font-size: 18px;
+  transition: opacity 0.15s;
+}
+
+.add-button:hover{
+  opacity: 0.7;
+}
+
+.add-button:active{
+  opacity: 0.4;
+}
+
+.lista-polja {
+  display: flex;
+  flex-direction: column;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+.lista-polja > h3 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+.lista-polja > ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 7px;
+}
+
+.remove-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  margin-left: 10px;
+}
