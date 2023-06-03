@@ -63,6 +63,7 @@ export default function SortWindow({active,setActive,stanja,seterStanja})
                         label='Broj oglasa po stranici'
                         inputProps={
                         { name: 'brojOglasa' }}>
+                <MenuItem value={4} key={4}>4</MenuItem>
                 <MenuItem value={10} key={10}>10</MenuItem>
                 <MenuItem value={20} key={20}>20</MenuItem>
                 <MenuItem value={50} key={50}>50</MenuItem>

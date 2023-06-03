@@ -8,6 +8,8 @@ import "./Naslovna.css"
 import SearchBarContext from '../../Contexts/NavBarContext'
 import { useLoaderData } from "react-router";
 import NavBarContext from "../../Contexts/NavBarContext";
+import NaslovnaContext from "../../Contexts/NaslovnaContext";
+import { useLocation } from 'react-router-dom'
 
 const changeWindowWidth = 'change-window-width'
 const actionChangeWindowWidth = { type: changeWindowWidth }
@@ -90,7 +92,6 @@ export async function naslovnaLoader({params})
             })
         
     }
-    console.log(filters)
     const response1 =
         await fetch(requestUrl,
             {
@@ -108,7 +109,11 @@ export async function naslovnaLoader({params})
             const response1JSON = await response1.json()
             const oglasi = response1JSON.lista
             const ukupanBr = response1JSON.ukupanBr
-            return {oglasNiz:oglasi,ukupanBr:ukupanBr,trenutnaStranica:params.M}
+        return {
+            oglasNiz: oglasi,
+            ukupanBr: ukupanBr,
+            trenutnaStranica: params.M!==undefined?Number.parseInt(params.M):0
+        }
     }
     else
     {
@@ -138,7 +143,7 @@ export default function Naslovna()
     
    
 
-    const { oglasNiz, trenutnaStranica } = useLoaderData()
+    const { oglasNiz, trenutnaStranica,ukupanBr } = useLoaderData()
 
     const oglasiStavke = oglasNiz.map((o,index) =>
     {
@@ -178,34 +183,34 @@ export default function Naslovna()
     )
 
     const [isDropdownSelected, setDropdownSelected] = React.useState(false)
-    const [contextNaslovne, setContextNaslovne] = React.useState(
-        {
-            brStranice:0,ukupanBr:null
-        }
-    )
+    const fromLocUkupanBr = useLocation().state?.ukupanBr
 
 
     return (
         <div className="naslovna">
-        <NavBarContext.Provider value=
+            <NavBarContext.Provider value=
             {
-            {
+                {
                 opacityStyle: opacityStyle,
                 isDropdownSelected: isDropdownSelected,
-                setDropdownSelected: setDropdownSelected,
-                trenutnaStranica:trenutnaStranica
-            }
-        }>
-        <Navbar></Navbar>
-        <Header></Header>
-        <SearchBar />
+                setDropdownSelected: setDropdownSelected
+                }
+            }>
+                <NaslovnaContext.Provider value= 
+                {
+                    {
+                        trenutnaStranica: trenutnaStranica,
+                        ukupanBr: ukupanBr !== undefined ? ukupanBr : fromLocUkupanBr,
+                    }
+                }>
+                    <Navbar></Navbar>
+                    <Header></Header>
+                    <SearchBar />
 
-        <div className="naslovna--oglasi_stavke_container" style={mainContainerStyle}>
-            {oglasiStavke}
-        </div>
-
-
-
+                    <div className="naslovna--oglasi_stavke_container" style={mainContainerStyle}>
+                        {oglasiStavke}
+                    </div>
+                </NaslovnaContext.Provider>
     </NavBarContext.Provider>
         </div>
     )

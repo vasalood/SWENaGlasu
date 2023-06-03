@@ -7,6 +7,7 @@ const NavBarContext = React.createContext({
         opacity:"1"
     },
     isDropdownSelected: false,
-    setDropdownSelected: (oldValue)=>{return null}
+    setDropdownSelected: (oldValue) => { return null },
+
 })
 export default NavBarContext

@@ -43,6 +43,10 @@
 
 .searchbar--nav_btn
 {
+    width: 52px;
+    height: 52px;
+    border: none;
+    background-color: transparent;
     margin-left:40px;
     margin-right: 40px;
 }

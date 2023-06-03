@@ -6,6 +6,7 @@ import NavBarContext from "../../Contexts/NavBarContext"
 import FilterWindow from "../FilterWindow/FilterWindow";
 import { Link } from 'react-router-dom'
 import SortWindow from "../SortWindow/SortWindow";
+import NaslovnaContext from "../../Contexts/NaslovnaContext";
 
 export default function SearchBar()
 {
@@ -77,12 +78,22 @@ export default function SearchBar()
 
     const [filterWindowActive, setFilterWindowActive] = React.useState(false)
     const [sortWindowActive,setSortWindowActive]=React.useState(false)
-    const {opacityStyle,trenutnaStranica}=React.useContext(NavBarContext)
+    const { opacityStyle } = React.useContext(NavBarContext)
+    const {trenutnaStranica, ukupanBr }=React.useContext(NaslovnaContext)
+    const maxStranica = (ukupanBr / sortStanja.brojOglasa) >> 0
+    console.log('max str ' + maxStranica)
     return (
         <div className='searchbar--container' style={opacityStyle}>
-            <button className="searchbar--nav_btn searchbar--prev_btn">
-                    <BsChevronLeft size={35} style={navButtonStyle} />
-                </button>
+            {trenutnaStranica !== 0?
+                <Link to={`/${sortStanja.brojOglasa}/${trenutnaStranica - 1}/` +
+                    `${sortStanja.orderBy !== '' ? sortStanja.orderBy : 'kredit'}` +
+                    `/${sortStanja.orderType}/${stringFilterStanja
+                    }`} state={{ ukupanBr: ukupanBr }}>
+                    <button className="searchbar--nav_btn searchbar--prev_btn">
+                        <BsChevronLeft size={35} style={navButtonStyle} />
+                    </button>
+                </Link> : <div className="searchbar--nav_btn" />
+            }
             <div className='searchbar--wrapper'>
                 
                 <input type="text" className='searchbar--input' placeholder="Pretraga..."
@@ -97,7 +108,7 @@ export default function SearchBar()
                     value={filterStanja.ime}></input>
                 <button className='searchBar--sort_btn'>
                     <BsSortDownAlt size={30} onClick={(ev) => setSortWindowActive(
-                        oldValue=>!oldValue
+                        oldValue => !oldValue
                     )} />
                 </button>
                 <button className='searchbar--filter_btn' onClick={(ev) => {
@@ -106,7 +117,8 @@ export default function SearchBar()
                 }>
                     <BsFilter size={30}/>
                 </button>
-                <Link to={`/20/0/kredit/0/${
+                <Link to={`/${sortStanja.brojOglasa}/0/${sortStanja.orderBy !== '' ? sortStanja.orderBy : 'kredit'}` +
+                    `/${sortStanja.orderType}/${
                             stringFilterStanja
                     }`}>
                 <button className='searchbar--search_btn'>
@@ -115,9 +127,17 @@ export default function SearchBar()
                 </Link>
            
             </div>  
-            <button className="searchbar--nav_btn searchbar--next_btn" style={navButtonStyle}>
-            <BsChevronRight size={35} />
-            </button>
+            {trenutnaStranica !== maxStranica?
+                <Link to={`/${sortStanja.brojOglasa}/${trenutnaStranica +1}/` +
+                `${sortStanja.orderBy !== '' ? sortStanja.orderBy : 'kredit'}` +
+                `/${sortStanja.orderType}/${
+                        stringFilterStanja
+                    }`} state={{ukupanBr:ukupanBr}}>
+                    <button className="searchbar--nav_btn searchbar--next_btn" style={navButtonStyle}>
+                        <BsChevronRight size={35} />
+                    </button>
+                    
+                </Link>:<div className='searchbar--nav_btn'/>}
             <FilterWindow active={filterWindowActive} setActive={setFilterWindowActive} stanja={filterStanja}
                 seterStanja={seterFilterStanja} />
             <SortWindow active={sortWindowActive} setActive={setSortWindowActive} stanja={sortStanja } seterStanja={seterSortStanja} />
