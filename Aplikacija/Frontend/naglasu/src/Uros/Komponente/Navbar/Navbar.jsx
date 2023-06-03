@@ -6,13 +6,49 @@ import DropDownMenu from '../DropDownMenu/DropDownMenu'
 import {BsChevronUp,BsChevronDown} from 'react-icons/bs'
 import NavBarContext  from '../../Contexts/NavBarContext'
 
-export default function Navbar()
+export default function Navbar({children})
 {
 
     const color_secondary = '#ff3333';
-    const {opacityStyle,isDropdownSelected,setDropdownSelected} = React.useContext(NavBarContext)
+    const [isCollapsable, setCollapsable] = React.useState(false)
+    const [isDropdownSelected,setDropdownSelected] = React.useState(false)
+    const [opacityStyle, setOpacityStyle] = React.useState({
+        opacity: "1"
+    })
+    const [isEnabled,setEnabled] = React.useState(true)
+    function opacityOnScroll()
+    {
+        const y = window.scrollY
+        const newOpacity = Math.max((y - 200) / 300, 0)
+        if (newOpacity < 1.0)
+        {
+            setDropdownSelected(false)
+        }
+
+        setOpacityStyle((oldValue) => {
+            
+            return {
+                ...oldValue,
+                opacity: newOpacity.toString()
+            }
+        })
+        
+    }
     
-    
+    function SetCollapsable(value)
+    {
+        setCollapsable(value)
+        setOpacityStyle(value===true?{opacity:'0'}:{opacity:'1'})
+    }
+
+    React.useEffect(
+        () =>
+        {
+            window.addEventListener("scroll", opacityOnScroll)
+            return ()=>window.removeEventListener("scroll",opacityOnScroll)
+        },[]
+    )
+
 
     const menuItems = [
     <a href="/">PROFIL</a>,
@@ -21,21 +57,28 @@ export default function Navbar()
     <a href="/">ODJAVA</a>]
 
     
-    return (<nav className="mnavbar" style={opacityStyle}>
-        <img className="mnavbar--banner" src={BannerLogo}></img>
-       {/*  <ul className="nav--ul">
-            <li>PROFIL</li>
-            <li>FAVORITI</li>
-            <li>UGOVORI</li>
-            <li>ODJAVA</li>
-        </ul> */}
-        <DropDownMenu
-            ButtonIconOn={<BsChevronUp size={35} color={color_secondary}/>}
-            ButtonIconOff={<BsChevronDown size={35} color={color_secondary}/>}
-            items={menuItems}
-            className="mnavbar--dropdown"
-            isSelected={isDropdownSelected}
-            toggleSelected={setDropdownSelected}
-            buttonDisabled={Number.parseFloat(opacityStyle.opacity)<1.0}></DropDownMenu>
-    </nav>)
+    return (
+       <NavBarContext.Provider value=
+        {
+            {
+                opacityStyle: opacityStyle,
+                navbarSetCollapsable: SetCollapsable,
+                navbarSetEnabled:setEnabled
+            }
+        }>
+            {isEnabled && <nav className="mnavbar" style={isCollapsable ? opacityStyle : { opacity: '1' }}>
+                <img className="mnavbar--banner" src={BannerLogo}></img>
+                <DropDownMenu
+                    ButtonIconOn={<BsChevronUp size={35} color={color_secondary} />}
+                    ButtonIconOff={<BsChevronDown size={35} color={color_secondary} />}
+                    items={menuItems}
+                    className="mnavbar--dropdown"
+                    isSelected={isDropdownSelected}
+                    toggleSelected={setDropdownSelected}
+                    buttonDisabled={Number.parseFloat(opacityStyle.opacity) < 1.0}></DropDownMenu>
+            </nav>}
+            {children}
+        </NavBarContext.Provider>
+        
+    )
 }

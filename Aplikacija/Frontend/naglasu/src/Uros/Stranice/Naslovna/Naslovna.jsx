@@ -1,11 +1,10 @@
-import { Fragment, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import Header from "../../Komponente/Header/Header"
 import Navbar from "../../Komponente/Navbar/Navbar"
 import SearchBar from "../../Komponente/Searchbar/Searchbar";
 import OglasStavka from "../../Komponente/OglasStavka/OglasStavka"
 import React from 'react'
 import "./Naslovna.css"
-import SearchBarContext from '../../Contexts/NavBarContext'
 import { useLoaderData } from "react-router";
 import NavBarContext from "../../Contexts/NavBarContext";
 import NaslovnaContext from "../../Contexts/NaslovnaContext";
@@ -150,12 +149,18 @@ export default function Naslovna()
         return <OglasStavka oglas={o} key={index} />
     })
 
+    const { navbarSetCollapsable } = React.useContext(NavBarContext)
+    React.useEffect(() => {
+        
+        navbarSetCollapsable(true)
+        return ()=>navbarSetCollapsable(false)
+    }, [])
     
-    const [opacityStyle, setOpacityStyle] = React.useState({
+   /*  const [opacityStyle, setOpacityStyle] = React.useState({
         opacity: "0"
-    })
+    }) */
 
-    function opacityOnScroll()
+   /*  function opacityOnScroll()
     {
         const y = window.scrollY
         const newOpacity = Math.max((y - 200) / 300, 0)
@@ -181,37 +186,26 @@ export default function Naslovna()
             return ()=>window.removeEventListener("scroll",opacityOnScroll)
         },[]
     )
-
-    const [isDropdownSelected, setDropdownSelected] = React.useState(false)
+ */
+    /* const [isDropdownSelected, setDropdownSelected] = React.useState(false) */
     const fromLocUkupanBr = useLocation().state?.ukupanBr
 
 
     return (
         <div className="naslovna">
-            <NavBarContext.Provider value=
+            <NaslovnaContext.Provider value= 
             {
                 {
-                opacityStyle: opacityStyle,
-                isDropdownSelected: isDropdownSelected,
-                setDropdownSelected: setDropdownSelected
+                    trenutnaStranica: trenutnaStranica,
+                    ukupanBr: ukupanBr !== undefined ? ukupanBr : fromLocUkupanBr,
                 }
             }>
-                <NaslovnaContext.Provider value= 
-                {
-                    {
-                        trenutnaStranica: trenutnaStranica,
-                        ukupanBr: ukupanBr !== undefined ? ukupanBr : fromLocUkupanBr,
-                    }
-                }>
-                    <Navbar></Navbar>
-                    <Header></Header>
-                    <SearchBar />
-
-                    <div className="naslovna--oglasi_stavke_container" style={mainContainerStyle}>
-                        {oglasiStavke}
-                    </div>
-                </NaslovnaContext.Provider>
-    </NavBarContext.Provider>
+                <Header/>
+                <SearchBar />
+                <div className="naslovna--oglasi_stavke_container" style={mainContainerStyle}>
+                    {oglasiStavke}
+                </div>
+            </NaslovnaContext.Provider>
         </div>
     )
 }

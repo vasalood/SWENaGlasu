@@ -22,6 +22,8 @@ import DataTable from './Veljko/ProfilePage/Datatable';
 import Neka from './Veljko/ProfilePage/Neka';
 import  Payment  from './Veljko/ProfilePage/Payment';
 import QuickFilteringGrid from './Veljko/ProfilePage/NovaTabela';
+import Navbar from './Uros/Komponente/Navbar/Navbar'
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const router = createBrowserRouter(
   [
@@ -61,10 +63,13 @@ const router = createBrowserRouter(
 root.render(
   <Provider store = {store}>
   <AuthContextProvider>
-    <ProSidebarProvider>
-      <RouterProvider router={router}>
+      <ProSidebarProvider>
+        <Navbar>
+          <RouterProvider router={router}>
 
-      </RouterProvider>
+          </RouterProvider>
+        </Navbar>
+    
 {/*   <BrowserRouter>
    <Routes>
    <Route path="/" element={<Naslovna/>}/>
