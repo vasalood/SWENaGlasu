@@ -48,6 +48,7 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+builder.Services.AddStripeInfrastructure(builder.Configuration);
 builder.Services.AddScoped<IKategorijaRepo, KategorijaRepoImpl>();
 builder.Services.AddScoped<IOglasRepo, OglasRepoImpl>();
 

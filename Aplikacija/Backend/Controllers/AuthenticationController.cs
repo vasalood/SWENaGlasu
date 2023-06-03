@@ -14,7 +14,7 @@ using Business.Contexts;
 using System.ComponentModel.DataAnnotations;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.AspNetCore.Authentication;
 namespace Backend.Controllers;
 
 [ApiController]
@@ -27,8 +27,9 @@ public class AuthenticationController:ControllerBase
     private readonly IConfiguration _configuration;
     private readonly  NaGlasuContext _context ;
     private readonly SignInManager<Korisnik> _signInManager;
+
     public AuthenticationController(UserManager<Korisnik> userManager,RoleManager<IdentityRole> roleManager
-    ,IConfiguration configuration,IEmailService emailService,NaGlasuContext context, SignInManager<Korisnik> signInManager )
+    ,IConfiguration configuration,IEmailService emailService,NaGlasuContext context, SignInManager<Korisnik> signInManager)
     {
         _userManager=userManager;
         _roleManager=roleManager;
@@ -36,6 +37,7 @@ public class AuthenticationController:ControllerBase
        _emailService=emailService;
        _context=context;
        _signInManager=signInManager;
+       
     }
     [HttpPost]
     [Route("UploadImage")]
@@ -380,8 +382,11 @@ public class AuthenticationController:ControllerBase
        var userName=claim.Value;
 
        Korisnik korisnik = await _userManager.FindByNameAsync(userName);
+       //korisnik.IsRevoked = true;
+    
         if(korisnik!=null)
-       { await _signInManager.SignOutAsync();
+       {
+        await HttpContext.SignOutAsync();
         return Ok("Uspesno ste odjavljeni");//mozda treba ovde redirekcija na pocetnu stranicu nekako 
        }
        else
@@ -420,7 +425,7 @@ public class AuthenticationController:ControllerBase
             };
        return Ok(model);
     }
-   
+    [Authorize(Roles ="Admin")]
     [Route("GetAllUsers")]
     [HttpGet]
     public async Task<IActionResult>GetAllUsers()
