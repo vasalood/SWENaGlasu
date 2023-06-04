@@ -205,12 +205,12 @@ public class AuthenticationController:ControllerBase
             var ForgotPasswordLink=Url.Action(nameof(ResettPassword),"Authentication",new{token,email=user.Email},Request.Scheme);
              var message = new Message(new string[] { user.Email! }, "Forgot Password link", ForgotPasswordLink!);
                 _emailService.SendEmail(message);
-            return Ok($"Password Changed request is sent on Email {user.Email}");
+            return Ok($"Poštovani {user.Ime},");
            
         }
         else
         {
-            return BadRequest("This email doesn't exist!");
+            return BadRequest("Ovaj email ne postoji");
         }
     }
     [HttpGet("reset-password")]
@@ -221,12 +221,13 @@ public class AuthenticationController:ControllerBase
     }
     [Route("Reset Password")]
     [HttpPost]
-    public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
+    public async Task<IActionResult> ResetPassword([FromBody]ResetPassword resetPassword)
     {
         //ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
         var user = await _userManager.FindByEmailAsync(resetPassword.Email);
         if(user != null)
         {
+            
             var resetPassResult = await _userManager.ResetPasswordAsync(user,resetPassword.Token,resetPassword.Password);
             if(!resetPassResult.Succeeded)
             {
