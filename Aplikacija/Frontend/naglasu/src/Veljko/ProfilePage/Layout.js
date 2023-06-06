@@ -11,7 +11,7 @@ import WavingHandIcon from '@mui/icons-material/WavingHand';
 import { useState } from "react";
 import  './Layout.module.css';
 import EditPage from "./EditPage";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import MenuItemm from "./MenuItemm";
 import { userActions } from "../store/user";
 import { useSelector,useDispatch } from "react-redux";
@@ -28,7 +28,11 @@ import Expenses from "./Expenses";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useContext } from "react";
 import AuthContext from "../store/auth-context";
+import AddModeratorIcon from '@mui/icons-material/AddModerator';
+import TabelaModerator from './TabelaModerator';
 const Layout =() =>{
+  const navigate =useNavigate();
+
   const authCtx = useContext(AuthContext);
   const [page, setPage] = useState({
     favoriti:"",
@@ -36,7 +40,9 @@ const Layout =() =>{
     ugovori:"",
     oglasi:"",
     korisnik:"",
-    ocene:""
+    ocene:"",
+    izmene:"",
+    moderator:""
   });
   const dispatch=useDispatch();
   const user = useSelector(state =>({
@@ -68,7 +74,9 @@ const Layout =() =>{
       tabele:"",
       oglasi:"",
       korisnik:"2",
-      ocene:""
+      ocene:"",
+      izmene:"",
+      moderator:""
     });
   }
   const handlerTabela =() =>{
@@ -79,7 +87,9 @@ const Layout =() =>{
       favoriti:"",
       oglasi:"",
       tabela:"1",
-      ocene:""
+      ocene:"",
+      izmene:"",
+      moderator:""
     });
   }
   console.log("profilnasidebar");
@@ -91,7 +101,9 @@ const Layout =() =>{
       favoriti:"",
       oglasi:"1",
       tabele:"",
-      ocene:""
+      ocene:"",
+      izmene:"",
+      moderator:""
     })
   }
   const handler = ()=>{
@@ -102,7 +114,9 @@ const Layout =() =>{
       tabele:"",
       oglasi:"",
       korisnik:"2",
-      ocene:"2"
+      ocene:"2",
+      izmene:"",
+      moderator:""
     });
   }
   const handlerOcena = () =>{
@@ -113,7 +127,22 @@ const Layout =() =>{
       tabele:"",
       oglasi:"",
       korisnik:"2",
-      ocene:"2"
+      ocene:"2",
+      izmene:"",
+      moderator:""
+    });
+  }
+  const handlerIzmena = () =>{
+    console.log("2");
+    setPage({
+      ugovori:"",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:"",
+      izmene:"2",
+      moderator:""
     });
   }
   let navigacija = useNavigate();
@@ -128,7 +157,7 @@ const Layout =() =>{
       title: 'Toilet Paper',
       amount: 4,
       date: new Date(2020, 7, 14),
-      korisnik:"Jovan Memedovic",
+      korisnik:"veljkovv",
       komentar:"Katastrofa, prevario me je"
     },
     { id: 'e2', title: 'New TV', amount: 2, date: new Date(2021, 2, 12),korisnik:"Jasar Muhildzic", komentar:"Odlican posao smo sklopili"},
@@ -145,15 +174,51 @@ const Layout =() =>{
       title: 'New Desk (Wooden)',
       amount: 5,
       date: new Date(2021, 5, 12),
-      korisnik:"Perid Bukvic",
+      korisnik:"milos",
       komentar:"Sve iz oglasa ispostovano"
     },
   ];
 const handlerLogout = () =>{
   authCtx.logout();
+  console.log(authCtx.token);
+
+  dispatch(userActions.resetValues());
+  console.log(userActions.getValues());
+
+  // Remove user state from localStorage
+  localStorage.removeItem("userState");
+  localStorage.removeItem('token');
+  navigate('/');
+}
+const handlerModerator = () =>{
+  setPage({
+    ugovori:"",
+    favoriti:"",
+    tabele:"",
+    oglasi:"",
+    korisnik:"2",
+    ocene:"",
+    izmene:"",
+    moderator:"2"
+  });
+}
+const handlerMoji = () =>{
+  setPage({
+    ugovori:"",
+    favoriti:"",
+    tabele:"",
+    oglasi:"",
+    korisnik:"",
+    ocene:"",
+    izmene:"",
+    moderator:""
+  });
 }
   const { collapseSidebar } = useProSidebar();
-    return (
+    if(savedUserState)
+    {  
+  return (
+
       <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
         <Sidebar style={{ height: "100vh" }}>
         <Menu>
@@ -169,15 +234,17 @@ const handlerLogout = () =>{
             <h3>Profile</h3>
           </MenuItem>
           <MenuItem icon={<HomeOutlinedIcon></HomeOutlinedIcon>}onClick={routeChange}>Pocetna stranica</MenuItem>
-          {/* <MenuItem icon={<PeopleOutlinedIcon />}>Moji podaci</MenuItem> */}
-          <MenuItem icon={<PedalBikeIcon />}onClick={handlerOglasa}>Moji oglasi</MenuItem>
+          <MenuItem icon={<PeopleOutlinedIcon />} onClick={handlerMoji}>Moji podaci</MenuItem>
+          <MenuItem icon={<PedalBikeIcon />}onClick={handlerOglasa}>Oglasi koje pratim</MenuItem>
           <MenuItem icon={<GavelIcon />}onClick={handlerUgovora}>Ugovori</MenuItem>
           {/* <MenuItem icon={<CalendarTodayOutlinedIcon />}>O nama</MenuItem> */}
           <MenuItem icon={<ContactsOutlinedIcon />}onClick={handlerOcena}>Ocene</MenuItem>
-          <MenuItem icon = {<SettingsIcon></SettingsIcon>}>Settings</MenuItem>
-          <MenuItem icon = {<ModeEditIcon></ModeEditIcon>}>Izmena podataka</MenuItem>
+          {/* <MenuItem icon = {<SettingsIcon></SettingsIcon>}>Settings</MenuItem> */}
+          <MenuItem icon = {<ModeEditIcon></ModeEditIcon>}onClick={handlerIzmena}>Izmena podataka</MenuItem>
 
           {user.role=="Admin"?(<MenuItem icon ={<AdminPanelSettingsIcon></AdminPanelSettingsIcon>}onClick={handlerTabela}>AdminSettings</MenuItem>):<></>}
+          {user.role=="Moderator"?(<MenuItem icon ={<AddModeratorIcon></AddModeratorIcon>}onClick={handlerModerator}>Moderator Settings</MenuItem>):<></>}
+
           <MenuItem icon = {<LogoutIcon></LogoutIcon>}onClick={handlerLogout}>Logout</MenuItem>
         </Menu>
       </Sidebar>
@@ -188,8 +255,15 @@ const handlerLogout = () =>{
         {page.oglasi==""?(<></>):<Oglasi></Oglasi>}
         {page.korisnik!=""?(<></>):<Neka></Neka>}
         {page.ocene==""?(<></>):<Expenses items={expenses}></Expenses>}
+        {page.izmene==""?(<></>):<EditPage></EditPage>}
+        {page.moderator==""?(<></>):<TabelaModerator></TabelaModerator>}
+        
       </main>
       </div>
     );
+          }
+          else{
+            return<div>{user.address}</div>
+          }
 }
 export default Layout;

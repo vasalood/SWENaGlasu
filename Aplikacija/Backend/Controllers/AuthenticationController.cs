@@ -16,7 +16,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 namespace Backend.Controllers;
-
+using Microsoft.AspNetCore.Mvc;
+using Contracts;
 [ApiController]
 [Route("[controller]")]
 public class AuthenticationController:ControllerBase
@@ -27,9 +28,9 @@ public class AuthenticationController:ControllerBase
     private readonly IConfiguration _configuration;
     private readonly  NaGlasuContext _context ;
     private readonly SignInManager<Korisnik> _signInManager;
-
+private readonly IStripeAppService _stripeService;
     public AuthenticationController(UserManager<Korisnik> userManager,RoleManager<IdentityRole> roleManager
-    ,IConfiguration configuration,IEmailService emailService,NaGlasuContext context, SignInManager<Korisnik> signInManager)
+    ,IConfiguration configuration,IEmailService emailService,NaGlasuContext context, SignInManager<Korisnik> signInManager,IStripeAppService stripeService)
     {
         _userManager=userManager;
         _roleManager=roleManager;
@@ -37,6 +38,7 @@ public class AuthenticationController:ControllerBase
        _emailService=emailService;
        _context=context;
        _signInManager=signInManager;
+       _stripeService=stripeService;
        
     }
     [HttpPost]
@@ -143,7 +145,7 @@ public class AuthenticationController:ControllerBase
     [Route("Login")]
     public async Task<IActionResult>Login([FromBody]LoginModel loginModel)
     {
-    
+        // await _userManager.SetLockoutEndDateAsync(user,DateTimeOffset.UtcNow.AddMonths(1));
         //checking the user ...
         var user = await _userManager.FindByNameAsync(loginModel.UserName);
         if(user == null)
@@ -156,6 +158,7 @@ public class AuthenticationController:ControllerBase
             {
                 return BadRequest("Vas nalog je suspendovan !");
             }
+            
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name,user.UserName),
@@ -243,6 +246,7 @@ public class AuthenticationController:ControllerBase
             return BadRequest("This email doesn't exist!");
         }
     }
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [Route("Get Korisnik")]
     [HttpGet]
     public async Task<IActionResult>GetKorisnikByUserName(string userName)
@@ -278,7 +282,7 @@ public class AuthenticationController:ControllerBase
             return BadRequest("Ne postoji korisnik sa tim userNameom");
         }
     }
-   // [Authorize(Roles ="Moderator")]
+    [Authorize(Roles ="Admin")]
     [Route("PromeniRolu/{userName}")]
     [HttpPut]
     public async Task<IActionResult>ChangeRole(string userName)
@@ -304,6 +308,7 @@ public class AuthenticationController:ControllerBase
                 }
         }
     }
+    [Authorize(Roles ="Admin, Moderator")]
     [Route("SuspendujKorisnika/{userName}")]
     [HttpPut]
     public async Task<IActionResult>SuspendUser(string userName)
@@ -320,6 +325,7 @@ public class AuthenticationController:ControllerBase
             return BadRequest("Neuspesno blokiran korisnik");
         }
     }
+    [Authorize(Roles ="Admin, Moderator")]
     [Route("UnBlockUser/{userName}")]
     [HttpPut]
     public async Task<IActionResult>UnSuspendUser(string userName)
@@ -336,15 +342,15 @@ public class AuthenticationController:ControllerBase
             return BadRequest("Neuspesno odblokiran korisnik");
         }
     }
-
-    [Route("SuspendUserOnTime")]
+    [Authorize(Roles ="Admin, Moderator")]
+    [Route("SuspendUserOnTime/{userName}")]
     [HttpPut]
-    public async Task<IActionResult>SuspendUserOnTime(string userName,int number)
+    public async Task<IActionResult>SuspendUserOnTime(string userName)
     {
         var user = await _userManager.FindByNameAsync(userName);
         if(user != null)
         {
-            await _userManager.SetLockoutEndDateAsync(user,DateTimeOffset.UtcNow.AddMonths(number));
+            await _userManager.SetLockoutEndDateAsync(user,DateTimeOffset.UtcNow.AddMonths(1));
               await _signInManager.SignOutAsync();
             return Ok("Uspesno blokiran korisnik!");
         }
@@ -353,9 +359,10 @@ public class AuthenticationController:ControllerBase
             return BadRequest("Neuspesno blokiran korisnik");
         }
     }
-    [Route("UpdateUser/{userName}/{Ime}/{Prezime}/{Adresa}/{Uplata}/{Telefon}")]
+[Authorize(Roles ="Admin, Moderator, PremiumUser, User")]   
+ [Route("UpdateUser/{userName}/{Ime}/{Prezime}/{Adresa}/{Telefon}")]
     [HttpPut]
-    public async Task<IActionResult>UpdateUser(string userName,string Ime, string Prezime,string Adresa,int Uplata, string Telefon)
+    public async Task<IActionResult>UpdateUser(string userName,string Ime, string Prezime,string Adresa, string Telefon)
     {
         Korisnik userExist=await _userManager.FindByNameAsync(userName);
         if(userExist== null)
@@ -367,32 +374,35 @@ public class AuthenticationController:ControllerBase
             userExist.Ime=Ime;
             userExist.Prezime=Prezime;
             userExist.Adresa=Adresa;
-            userExist.Uplata=Uplata;
             userExist.Telefon=Telefon;
            await _userManager.UpdateAsync(userExist);
             return Ok("Uspesno promenjen korisnik!");
             
         }
     }
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User ")]
     [Route("LogOut")]
     [HttpPost]
     public async Task<IActionResult>LogOut()
     {
-         var Identity = (ClaimsIdentity)User.Identity;
-       var claim = Identity.FindFirst(ClaimTypes.Name);
-       var userName=claim.Value;
+         if (User.Identity.IsAuthenticated)
+    {
+        var userName = User.Identity.Name;
 
-       Korisnik korisnik = await _userManager.FindByNameAsync(userName);
-       //korisnik.IsRevoked = true;
-    
-        if(korisnik!=null)
-       {
-        await HttpContext.SignOutAsync();
-        return Ok("Uspesno ste odjavljeni");//mozda treba ovde redirekcija na pocetnu stranicu nekako 
-       }
-       else
-       return BadRequest();
+        Korisnik korisnik = await _userManager.FindByNameAsync(userName);
+
+        if (korisnik != null)
+        {
+            
+            await HttpContext.SignOutAsync();
+         
+            return Ok("Uspesno ste odjavljeni");
+        }
     }
+
+    return BadRequest();
+    }
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User ")]
     [Route("GetUserName")]
     [HttpGet]
     public async Task<IActionResult>GetUserName()
@@ -403,6 +413,7 @@ public class AuthenticationController:ControllerBase
        return Ok(userName);
        return BadRequest("Ne postoji");
     }
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User ")]
     [Route("GetUser")]
     [HttpGet]
     public async Task<IActionResult>GetUser()
@@ -426,7 +437,7 @@ public class AuthenticationController:ControllerBase
             };
        return Ok(model);
     }
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [Route("GetAllUsers")]
     [HttpGet]
     public async Task<IActionResult>GetAllUsers()
@@ -468,5 +479,68 @@ public class AuthenticationController:ControllerBase
         return Ok(registrovani);
         
     }
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
+    [Route("GetUserView/{userName}")]
+    [HttpGet]
+    public async Task<IActionResult>GetUserView(string userName)
+    {
+Korisnik korisnik = await _userManager.FindByNameAsync(userName);
+  RegisterModel model = new(){
+                Ime = korisnik.Ime,
+                Prezime=korisnik.Prezime,
+                UserName=korisnik.UserName,
+                Adresa=korisnik.Adresa,
+                Telefon=korisnik.Telefon,
+                Email = korisnik.Email,
+                Rola="",
+                Slika=korisnik.Slika
+            };
+       return Ok(model);
+    }
+    
+     [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
+    [Route("IzmeniSifru/{userName}/{novaSifra}")]
+    [HttpPut]
+    public async Task<IActionResult>IzmeniSifru(string userName,string novaSifra)
+    {
+        Korisnik korisnik = await _userManager.FindByNameAsync(userName);
+        if(korisnik!=null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(korisnik);
+                var resetPassResult = await _userManager.ResetPasswordAsync(korisnik,token,novaSifra);
+            if(!resetPassResult.Succeeded)
+            {
+                return BadRequest("Sifra mora sadrzati jedno veliko slovo, jednu cifru i jedan specijalni karakter!");
+            }
+            else
+            return Ok("Sifra je uspesno promenjena");
+            }
+        else 
+                return BadRequest("Korisnik ne postoji");
+    }
+        [Route("AddCustomer")]
+        [HttpPost]
+        public async Task<ActionResult<StripeCustomer>> AddStripeCustomer(
+            [FromBody] AddStripeCustomer customer,
+            CancellationToken ct)
+        {
+            StripeCustomer createdCustomer = await _stripeService.AddStripeCustomerAsync(
+                customer,
+                ct);
 
+            return StatusCode(StatusCodes.Status200OK, createdCustomer);
+        }
+        [Route("AddPayment")]
+        [HttpPost()]
+        public async Task<ActionResult<StripePayment>> AddStripePayment(
+            [FromBody] AddStripePayment payment,
+            CancellationToken ct)
+        {
+            StripePayment createdPayment = await _stripeService.AddStripePaymentAsync(
+                payment,
+                ct);
+
+            return StatusCode(StatusCodes.Status200OK, createdPayment);
+        }
+    
 }

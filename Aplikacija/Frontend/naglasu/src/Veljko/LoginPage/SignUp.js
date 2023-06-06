@@ -18,8 +18,9 @@ const SignUp = props =>{
     const confInputRef = useRef();
     const [currValue,setCurrValue]=useState(false);
     const [errorPop,setErrorPop]=useState();
-
+    let letka = -1;
     const handlerSlike = () =>{
+
       const formDataSlika=new FormData();
       formDataSlika.append('slika', confInputSlika.current.files[0]);
       formDataSlika.append('userName', usernameInputRef.current.value);
@@ -146,12 +147,27 @@ const SignUp = props =>{
             telefon:telefonInputRef.current.value
           }),
         })
-          .then(odgovor => odgovor.text())
-          .then(odgovorTekst => {console.log(odgovorTekst)
-          handlerSlike();})
-            .catch((error) => {
-              //console.log(error);
-            });
+        .then((response) => {
+          if (response.status === 200) {
+            return response.text();
+          } else if (response.status === 400) {
+            letka = 1;
+            setErrorPop({
+              title:"Nevalidna lozina",
+              message:"Lozinka mora sadrzati najmanje 7 znakova, mora sadrzati cifru, veliko slovo i jedan specijalni karakter"
+            })
+          } else {
+            throw new Error("Neuspešan zahtev");
+          }
+        })
+        .then((odgovorTekst) => {
+          console.log(odgovorTekst);
+          if(letka == -1)
+          handlerSlike();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
                 }
     }
     const errorHandler = () =>{

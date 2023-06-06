@@ -3,7 +3,30 @@ import Card from "./Card";
 
 import { useState } from "react";
 import { CgEditFlipH } from "react-icons/cg";
+import { useDispatch,useSelector } from "react-redux";
+import { userActions } from "../store/user";
 export default function App() {
+  const dispatch=useDispatch();
+  const user = useSelector(state =>({
+    name:state.user.uname,
+    surname:state.user.usurname,
+    username:state.user.uusername,
+    address:state.user.uaddress,
+    email:state.user.uemail,
+    phone:state.user.uphone,
+    uplata:state.user.uuplata,
+    role:state.user.urole,
+    slika:state.user.uslika
+    //<span className="text-black-50">veljkoveljovic13@gmail.com</span>
+  }));
+  console.log(user.slika);
+  const savedUserState=localStorage.getItem('userState');
+  if(savedUserState)
+  {
+    dispatch(userActions.setValues(JSON.parse(savedUserState)));
+  }
+
+  console.log(user.name+" "+user.surname+""+user.role);
   const months = [];
   const year = [];
   var [focus, setFocus] = useState("none");
@@ -19,7 +42,7 @@ export default function App() {
   const [cvv, setCvv] = useState();
   const [cardNumber, setCardNumber] = useState("");
   const [cardHolder, setCardHolder] = useState("");
-  const [expDate, setExpDate] = useState({ month: "10", year: 21 });
+  const [expDate, setExpDate] = useState({ month: "10", year: 23 });
   const type = "visa"; /* or Discover,MasterCard HBK's Custom feature */
 
   const handleSubmit = (e) => {
@@ -29,6 +52,69 @@ export default function App() {
       /^[a-zA-Z ]{5,15}$/.test(cardHolder.trim()) &&
       /^[0-9]{3}$/.test(cvv)
     ) {
+      let email = user.email;
+      let name = user.name+" " +user.surname;
+      let cardName = cardHolder;
+      let cardNumberr=cardNumber;
+      let cvvv=cvv;
+      let expYear="20"+expDate.year;
+      let expMonth=expDate.month;
+      console.log(email+" "+name+" "+cardName+" "+cardNumberr+" "+" "+cvvv+" "+expYear+" "+expMonth );
+      const customerData ={
+        email:email,
+        name:name,
+        creditCard:{
+          name:cardName,
+          cardNumber:cardNumberr,
+          expirationYear:expYear,
+          expirationMonth:expMonth,
+          cvc:cvvv
+        }
+      }
+      console.log(customerData);
+      fetch("http://localhost:5105/Authentication/AddCustomer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(customerData),
+      })
+      .then(response1 => {
+        if (response1.status === 200) {
+          return response1.json();
+        } else {
+          throw new Error('Status code is not 200');
+        }
+      })
+      .then(data => {
+        const paymentData2={
+          customerId:data.customerId,
+          receiptEmail:data.email,
+          description:"Premium Clan",
+          currency:"eur",
+          amount:"1000",
+        }
+        console.log(paymentData2);
+        fetch("http://localhost:5105/Authentication/AddPayment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(paymentData2),
+      })
+      .then(response12 => {
+        if (response12.status === 200) {
+          return response12.json();
+        } else {
+          return response12.text();
+        }
+      }).then(data2=>{
+        console.log(data2);
+      })
+      })
+      .catch(error => {
+        console.error(error);
+      });
       setSuccess(true);
       setError("Your information have been captured successfully!");
       setTimeout(() => {

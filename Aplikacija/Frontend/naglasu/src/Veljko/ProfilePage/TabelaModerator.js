@@ -31,9 +31,13 @@ const columns = [
 },
 {
     field:"rola", headerName:"Rola",width:120,
-    cellRender:(params)=>{
-        return(<div className={`cellWithStatus${params.row.rola}}`}></div>)
-    }
+    cellRender: (params) => {
+        if (params.row.rola !== "Admin") {
+          return <div className={`cellWithStatus${params.row.rola}`}></div>;
+        } else {
+          return null; // ili neki drugi sadržaj ukoliko ne želite ništa prikazati za korisnike sa ulogom "Admin"
+        }
+      }
 },
 {
 field: "suspendovan",
@@ -55,15 +59,17 @@ renderCell: (params) => {
 
 
 export default function DataTable() {
+    let token = localStorage.getItem('token');
+    console.log(token);
   const authCtx = useContext(AuthContext);
     const [selectedRow, setSelectedRow] = useState(null);
   console.log(authCtx.token);
   const handleActionClick = (rowData) => {
    console.log(rowData.username);
-   fetch("http://localhost:5105/Authentication/SuspendUserOnTime/"+rowData.username, {
+   fetch("http://localhost:5105/Authentication/SuspendujKorisnika/"+rowData.username, {
     method: "PUT", // HTTP metoda koja se koristi za zahtev
     headers: {
-      "Authorization":`Bearer ${token}`,
+        "Authorization":`Bearer ${token}`,
       "Content-Type": "application/json", // Tip sadržaja koji se šalje
     },
     body: JSON.stringify({
@@ -78,10 +84,10 @@ export default function DataTable() {
   };
   const handleActionClick2 = (rowData) => {
     console.log(rowData.username);
-    fetch("http://localhost:5105/Authentication/SuspendujKorisnika/"+rowData.username, {
+    fetch("http://localhost:5105/Authentication/SuspendUserOnTime/"+rowData.username, {
      method: "PUT", // HTTP metoda koja se koristi za zahtev
      headers: {
-       "Authorization":`Bearer ${token}`,
+         "Authorization":`Bearer ${token}`,
        "Content-Type": "application/json", // Tip sadržaja koji se šalje
      },
      body: JSON.stringify({
@@ -94,24 +100,7 @@ export default function DataTable() {
      console.log(error);
    });
    };
-  const postaviModeratoraOnClick = (rowData) =>{
-    console.log(rowData.username);
-    fetch("http://localhost:5105/Authentication/PromeniRolu/"+rowData.username, {
-     method: "PUT", // HTTP metoda koja se koristi za zahtev
-     headers: {
-      "Authorization":`Bearer ${token}`,
-       "Content-Type": "application/json", // Tip sadržaja koji se šalje
-     },
-     body: JSON.stringify({
-       // Objekat koji se šalje kao sadržaj
-      
-     }),
-   }).then(odgovorTekst=>{
-     console.log(odgovorTekst);
-   }) .catch((error) => {
-     console.log(error);
-   });
-  }
+  
     
     //                        <button type="button" class="btn btn-outline-success">Success</button>
 
@@ -145,7 +134,7 @@ export default function DataTable() {
         fetch("http://localhost:5105/Authentication/UnBlockUser/"+rowData.username, {
          method: "PUT", // HTTP metoda koja se koristi za zahtev
          headers: {
-          "Authorization":`Bearer ${token}`,
+            "Authorization":`Bearer ${token}`,
            "Content-Type": "application/json", // Tip sadržaja koji se šalje
          },
          body: JSON.stringify({
@@ -174,12 +163,14 @@ export default function DataTable() {
     //     }
     // ]
     const [userRole, setUserRole] = useState('');
-    let token = localStorage.getItem('token');
+
     const [users,SetUsers]=useState([]);
     const fetchUsers = () =>{
+        console.log(token);
         fetch("http://localhost:5105/Authentication/GetAllUsers",{
           headers:{
             "Authorization":`Bearer ${token}`
+           
           }
           })
           .then(odgovor => odgovor.json())
@@ -222,24 +213,19 @@ export default function DataTable() {
             const isAdmin = params.row.rola ==="Admin";
             const isModerator = params.row.rola ==="Moderator";
             const suspended = params.row.suspendOnTime ;
-            const ime = params.row.firstName;
-            console.log(ime);
-            console.log(suspended);
             const suspended2 = params.row.suspendForEver;
-            console.log(suspended2);
             let konacnoSuspendovan;
             if(suspended2==true)
             konacnoSuspendovan=true;
             else if(suspended==true)
             konacnoSuspendovan=true;
             else
-            konacnoSuspendovan=false;
-            return(
+            konacnoSuspendovan=false
+              return(
                   <div className="cellAction">
                       <Button variant="outlined" color="error"onClick={() => handleActionClick2(params.row)} disabled={isAdmin|| suspended || suspended2} >BLOCK ON TIME</Button>
                       <button type="button" class="btn btn-outline-success" onClick={() => unblockHandler(params.row) } disabled={isAdmin || !konacnoSuspendovan}>UNBLOCK</button>
-                      <Button variant="outlined"onClick={() => postaviModeratoraOnClick(params.row)} disabled={isAdmin|| isModerator||suspended || suspended2}>SetAsModerator</Button>
-                      <button type="button" class="btn btn-outline-dark"onClick={() => handleActionClick(params.row)} disabled={suspended||isAdmin} >Black List</button>
+                      <button type="button" class="btn btn-outline-dark" disabled={suspended||isAdmin} onClick={() => handleActionClick(params.row)} >Black List</button>
                   </div>
               )
           }
@@ -249,7 +235,7 @@ export default function DataTable() {
   return (
     <div className='datatable'>
       <DataGrid
-        rows={users}
+        rows={users.filter(user=>user.role!=='Admin')}
         columns={columns.concat(actionColun)}
        pageSize={3}
        rowsPerPageOptions={[5]}

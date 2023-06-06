@@ -7,7 +7,7 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import  './Layout.module.css';
 import EditPage from "./EditPage";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import Table2 from './Table2';
 import DataTable from "./Datatable";
 import Layout from "./Layout";
+import AuthContext from "../store/auth-context";
 const Neka = () =>{
   const dispatch=useDispatch();
   const user = useSelector(state =>({
@@ -62,7 +63,7 @@ const Neka = () =>{
               </div>
             </div>
           </div>
-          <div className="card mb-4 mb-lg-0">
+          {/* <div className="card mb-4 mb-lg-0">
             <div className="card-body p-0">
               <ul className="list-group list-group-flush rounded-3">
                 <li className="list-group-item d-flex justify-content-between align-items-center p-3">
@@ -99,7 +100,7 @@ const Neka = () =>{
                 </li>
               </ul>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="col-lg-8">
           <div className="card mb-4">
@@ -150,7 +151,7 @@ const Neka = () =>{
               </div>
             </div>
           </div>
-          <div className="row">
+          {/* <div className="row">
             <div className="col-md-6">
               <div className="card mb-4 mb-md-0">
                 <div className="card-body">
@@ -305,10 +306,16 @@ const Neka = () =>{
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
+      <h1 style={{ marginBottom: '1rem', fontSize: '2.5rem', fontWeight: 800, lineHeight: 1, color: '#333333' }}>
+        Oglasi koje ste postavili su  <mark style={{ padding: '0.25rem 0.5rem', color: '#ffffff', backgroundColor: '#3B82F6', borderRadius: '0.25rem' }}>NaGlasu</mark> 
+      </h1>
+      
+      <Oglasi></Oglasi>
     </div>
+    
 </section>
     )}
     export default Neka;

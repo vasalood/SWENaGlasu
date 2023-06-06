@@ -28,7 +28,18 @@ const userSlice = createSlice({
         getValues(state)
         {
             return state;
-        }
+        },
+        resetValues(state) {
+            state.uname = "";
+            state.usurname = "";
+            state.uemail = "";
+            state.uaddress = "";
+            state.uusername = "";
+            state.uphone = "";
+            state.uuplata = -1;
+            state.urole = "";
+            state.uslika = "";
+          }
     }
 });
 export const userActions = userSlice.actions;

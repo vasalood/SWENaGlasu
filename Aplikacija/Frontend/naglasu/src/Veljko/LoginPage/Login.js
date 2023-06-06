@@ -138,7 +138,7 @@ const navigate =useNavigate();
           }
           else if(odgovorTekst.includes('confirm') || odgovorTekst.includes('suspendovan'))
           {
-            setPromenaStrane({
+            setErrorPop({
               title:"Greska",
               message:odgovorTekst
               
@@ -146,7 +146,9 @@ const navigate =useNavigate();
              });
              setEmail(true);
             
-          }
+             
+            }
+          
           else
           {
            
@@ -155,7 +157,7 @@ const navigate =useNavigate();
              const tokenValue = odgovorTekst.substring(startIndex, endIndex);
              console.log(odgovorTekst);
             authCtx.login(tokenValue);
-            console.log(tokenValue);
+            localStorage.setItem('token',tokenValue);
            // navigate('/test');
           }
           
