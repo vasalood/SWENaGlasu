@@ -2,6 +2,7 @@ import MenuItemm from "./MenuItemm";
 import './Oglasi.css';
 import { useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
+import ExpensesFilter from "./ExpensesFilter";
 const Oglasi = (props) =>{
 const [oglasList,setOglasList]= useState([]);
 const dispatch=useDispatch();
@@ -87,6 +88,7 @@ useEffect(()=>{
     // ];
 
     return (
+
         <div className="oglas-container">
           {oglasList.map((oglas) => (
             <MenuItemm key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje[0].naziv} />

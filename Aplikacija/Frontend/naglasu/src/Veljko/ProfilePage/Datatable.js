@@ -6,6 +6,8 @@ import { useState,useEffect } from 'react';
 import { Button } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import { useContext } from 'react';
+import AuthContext from '../store/auth-context';
 import { GridToolbarContainer,GridToolbarColumnsButton,GridToolbarFilterButton,GridToolbarDensitySelector,GridToolbarQuickFilter   } from '@mui/x-data-grid';
 const columns = [
   {field:"user",headerName:"User",width:230,
@@ -52,15 +54,16 @@ renderCell: (params) => {
 ];
 
 
-
 export default function DataTable() {
+  const authCtx = useContext(AuthContext);
     const [selectedRow, setSelectedRow] = useState(null);
-
+  console.log(authCtx.token);
   const handleActionClick = (rowData) => {
    console.log(rowData.username);
    fetch("http://localhost:5105/Authentication/SuspendujKorisnika/"+rowData.username, {
     method: "PUT", // HTTP metoda koja se koristi za zahtev
     headers: {
+     
       "Content-Type": "application/json", // Tip sadržaja koji se šalje
     },
     body: JSON.stringify({
@@ -155,6 +158,9 @@ export default function DataTable() {
     const [users,SetUsers]=useState([]);
     const fetchUsers = () =>{
         fetch("http://localhost:5105/Authentication/GetAllUsers",{
+          headers:{
+            "Authorization":`Bearer ${authCtx.token}`
+          }
           })
           .then(odgovor => odgovor.json())
             .then(odgovorTekst =>  {

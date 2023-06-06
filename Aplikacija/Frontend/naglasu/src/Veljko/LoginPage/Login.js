@@ -9,7 +9,14 @@ import AuthContext from "../store/auth-context";
 import { getListSubheaderUtilityClass } from "@mui/material";
 import { userActions } from "../store/user";
 import PopUpModal from './PopUpModal';
+import NavBarContext from "../../Uros/Contexts/NavBarContext";
 const Login = (props) => {
+  // const { navbarSetCollapsable } = React.useContext(NavBarContext)
+  //   React.useEffect(() => {
+        
+  //       navbarSetCollapsable(true)
+  //       return ()=>navbarSetCollapsable(false)
+  //   }, [])
   const dispatch=useDispatch();
   const user = useSelector(state =>({
     name:state.user.uname,

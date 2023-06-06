@@ -24,6 +24,9 @@ import Neka from './Veljko/ProfilePage/Neka';
 import  Payment  from './Veljko/ProfilePage/Payment';
 import QuickFilteringGrid from './Veljko/ProfilePage/NovaTabela';
 import Navbar from './Uros/Komponente/Navbar/Navbar'
+import QuoteItem from './Veljko/ProfilePage/QuoteItem';
+import { Collapse } from '@mui/material';
+import ForgotPasswordPage from './Veljko/LoginPage/ForgotPasswordPage';
 import Chat from './Uros/Stranice/Chat/Chat';
 import './res/colors.css'
 
@@ -53,15 +56,15 @@ const router = createBrowserRouter(
     },
     {
       path:'forgot',
-      element:<ForgotPassword></ForgotPassword>
+      element:<ForgotPasswordPage></ForgotPasswordPage>
     },
     {
       path:'email',
-      element:<Payment></Payment>
+      element:<EmailSentForgot></EmailSentForgot>
     },
     {
       path:'neka',
-      element:<QuickFilteringGrid></QuickFilteringGrid>
+      element:<Collapse></Collapse>
     }
     
   ]

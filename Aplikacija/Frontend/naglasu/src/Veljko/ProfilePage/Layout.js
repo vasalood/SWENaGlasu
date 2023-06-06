@@ -25,7 +25,11 @@ import GavelIcon from '@mui/icons-material/Gavel';
 import PedalBikeIcon from '@mui/icons-material/PedalBike';
 import Ugovori from "./Ugovori";
 import Expenses from "./Expenses";
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useContext } from "react";
+import AuthContext from "../store/auth-context";
 const Layout =() =>{
+  const authCtx = useContext(AuthContext);
   const [page, setPage] = useState({
     favoriti:"",
     tabele:"",
@@ -118,6 +122,36 @@ const Layout =() =>{
     navigacija(path);
     console.log("hahahah");
   }
+  const expenses = [
+    {
+      id: 'e1',
+      title: 'Toilet Paper',
+      amount: 4,
+      date: new Date(2020, 7, 14),
+      korisnik:"Jovan Memedovic",
+      komentar:"Katastrofa, prevario me je"
+    },
+    { id: 'e2', title: 'New TV', amount: 2, date: new Date(2021, 2, 12),korisnik:"Jasar Muhildzic", komentar:"Odlican posao smo sklopili"},
+    {
+      id: 'e3',
+      title: 'Car Insurance',
+      amount: 3,
+      date: new Date(2021, 2, 28),
+      korisnik:"Ana Jovanovic",
+      komentar:"Sve preporuke za saradnju"
+    },
+    {
+      id: 'e4',
+      title: 'New Desk (Wooden)',
+      amount: 5,
+      date: new Date(2021, 5, 12),
+      korisnik:"Perid Bukvic",
+      komentar:"Sve iz oglasa ispostovano"
+    },
+  ];
+const handlerLogout = () =>{
+  authCtx.logout();
+}
   const { collapseSidebar } = useProSidebar();
     return (
       <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
@@ -144,6 +178,7 @@ const Layout =() =>{
           <MenuItem icon = {<ModeEditIcon></ModeEditIcon>}>Izmena podataka</MenuItem>
 
           {user.role=="Admin"?(<MenuItem icon ={<AdminPanelSettingsIcon></AdminPanelSettingsIcon>}onClick={handlerTabela}>AdminSettings</MenuItem>):<></>}
+          <MenuItem icon = {<LogoutIcon></LogoutIcon>}onClick={handlerLogout}>Logout</MenuItem>
         </Menu>
       </Sidebar>
       <main style={{ width: '100%', height: '100%' }}>
@@ -152,7 +187,7 @@ const Layout =() =>{
         {page.favoriti==""?(<></>):<Oglasi></Oglasi>}
         {page.oglasi==""?(<></>):<Oglasi></Oglasi>}
         {page.korisnik!=""?(<></>):<Neka></Neka>}
-        {page.ocene==""?(<></>):<Expenses></Expenses>}
+        {page.ocene==""?(<></>):<Expenses items={expenses}></Expenses>}
       </main>
       </div>
     );
