@@ -1,0 +1,38 @@
+.bg-on-primary
+{
+    background-color: var(--color_on_primary);
+}
+.on-primary
+{
+    color:var(--color_on_primary)
+}
+
+.bg-primary
+{
+    background-color: var(--color_primary);
+}
+.primary
+{
+    color: var(--color_primary);
+}
+
+.bg-secondary
+{
+    background-color: var(--color_secondary);
+}
+
+.secondary
+{
+    color: var(--color_secondary);
+}
+
+.on-secondary
+{
+    color: var(--color_on_secondary);
+}
+
+.bg-on-secondary
+{
+    background-color: var(--color_on_secondary);
+}
+

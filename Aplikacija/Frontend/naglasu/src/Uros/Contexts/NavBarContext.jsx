@@ -4,7 +4,7 @@ import React from 'react'
 const NavBarContext = React.createContext({
     opacityStyle: 
     {
-        opacity:"1"
+        opacity:"0"
     },
     navbarSetCollapsable: (value) => { },
     navbarSetEnabled:(value)=>{}
