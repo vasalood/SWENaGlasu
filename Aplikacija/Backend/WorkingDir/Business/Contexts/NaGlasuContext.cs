@@ -17,6 +17,8 @@ namespace Business.Contexts
         public DbSet<Ugovor> Ugovori { get; set; }
         public DbSet<Ocena> Ocene { get; set; }
         public DbSet<FavoritSpoj> Favoriti { get; set; }
+
+        public DbSet<Poruka> Poruke{ get; set; }
         //Ovde se konfigurise izgled baze
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,6 +37,7 @@ namespace Business.Contexts
             });
 
             modelBuilder.Entity<Ugovor>().HasOne(u => u.Ocena).WithOne(o=>o.Ugovor).HasForeignKey<Ocena>("UgovorId").OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Poruka>().HasOne(p=>p.ZaOglas).WithMany().OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Ocena>().HasAlternateKey("UgovorId");
             modelBuilder.Entity<FavoritSpoj>().HasAlternateKey("KorisnikId", "OglasId");
         }
