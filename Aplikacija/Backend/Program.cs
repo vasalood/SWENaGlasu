@@ -13,6 +13,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Stripe;
+using Controllers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -63,6 +65,10 @@ builder.Services.AddScoped<IUgovorService, UgovorService>();
 builder.Services.AddScoped<IOcenaRepo, OcenaRepoImpl>();
 builder.Services.AddScoped<IOcenaService, OcenaService>();
 
+builder.Services.AddScoped<IPorukaRepo, PorukaRepoImpl>();
+builder.Services.AddScoped<IPorukaService, PorukaService>();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<NaGlasuContext>(options=>
 {
@@ -142,4 +148,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapHub<ChatHub>("/chat");
 app.Run();

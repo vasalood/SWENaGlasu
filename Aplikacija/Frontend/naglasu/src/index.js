@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import reportWebVitals from './reportWebVitals';
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import { BrowserRouter, Routes,Route,createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Login from './Veljko/LoginPage/Login';
 import Test from './Veljko/LoginPage/Test';
@@ -23,6 +24,8 @@ import Neka from './Veljko/ProfilePage/Neka';
 import  Payment  from './Veljko/ProfilePage/Payment';
 import QuickFilteringGrid from './Veljko/ProfilePage/NovaTabela';
 import Navbar from './Uros/Komponente/Navbar/Navbar'
+import Chat from './Uros/Stranice/Chat/Chat';
+import './res/colors.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const router = createBrowserRouter(
@@ -31,6 +34,10 @@ const router = createBrowserRouter(
       path: "/:N?/:M?/:orderBy?/:orderType?/:filters?",
       element: <Naslovna />,
       loader:naslovnaLoader
+    },
+    {
+      path: '/chat/:userId?',
+      element:<Chat/>
     },
     {
       path: "login",
