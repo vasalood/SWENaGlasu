@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './Oglas.css';
 import bicikla1 from "./Hardkodirani podaci/bicikla1.jpeg";
 import bicikla2 from "./Hardkodirani podaci/bicikla2.jpeg";
 import bicikla3 from "./Hardkodirani podaci/bicikla3.jpeg";
@@ -154,12 +155,14 @@ export default function Oglas() {
           }
           
           <ul className="polja">
+            <h4 className="polja-naslov">Specifikacije:</h4>
             {popuniPolja()}
           </ul>
 
         </div>
         
         <div className="oglas-opis">
+          <h4 className="oglas-opis-naslov">Opis oglasa:</h4>
           {data.opis}
         </div>
 

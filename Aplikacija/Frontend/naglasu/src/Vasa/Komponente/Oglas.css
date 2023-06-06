@@ -10,7 +10,7 @@
 
 button{
   cursor: pointer;
-  font-family: Robotom, Arial, Helvetica, sans-serif;
+  font-family: Roboto, Arial, Helvetica, sans-serif;
   font-size: 16px;
 }
 
@@ -195,6 +195,12 @@ button{
   font-size: 20px;
 }
 
+.polja-naslov{
+  margin-top: -10px;
+  margin-bottom: -5px;
+  margin-left: -20px;
+}
+
 .oglas-opis{
   background-color: white;
   border: 1px solid white;
@@ -204,4 +210,8 @@ button{
   margin-left: 92px;
   margin-right: 92px;
   margin-bottom: 70px;
+}
+
+.oglas-opis-naslov{
+  margin-top: -7px;
 }
