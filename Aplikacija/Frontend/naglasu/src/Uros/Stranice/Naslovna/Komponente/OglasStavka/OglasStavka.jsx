@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import placeholder_image from '../../Res/Slike/placeholder.jpg'
+import placeholder_image from '../../../../Res/Slike/placeholder.jpg'
 import "./OglasStavka.css"
 export default function OglasStavka({ oglas })
 {

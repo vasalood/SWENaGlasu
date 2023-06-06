@@ -8,14 +8,13 @@
     width: inherit;
     padding-left: 50px;
     padding-top:5px;
-    /*box-shadow: 0 4px 3px -3px #ffffff;*/
-    margin-bottom: 4px;
     position: sticky;
     top: 0;
     background-color: var(--color_primary);
     z-index: 999999;
     overflow: visible;
     padding-bottom: 20px;
+    box-shadow: 0 1px 2px #010101;
 }
 
 

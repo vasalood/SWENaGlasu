@@ -1,5 +1,5 @@
 
-import MainLogo from "../../Res/Slike/Logo/logo_color_transparent_hres.png"
+import MainLogo from "../../../../Res/Slike/Logo/logo_color_transparent_hres.png"
 import React from "react"
 import "./Header.css"
 

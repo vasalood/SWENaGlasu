@@ -2,11 +2,11 @@ import { Fragment } from "react";
 import "./Searchbar.css"
 import React from 'react'
 import { BsSearch,BsFilter,BsChevronRight,BsChevronLeft,BsSortDownAlt} from 'react-icons/bs'
-import NavBarContext from "../../Contexts/NavBarContext"
+import NavBarContext from "../../../../Contexts/NavBarContext"
 import FilterWindow from "../FilterWindow/FilterWindow";
 import { Link } from 'react-router-dom'
 import SortWindow from "../SortWindow/SortWindow";
-import NaslovnaContext from "../../Contexts/NaslovnaContext";
+import NaslovnaContext from "../../../../Contexts/NaslovnaContext";
 
 export default function SearchBar()
 {
@@ -81,7 +81,6 @@ export default function SearchBar()
     const { opacityStyle } = React.useContext(NavBarContext)
     const {trenutnaStranica, ukupanBr }=React.useContext(NaslovnaContext)
     const maxStranica = (ukupanBr / sortStanja.brojOglasa) >> 0
-    console.log('max str ' + maxStranica)
     return (
         <div className='searchbar--container' style={opacityStyle}>
             {trenutnaStranica !== 0?

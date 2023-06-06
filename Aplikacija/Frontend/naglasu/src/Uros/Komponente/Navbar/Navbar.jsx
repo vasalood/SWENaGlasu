@@ -10,17 +10,17 @@ export default function Navbar({children})
 {
 
     const color_secondary = '#ff3333';
-    const [isCollapsable, setCollapsable] = React.useState(false)
+    const [isCollapsable, setCollapsable] = React.useState(true)
     const [isDropdownSelected,setDropdownSelected] = React.useState(false)
     const [opacityStyle, setOpacityStyle] = React.useState({
-        opacity: "1"
+        opacity: "0"
     })
     const [isEnabled,setEnabled] = React.useState(true)
     function opacityOnScroll()
     {
         const y = window.scrollY
         const newOpacity = Math.max((y - 200) / 300, 0)
-        if (newOpacity < 1.0)
+        if (newOpacity < 1.0&&isCollapsable)
         {
             setDropdownSelected(false)
         }

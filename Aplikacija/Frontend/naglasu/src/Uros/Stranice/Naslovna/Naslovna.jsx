@@ -1,8 +1,7 @@
 import { useEffect, useReducer } from "react";
-import Header from "../../Komponente/Header/Header"
-import Navbar from "../../Komponente/Navbar/Navbar"
-import SearchBar from "../../Komponente/Searchbar/Searchbar";
-import OglasStavka from "../../Komponente/OglasStavka/OglasStavka"
+import Header from "./Komponente/Header/Header"
+import SearchBar from "./Komponente/Searchbar/Searchbar";
+import OglasStavka from "./Komponente/OglasStavka/OglasStavka"
 import React from 'react'
 import "./Naslovna.css"
 import { useLoaderData } from "react-router";
@@ -21,44 +20,6 @@ function reducer(state,action)
     if (action.type === changeWindowWidth)
         return { ...state, width: `${window.innerWidth - (window.innerWidth%440)}px` } //440 = sirina i margine zajedno
 }
-
-
-const oglasTemplate = 
-{
-    id: 7,
-    ime: "oglas test",
-    podkategorija: {
-      ime: "string",
-      id: 1,
-      kategorijaId: 1,
-      kategorijaNaziv: "string"
-    },
-    polja: {
-      string: "string"
-    },
-    kredit: 1231231,
-    datumPostavljanja: "2023-05-14T22:42:03.2330115",
-    smer: 0,
-    tip: 0,
-    cena: 12321312,
-    kolicina: 12,
-    brojPregleda: 0,
-    vlasnikUsername: "VELJKO",
-    vlasnikId: "bcda",
-    lokacija: "Novi Sad",
-    stanje: 1,
-    slikeZaSlanje: [
-      {
-        naziv: "5fVVaFByxe5pUU09s9wQ.png",
-        redosled: 0
-      },
-      {
-        naziv: "ohPk1wonmR8oJjw41bGE.jpg",
-        redosled: 1
-        }
-    ]
-}
-
 
 export async function naslovnaLoader({params})
 {
@@ -156,38 +117,7 @@ export default function Naslovna()
         return ()=>navbarSetCollapsable(false)
     }, [])
     
-   /*  const [opacityStyle, setOpacityStyle] = React.useState({
-        opacity: "0"
-    }) */
-
-   /*  function opacityOnScroll()
-    {
-        const y = window.scrollY
-        const newOpacity = Math.max((y - 200) / 300, 0)
-        if (newOpacity < 1.0)
-        {
-            setDropdownSelected(false)
-        }
-
-        setOpacityStyle((oldValue) => {
-            
-            return {
-                ...oldValue,
-                opacity: newOpacity.toString()
-            }
-        })
-        
-    }   
-
-    React.useEffect(
-        () =>
-        {
-            window.addEventListener("scroll", opacityOnScroll)
-            return ()=>window.removeEventListener("scroll",opacityOnScroll)
-        },[]
-    )
- */
-    /* const [isDropdownSelected, setDropdownSelected] = React.useState(false) */
+   
     const fromLocUkupanBr = useLocation().state?.ukupanBr
 
 
