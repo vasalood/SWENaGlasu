@@ -8,7 +8,10 @@ import { useLoaderData } from "react-router";
 import NavBarContext from "../../Contexts/NavBarContext";
 import NaslovnaContext from "../../Contexts/NaslovnaContext";
 import { useLocation } from 'react-router-dom'
-
+import * as SignalR from '@microsoft/signalr'
+import ConnectionContext from "../../Contexts/ConnectionContext";
+import { Link } from 'react-router-dom'
+import BuildChatHubConnection from "../../Utils/ChatHubConnectionBuilder";
 const changeWindowWidth = 'change-window-width'
 const actionChangeWindowWidth = { type: changeWindowWidth }
 
@@ -86,7 +89,13 @@ export async function naslovnaLoader({params})
 
 export default function Naslovna()
 {
-    
+    const {connectionState,setConnectionState,handleMsgRcv}=React.useContext(ConnectionContext)
+    useEffect(() =>
+    {   
+        if (connectionState === null)
+            BuildChatHubConnection(setConnectionState,connectionState,handleMsgRcv)
+
+    },[connectionState])
     const stavkaWidth=window.innerWidth>450?440:320
     const [mainContainerStyle, dispatch] = useReducer(reducer, {
         width: `${window.innerWidth - (window.innerWidth % stavkaWidth)}px`
@@ -101,8 +110,6 @@ export default function Naslovna()
         return ()=>window.removeEventListener("resize",resizeHandler)
     }, [])
     
-   
-
     const { oglasNiz, trenutnaStranica,ukupanBr } = useLoaderData()
 
     const oglasiStavke = oglasNiz.map((o,index) =>
@@ -122,7 +129,9 @@ export default function Naslovna()
 
 
     return (
+        
         <div className="naslovna">
+            <Link to='/chat'>OVDE</Link>
             <NaslovnaContext.Provider value= 
             {
                 {
