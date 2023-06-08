@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.SignalR;
-using Controllers.Utility;
 namespace Controllers;
 
 public class ChatHub : Hub

@@ -12,7 +12,8 @@ const EmailSentForgot = () =>{
         event.preventDefault(); 
         let a="a";
         console.log(emailRef.current.value);
-        if(emailRef.current.value!=""){
+        if(emailRef.current.value.length>0)
+        {
         fetch("http://localhost:5105/Authentication/ForgotPassword/" + emailRef.current.value, {
           method: "POST",
           headers: {

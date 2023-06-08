@@ -89,11 +89,13 @@ useEffect(()=>{
 
     return (
 
+      <>
         <div className="oglas-container">
           {oglasList.map((oglas) => (
             <MenuItemm key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje[0].naziv} />
           ))}
         </div>
+        </>
       );
     };
 

@@ -53,7 +53,7 @@ const ForgotPassword = (props) =>{
             <i></i>
           </div>
           <div className = {classes.links}>
-            <a href="#" >Forgot Password </a>
+          <Link to="/signup" >SignUp</Link>
             <Link to="/login" >Login</Link>
           </div>
           <input type = "submit" value="Sign Up" onClick={handler} ></input>

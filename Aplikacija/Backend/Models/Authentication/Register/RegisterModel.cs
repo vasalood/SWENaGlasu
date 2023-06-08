@@ -25,6 +25,7 @@ namespace Models
         public string Telefon { get; set; }
         public string? Rola {get;set;}
         public string? Slika{get;set;}
+        public string? Id{get;set;}
         
 
     }

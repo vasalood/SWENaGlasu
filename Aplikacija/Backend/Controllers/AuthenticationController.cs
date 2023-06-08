@@ -273,7 +273,8 @@ private readonly IStripeAppService _stripeService;
               Adresa=korisnik.Adresa,
             Telefon=korisnik.Telefon,
              Uplata= korisnik.Uplata,
-              Email = korisnik.Email
+              Email = korisnik.Email,
+              Id=korisnik.Id
             };
             return Ok(model);
         }
@@ -433,7 +434,8 @@ private readonly IStripeAppService _stripeService;
              Uplata= korisnik.Uplata,
               Email = korisnik.Email,
               Rola=rola[0],
-              Slika=korisnik.Slika
+              Slika=korisnik.Slika,
+              Id=korisnik.Id
             };
        return Ok(model);
     }
@@ -493,7 +495,8 @@ Korisnik korisnik = await _userManager.FindByNameAsync(userName);
                 Telefon=korisnik.Telefon,
                 Email = korisnik.Email,
                 Rola="",
-                Slika=korisnik.Slika
+                Slika=korisnik.Slika,
+                Id=korisnik.Id
             };
        return Ok(model);
     }

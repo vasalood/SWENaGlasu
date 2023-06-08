@@ -30,6 +30,8 @@ import { useContext } from "react";
 import AuthContext from "../store/auth-context";
 import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import TabelaModerator from './TabelaModerator';
+import App3 from './UgovoriBootStrap';
+import Favoriti from "./Favoriti";
 const Layout =() =>{
   const navigate =useNavigate();
 
@@ -249,10 +251,10 @@ const handlerMoji = () =>{
         </Menu>
       </Sidebar>
       <main style={{ width: '100%', height: '100%' }}>
-        {page.ugovori==""?(<></>):<Ugovori></Ugovori>}
+        {page.ugovori==""?(<></>):<App3></App3>}
         {page.tabele==""?(<></>):<DataTable></DataTable>}
         {page.favoriti==""?(<></>):<Oglasi></Oglasi>}
-        {page.oglasi==""?(<></>):<Oglasi></Oglasi>}
+        {page.oglasi==""?(<></>):<Favoriti></Favoriti>}
         {page.korisnik!=""?(<></>):<Neka></Neka>}
         {page.ocene==""?(<></>):<Expenses items={expenses}></Expenses>}
         {page.izmene==""?(<></>):<EditPage></EditPage>}

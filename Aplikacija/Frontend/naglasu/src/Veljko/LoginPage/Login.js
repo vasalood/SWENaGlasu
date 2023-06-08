@@ -27,7 +27,8 @@ const Login = (props) => {
     phone:state.user.uphone,
     uplata:state.user.uuplata,
     role:state.user.urole,
-    slika:state.user.uslika
+    slika:state.user.uslika,
+    id:state.user.id
   }));
   const authCtx = useContext(AuthContext);
 const navigate =useNavigate();
@@ -63,9 +64,10 @@ const navigate =useNavigate();
               username:odgovorTekst.userName,
               uplata:odgovorTekst.uplata,
               role:odgovorTekst.rola,
-              slika:odgovorTekst.slika
+              slika:odgovorTekst.slika,
+              id:odgovorTekst.id
             };
-            console.log(odgovorTekst);
+            console.log(odgovorTekst.id);
             dispatch(userActions.setValues(obj));
             dispatch(userActions.getValues());
             console.log(odgovorTekst.slika);

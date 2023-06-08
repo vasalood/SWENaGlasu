@@ -223,7 +223,7 @@ const SignUp = props =>{
           <input type="file" required="required" ref={confInputSlika}></input>
             <span>Slika</span>
             <i></i>
-            <a href="#" >Forgot Password </a>
+            <Link to="/email" >Forgot Password</Link>
             <Link to="/login" >Login</Link>
           </div>
           <input type = "submit" value="Sign Up" onClick={switchPageHandler}></input>
