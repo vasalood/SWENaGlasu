@@ -1,5 +1,6 @@
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Services.Abs;
 
 namespace Controllers;
@@ -10,9 +11,11 @@ public class PorukaController : ControllerBase
 {
 
     private IPorukaService _service;
-    public PorukaController(IPorukaService service)
+    private readonly IHubContext<ChatHub> _chatHub;
+    public PorukaController(IPorukaService service,IHubContext<ChatHub> chatHub)
     {
         _service = service;
+        _chatHub = chatHub;
     }
 
     [HttpGet]
@@ -32,7 +35,9 @@ public class PorukaController : ControllerBase
                 StrankaUsername=p.Stranka.UserName,
                 Sadrzaj=p.Sadrzaj,
                 Smer=p.Smer,
-                Procitana=p.Procitana
+                Procitana=p.Procitana,
+                Ugovor = p.Ugovor!=null?new UgovorPorukaDto(p.Ugovor.Opis,p.Ugovor.Kolicina,p.Ugovor.Prihvacen,p.Ugovor.Id)
+                :null
         });
             return Ok(retLista);
         }
@@ -43,7 +48,7 @@ public class PorukaController : ControllerBase
     }
 
     [HttpGet]
-    [Route("VratiPorukeZaOglas/{oglasId}/{posiljaocId}")]
+    [Route("VratiChat/{oglasId}/{posiljaocId}")]
     public ActionResult VratiPorukeZaOglas(long oglasId,string posiljaocId)
     {
         try
@@ -59,7 +64,9 @@ public class PorukaController : ControllerBase
                 StrankaUsername = p.Stranka.UserName,
                 Sadrzaj = p.Sadrzaj,
                 Smer = p.Smer,
-                Procitana = p.Procitana
+                Procitana = p.Procitana,
+                Ugovor = p.Ugovor!=null?new UgovorPorukaDto(p.Ugovor.Opis,p.Ugovor.Kolicina,p.Ugovor.Prihvacen,p.Ugovor.Id)
+                :null
             });
             return Ok(retLista);
         }
@@ -72,10 +79,16 @@ public class PorukaController : ControllerBase
 
     [HttpPost]
     [Route("PosaljiPoruku")]
-    public ActionResult PosaljiPoruku(PorukaDto dto)
+    public async Task<ActionResult> PosaljiPoruku(PorukaDto dto)
     {
         try{
             _service.PosaljiPoruku(dto);
+            string? myUsername = User.Identity?.Name;
+            if(myUsername!=null)
+            {
+                await _chatHub.Clients.Group(dto.StrankaUsername).SendAsync("ReceiveMessage",myUsername,dto);
+            }
+                
             return Ok("Poruka poslata.");
         }
         catch(Exception e)

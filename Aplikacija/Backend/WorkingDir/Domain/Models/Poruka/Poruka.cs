@@ -17,6 +17,8 @@ public class Poruka
 
     public bool Procitana { get; set; }
 
+    public Ugovor? Ugovor{ get; set; }
+
     public Poruka()
     {
         
@@ -24,12 +26,12 @@ public class Poruka
 
     public Poruka(PorukaDto dto)
     {
-        Id = dto.Id;
         Timestamp = dto.Timestamp;
         ZaOglas = new Oglas { Id = dto.OglasId };
         Procitana = dto.Procitana;
         Stranka = new Korisnik { Id = dto.StrankaId };
         Sadrzaj=dto.Sadrzaj;
         Smer = dto.Smer;
+        if(dto.UgovorId!=null) Ugovor = new Ugovor { Id = (long)dto.UgovorId };
     }
 }

@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Stripe;
 using Controllers;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -102,6 +103,25 @@ builder.Services.AddAuthentication(options=>{
         ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
+
+     options.Events = new JwtBearerEvents
+      {
+          OnMessageReceived = context =>
+          {
+              var accessToken = context.Request.Query["access_token"];
+
+              // If the request is for our hub...
+              var path = context.HttpContext.Request.Path;
+              if (!string.IsNullOrEmpty(accessToken) &&
+                  (path.StartsWithSegments("/chatHub")))
+              {
+                  // Read the token out of the query string
+                  context.Token = accessToken;
+              }
+              return Task.CompletedTask;
+          }
+      };
+
 });
 //Add Email Configs
 var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
@@ -129,7 +149,7 @@ options=>
         "http://127.0.0.1:3000",
         "https://127.0.0.1:3001",
         "http://127.0.0.1:3001"
-          ).AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+          ).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
     });
 });
 
@@ -142,12 +162,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
  app.UseHttpsRedirection();
-
+app.UseRouting();
 app.UseCors("CORS");
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<ChatHub>("/chat");
+
+app.MapHub<ChatHub>("/chatHub");
 app.Run();

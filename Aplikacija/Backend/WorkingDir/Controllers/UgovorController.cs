@@ -85,7 +85,7 @@ public class UgovorController : ControllerBase
         }
     }
 
-    [HttpPut]
+ /*    [HttpPut]
     [Route("AzurirajUgovor")]
     public ActionResult AzurirajUgovor(UgovorDto ugovorDto)
     {
@@ -100,6 +100,22 @@ public class UgovorController : ControllerBase
             _service.AzurirajUgovor(ugovor);
             return Ok($"Ugovor sa id: {ugovor.Id} azuriran.");
 
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    } */
+
+    [HttpPut]
+    [Route("PrihvatiUgovor/{id}")]
+    public ActionResult PrihvatiUgovor(long id)
+    {
+        try{
+            Ugovor u =_service.VratiUgovor(id);
+            u.Prihvacen = true;
+            _service.AzurirajUgovor(u);
+            return Ok("Ugovor prihvacen.");
         }
         catch(Exception e)
         {
@@ -145,7 +161,7 @@ public class UgovorController : ControllerBase
                 Oglas=oglas
             };
             _service.UpisiUgovor(ugovor);
-            return Ok($"Ugovor sa id: {ugovor.Id} kreiran.");
+            return Ok(new {UgovorId=ugovor.Id});
 
         }
         catch(Exception e)
