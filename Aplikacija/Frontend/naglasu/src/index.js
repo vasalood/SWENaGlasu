@@ -9,7 +9,8 @@ import Test from './Veljko/LoginPage/Test';
 import { AuthContextProvider } from './Veljko/store/auth-context';
 import Naslovna from "./Uros/Stranice/Naslovna/Naslovna"
 import SignUp from './Veljko/LoginPage/SignUp';
-import App from './Veljko/ProfilePage/Profile';
+//import App from './Veljko/ProfilePage/Profile';
+import App from './App'
 import Profile from './Veljko/ProfilePage/Profile';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import Layout from './Veljko/ProfilePage/Layout';
@@ -28,9 +29,15 @@ import QuoteItem from './Veljko/ProfilePage/QuoteItem';
 import { Collapse } from '@mui/material';
 import ForgotPasswordPage from './Veljko/LoginPage/ForgotPasswordPage';
 import Chat from './Uros/Stranice/Chat/Chat';
+import Oglas from './Vasa/Komponente/Oglas';
+import Kategorija from './Vasa/Komponente/Kategorija';
+import PostaviOglas from './Vasa/Komponente/PostaviOglas';
 import './res/colors.css'
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+
 const router = createBrowserRouter(
   [
     {
@@ -65,32 +72,40 @@ const router = createBrowserRouter(
     {
       path:'neka',
       element:<Collapse></Collapse>
+    },
+    {
+      path:'oglas',
+      element:<Oglas></Oglas>
+    },
+    {
+      path:'postavioglas',
+      element:<PostaviOglas></PostaviOglas>
+    },
+    {
+      path:'kategorija',
+      element:<Kategorija></Kategorija>
     }
-    
   ]
 
    )
 root.render(
+
   <Provider store = {store}>
   <AuthContextProvider>
       <ProSidebarProvider>
+        <App>
         <Navbar>
           <RouterProvider router={router}>
 
           </RouterProvider>
-        </Navbar>
+          </Navbar>
+      </App>
+        
     
-{/*   <BrowserRouter>
-   <Routes>
-   <Route path="/" element={<Naslovna/>}/>
-    <Route path="login" element={<Login></Login>}/>
-    <Route path="signup" element = {<SignUp></SignUp>}/>
-   <Route path="test" element = {<Layout></Layout>}/>
-   </Routes>
-  </BrowserRouter> */}
   </ProSidebarProvider>
   </AuthContextProvider>
   </Provider>
+
 );
 
 

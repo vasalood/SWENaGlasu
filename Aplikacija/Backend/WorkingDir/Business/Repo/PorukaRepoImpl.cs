@@ -11,11 +11,13 @@ public class PorukaRepoImpl : IPorukaRepo
     private NaGlasuContext _context;
     private IKorisnikService _korisnikService;
     private IOglasService _oglasService;
-    public PorukaRepoImpl(NaGlasuContext context,IKorisnikService korisnikService,IOglasService oglasService)
+    private IUgovorService _ugovorService;
+    public PorukaRepoImpl(NaGlasuContext context,IKorisnikService korisnikService,IOglasService oglasService,IUgovorService ugovorService)
     {
         _context = context;
         _korisnikService = korisnikService;
         _oglasService = oglasService;
+        _ugovorService = ugovorService;
     }
     public void AzurirajPoruku(Poruka poruka)
     {
@@ -27,13 +29,15 @@ public class PorukaRepoImpl : IPorukaRepo
     {
         poruka.Stranka = _korisnikService.VratiKorisnika(poruka.Stranka.Id);
         poruka.ZaOglas = _oglasService.VratiOglas(poruka.ZaOglas.Id, null);
+        if(poruka.Ugovor!=null)
+            poruka.Ugovor = _ugovorService.VratiUgovor(poruka.Ugovor.Id);
         _context.Poruke.Add(poruka);
         _context.SaveChanges();
     }
 
     public List<Poruka> VratiNaslovnePorukeZaKorisnika(string id)
     {
-        var lista = _context.Poruke.Where(p => p.Stranka.Id == id || p.ZaOglas.Vlasnik.Id == id).Include(p => p.Stranka)
+        var lista = _context.Poruke.Where(p => p.Stranka.Id == id || p.ZaOglas.Vlasnik.Id == id).Include(p => p.Stranka).Include(p=>p.Ugovor)
         .GroupBy(p => p.ZaOglas)
         .Select(g => new { Oglas = g.Key, Poruka = g.OrderByDescending(p => p.Timestamp).First() })
         .ToList()
@@ -45,7 +49,8 @@ public class PorukaRepoImpl : IPorukaRepo
             Procitana = a.Poruka.Procitana,
             Sadrzaj = a.Poruka.Sadrzaj,
             Smer = a.Poruka.Smer,
-            Stranka = a.Poruka.Stranka
+            Stranka = a.Poruka.Stranka,
+            Ugovor=a.Poruka.Ugovor
         }).OrderByDescending(p=>p.Timestamp).ToList();
 
         var lista2 = new List<Poruka>();
@@ -57,6 +62,7 @@ public class PorukaRepoImpl : IPorukaRepo
         return _context.Poruke.Where(p =>p.ZaOglas.Id == oglasId&&p.Stranka.Id==strankaId)
         .Include(p=>p.Stranka)
         .Include(p=>p.ZaOglas)
+        .Include(p=>p.Ugovor)
         .OrderByDescending(p => p.Timestamp).ToList();
     }
 

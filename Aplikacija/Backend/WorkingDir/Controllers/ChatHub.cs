@@ -5,10 +5,6 @@ public class ChatHub : Hub
 {
 
     //private ConnectionIdMapper<string> _mapper = new ConnectionIdMapper<string>();
-    public async Task SendToUser(string receiverName,string username,string msg)
-    {
-        await Clients.Group(receiverName).SendAsync("ReceiveMessage", username,msg);
-    }
 
     public async Task Test(string msg)
     {
@@ -18,17 +14,23 @@ public class ChatHub : Hub
     public async override Task OnConnectedAsync()
         {
 
-        string name = Context.User.Identity.Name;
-        //await Groups.AddToGroupAsync(Context.ConnectionId, name);
-        using(FileStream fs = new FileStream("connectionLog.txt",FileMode.Append))
+        string? name = Context.User?.Identity?.Name;
+        if(name==null)
+            name = "testing";
+        if(name!=null)
         {
-            using(TextWriter tw = new StreamWriter(fs))
+            await Groups.AddToGroupAsync(Context.ConnectionId, name);
+            using(FileStream fs = new FileStream("connectionLog.txt",FileMode.Append))
             {
-                tw.WriteLine($"Connection established, name: ${name}, connectionId: ${Context.ConnectionId}");
-                tw.Flush();
+                using(TextWriter tw = new StreamWriter(fs))
+                {
+                    tw.WriteLine($"Connection established, name: {name}, connectionId: {Context.ConnectionId}");
+                    tw.Flush();
+                }
             }
+            await base.OnConnectedAsync();
         }
-        await base.OnConnectedAsync();
+       
     }
 
 
