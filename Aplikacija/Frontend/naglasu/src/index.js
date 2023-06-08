@@ -29,6 +29,9 @@ import QuoteItem from './Veljko/ProfilePage/QuoteItem';
 import { Collapse } from '@mui/material';
 import ForgotPasswordPage from './Veljko/LoginPage/ForgotPasswordPage';
 import Chat from './Uros/Stranice/Chat/Chat';
+import Oglas from './Vasa/Komponente/Oglas';
+import Kategorija from './Vasa/Komponente/Kategorija';
+import PostaviOglas from './Vasa/Komponente/PostaviOglas';
 import './res/colors.css'
 
 
@@ -69,8 +72,19 @@ const router = createBrowserRouter(
     {
       path:'neka',
       element:<Collapse></Collapse>
+    },
+    {
+      path:'oglas',
+      element:<Oglas></Oglas>
+    },
+    {
+      path:'postavioglas',
+      element:<PostaviOglas></PostaviOglas>
+    },
+    {
+      path:'kategorija',
+      element:<Kategorija></Kategorija>
     }
-    
   ]
 
    )
