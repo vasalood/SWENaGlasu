@@ -542,7 +542,27 @@ Korisnik korisnik = await _userManager.FindByNameAsync(userName);
             StripePayment createdPayment = await _stripeService.AddStripePaymentAsync(
                 payment,
                 ct);
-
+                var userExist = await _userManager.FindByEmailAsync(payment.ReceiptEmail);
+        
+        if(userExist==null)
+        {
+            return BadRequest("User ne postoji!");
+        }
+        else
+        {
+           var result = await _userManager.RemoveFromRoleAsync(userExist,"User");
+                if(result.Succeeded)
+                {
+                    result=await _userManager.AddToRoleAsync(userExist,"PremiumUser");
+                    userExist.Uplata=10000;
+                    await _userManager.UpdateAsync(userExist);
+                    //return Ok("Uspesno promenjena rola");
+                }
+                else
+                {
+                    return BadRequest("Neuspesna promena role");
+                }
+        }
             return StatusCode(StatusCodes.Status200OK, createdPayment);
         }
     

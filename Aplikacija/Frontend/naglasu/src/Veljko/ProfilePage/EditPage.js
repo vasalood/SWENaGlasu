@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useRef,useContext, useState } from 'react';
 import AuthContext from '../store/auth-context';
 import PopUpModal from '../LoginPage/PopUpModal';
+import defaultImage from './istockphoto-1300845620-612x612.jpg';
 const EditPage = () =>{
   const[errorPop,setErrorPop]=useState();
 
@@ -145,8 +146,16 @@ return(<div className="container rounded bg-white mt-5 mb-5" style={{ width: '10
    {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
     <div className="row">
         <div className="col-md-3 border-right">
-            <div className="d-flex flex-column align-items-center text-center p-3 py-5"><img className="rounded-circle mt-5" width="150px" src={`data:image/jpeg;base64, ${user.slika}`}/><span className="font-weight-bold">{user.username}</span><span className="text-black-50">{user.email}</span><span> </span></div>
-        </div>
+        <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+  {user.slika ? (
+    <img className="rounded-circle mt-5" width="150px" src={`data:image/jpeg;base64, ${user.slika}`} />
+  ) : (
+    <img className="rounded-circle mt-5" width="150px" src={defaultImage} />
+  )}
+  <span className="font-weight-bold">{user.username}</span>
+  <span className="text-black-50">{user.email}</span>
+  <span> </span>
+</div>        </div>
         <div className="col-md-5 border-right">
             <div className="p-3 py-5">
                 <div className="d-flex justify-content-between align-items-center mb-3">

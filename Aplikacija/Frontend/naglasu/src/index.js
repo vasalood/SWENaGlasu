@@ -36,6 +36,7 @@ import './res/colors.css'
 import App3 from './Veljko/Kartica/App';
 import ViewUser from './Veljko/ProfilePage/ViewUser';
 import RecipeReviewCard from './Veljko/ProfilePage/KarticaNekaMui';
+import KarticaOglasNova from './Veljko/ProfilePage/KarticaOglasNova';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 
@@ -80,7 +81,7 @@ const router = createBrowserRouter(
     },
     {
       path: 'kartica',
-      element:<RecipeReviewCard/>
+      element:<KarticaOglasNova/>
     },
     // {
     //   path:'oglas',

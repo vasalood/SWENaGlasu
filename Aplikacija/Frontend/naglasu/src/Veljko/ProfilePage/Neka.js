@@ -23,6 +23,8 @@ import AuthContext from "../store/auth-context";
 import React from "react";
 import NavBarContext from "../../Uros/Contexts/NavBarContext";
 import SearchBar from "../../Uros/Stranice/Naslovna/Komponente/Searchbar/Searchbar";
+import defaultImage from './istockphoto-1300845620-612x612.jpg';
+import KarticeZaPrikaz from "./KarticeZaPrikaz";
 const Neka = () =>{
   const { navbarSetCollapsable } = React.useContext(NavBarContext)
   React.useEffect(() => {
@@ -53,12 +55,12 @@ const Neka = () =>{
         <div className="col-lg-4">
           <div className="card mb-4">
             <div className="card-body text-center">
-              <img
-                src={`data:image/jpeg;base64, ${user.slika}`}
-                alt="avatar"
-                className="rounded-circle img-fluid"
-                style={{ width: 150 }}
-              />
+            <img
+  src={user.slika ? `data:image/jpeg;base64, ${user.slika}` : defaultImage}
+  alt="avatar"
+  className="rounded-circle img-fluid"
+  style={{ width: 150 }}
+/>
               <h5 className="my-3">{user.username}</h5>
               <p className="text-muted mb-1">NaGlasu</p>
               <p className="text-muted mb-4">{user.address}</p>
@@ -323,7 +325,7 @@ const Neka = () =>{
         Oglasi koje ste postavili su  <mark style={{ padding: '0.25rem 0.5rem', color: '#ffffff', backgroundColor: '#3B82F6', borderRadius: '0.25rem' }}>NaGlasu</mark> 
       </h1>
       
-      <Oglasi></Oglasi>
+      <KarticeZaPrikaz></KarticeZaPrikaz>
     </div>
     
 </section>

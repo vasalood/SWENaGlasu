@@ -34,7 +34,6 @@ export default function RecipeReviewCard() {
   };
 
   return (
-    <div class="cardd">
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
         avatar={
@@ -109,6 +108,6 @@ export default function RecipeReviewCard() {
         </CardContent>
       </Collapse>
     </Card>
-    </div>
+   
   );
 }

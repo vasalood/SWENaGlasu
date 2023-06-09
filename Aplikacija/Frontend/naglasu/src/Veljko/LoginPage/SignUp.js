@@ -162,8 +162,10 @@ const SignUp = props =>{
         })
         .then((odgovorTekst) => {
           console.log(odgovorTekst);
-          if(letka == -1)
+          if(letka == -1 &&confInputSlika.current.files.length > 0)
           handlerSlike();
+          else
+          navigate('/login');
         })
         .catch((error) => {
           console.error(error);
