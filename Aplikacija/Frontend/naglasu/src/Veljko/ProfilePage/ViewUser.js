@@ -1,5 +1,7 @@
 import QuoteItem from './QuoteItem';
 import mango from './mango.jpg';
+import Expenses from './Expenses';
+import ViewMarks from './ViewMarks';
 // const ViewUser = () =>{
 //     return(
 //         <section style={{ backgroundColor: "#eee" }}>
@@ -283,12 +285,41 @@ import { useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from 'react';
 import ViewOglasi from './ViewOglasi';
 import AuthContext from '../store/auth-context';
-const userStorage = [
+ 
+const ViewUser = ()=>{
+  const userStorage = [
     { username: 'Jovan Memedovic', name: 'Ime 1', email: 'ime1@example.com', slika:"https://th.bing.com/th/id/R.cd6591d36cec89977d93223cf75c936b?rik=17rUfAXhWxU3bw&pid=ImgRaw&r=0",address:"Ratka Pavlovica", surname:"AA",phone:"0643249836" },
     { username: 'korisnik2', name: 'Ime 2', email: 'ime2@example.com' },
     // ...
   ];
-const ViewUser = ()=>{
+  const storedObj = JSON.parse(localStorage.getItem('myObj'));
+  const [oglasList,setOglasList]= useState([
+    // {
+    //   id: 'e1',
+    //   title: 'Toilet Paper',
+    //   amount: 4,
+    //   datum: new Date(2020, 7, 14),
+    //   korisnik:"veljkovv",
+    //   komentar:"Katastrofa, prevario me je"
+    // },
+    // { id: 'e2', title: 'New TV', amount: 2, datum: new Date(2021, 2, 12),korisnik:"Jasar Muhildzic", komentar:"Odlican posao smo sklopili"},
+    // {
+    //   id: 'e3',
+    //   title: 'Car Insurance',
+    //   amount: 3,
+    //   datum: new Date(2021, 2, 28),
+    //   korisnik:"Ana Jovanovic",
+    //   komentar:"Sve preporuke za saradnju"
+    // },
+    // {
+    //   id: 'e4',
+    //   title: 'New Desk (Wooden)',
+    //   amount: 5,
+    //   datum: new Date(2021, 5, 12),
+    //   korisnik:"milos",
+    //   komentar:"Sve iz oglasa ispostovano"
+    // },
+  ]);
   const authCtx=useContext(AuthContext);
     const { username } = useParams();
     let token = localStorage.getItem('token');
@@ -298,57 +329,158 @@ const ViewUser = ()=>{
     username:"",
     adresa:"",
     telefon:"",
-    slika:""});
-    useEffect(() => {
-      console.log(token);
-      fetch("http://localhost:5105/Authentication/GetUserView/" + username, {
-        method: "GET",
-        headers: {
-          "Authorization":`Bearer ${token}`,
-          "Content-Type": "application/json", // Tip sadržaja koji se šalje
-          // Dodajte dodatne zaglavlja prema potrebi
-        }
-      })
-          .then((response) => {
-            if (response.status === 200) {
-              return response.json();
-            } else if (response.status === 400) {
-              console.log(response);
-            } else {
-              throw new Error("Neuspešan zahtev");
-            }
-          })
-          .then((odgovorTekst) => {
-            console.log(odgovorTekst);
-            // user.ime=odgovorTekst.ime;
-            // user.prezime=odgovorTekst.prezime;
-            // user.email=odgovorTekst.email;
-            // user.telefon=odgovorTekst.telefon;
-            // user.username=odgovorTekst.userName;
-            // user.slika=odgovorTekst.slika
-            // console.log(odgovorTekst.slika);
-            setUser({
-                ime:odgovorTekst.ime,
-            prezime:odgovorTekst.prezime,
-            email:odgovorTekst.email,
-            telefon:odgovorTekst.telefon,
-            username:odgovorTekst.userName,
-            slika:odgovorTekst.slika,
-            adresa:odgovorTekst.adresa
-            })
-            console.log(user);
+    slika:"",
+    id:""
+  });
+  const fetchFavorites = (userId, M, N, orderBy, orderType) => {
+    console.log(userId);
+    const url = `http://localhost:5105/Ocena/VratiMtihNOcena/${userId}?M=${M}&N=${N}`;
+    
+    fetch(url)
+    .then(odgovor => odgovor.json())
+    .then(odgovorTekst =>  {
+          console.log("ocene");
+          console.log(odgovorTekst);
+          const formatiranaLista = odgovorTekst.lista.map((element) => {
+            let dateString=element.datum;
+            console.log(dateString);
+            const year = parseInt(dateString.substring(0, 4));
+            const month = parseInt(dateString.substring(5, 7)) - 1; // Mesec treba biti umanjen za 1 jer meseci u Date objektu kreću od 0 (januar je 0, februar je 1, itd.)
+              const day = parseInt(dateString.substring(8, 10));
+
+// Kreiranje novog Date objekta
+            const noviDatum = new Date(year, month, day);
+            console.log(noviDatum);
+            return { ...element, datum: noviDatum };
+          //   const month = datum.toLocaleString('en-US', { month: 'long' });
+          //  const day = datum.toLocaleString('en-US', { day: '2-digit' });
+          //   const year = datum.getFullYear();
+          //   const noviDatum = new Date(year,month - 1,day);
+          //   console.log(noviDatum);
+            //const formatiranDatum = `new Date(${datum.getFullYear()}, ${datum.getMonth()}, ${datum.getDate()})`;
+            
+          });
+          
+          setOglasList(formatiranaLista);
+          console.log(oglasList);
           })
           .catch((error) => {
-            console.error(error);
+            console.log(error);
           });
-      }, []);
-   
+  };
+  let idd ="";
+  useEffect(() => {
+    console.log(token);
+    fetch("http://localhost:5105/Authentication/GetUserView/" + username, {
+      method: "GET",
+      headers: {
+        "Authorization":`Bearer ${token}`,
+        "Content-Type": "application/json", // Tip sadržaja koji se šalje
+        // Dodajte dodatne zaglavlja prema potrebi
+      }
+    })
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          } else if (response.status === 400) {
+            console.log(response);
+          } else {
+            throw new Error("Neuspešan zahtev");
+          }
+        })
+        .then((odgovorTekst) => {
+          console.log(odgovorTekst);
+          idd=odgovorTekst.id;
+          console.log(idd);
+          // user.ime=odgovorTekst.ime;
+          // user.prezime=odgovorTekst.prezime;
+          // user.email=odgovorTekst.email;
+          // user.telefon=odgovorTekst.telefon;
+          // user.username=odgovorTekst.userName;
+          // user.slika=odgovorTekst.slika
+          // console.log(odgovorTekst.slika);
+          setUser({
+              ime:odgovorTekst.ime,
+          prezime:odgovorTekst.prezime,
+          email:odgovorTekst.email,
+          telefon:odgovorTekst.telefon,
+          username:odgovorTekst.userName,
+          slika:odgovorTekst.slika,
+          adresa:odgovorTekst.adresa,
+          id:odgovorTekst.id
+          })
+          const url = `http://localhost:5105/Ocena/VratiMtihNOcena/${encodeURIComponent(idd)}?M=${0}&N=${10}`;
+  
+          fetch(url)
+          .then(odgovor => odgovor.json())
+          .then(odgovorTekst =>  {
+                console.log("ocene");
+                console.log(odgovorTekst);
+                const formatiranaLista = odgovorTekst.lista.map((element) => {
+                  let dateString=element.datum;
+                  console.log(dateString);
+                  const year = parseInt(dateString.substring(0, 4));
+                  const month = parseInt(dateString.substring(5, 7)) - 1; // Mesec treba biti umanjen za 1 jer meseci u Date objektu kreću od 0 (januar je 0, februar je 1, itd.)
+                    const day = parseInt(dateString.substring(8, 10));
+        
+        // Kreiranje novog Date objekta
+                  const noviDatum = new Date(year, month, day);
+                  console.log(noviDatum);
+                  return { ...element, datum: noviDatum };
+                //   const month = datum.toLocaleString('en-US', { month: 'long' });
+                //  const day = datum.toLocaleString('en-US', { day: '2-digit' });
+                //   const year = datum.getFullYear();
+                //   const noviDatum = new Date(year,month - 1,day);
+                //   console.log(noviDatum);
+                  //const formatiranDatum = `new Date(${datum.getFullYear()}, ${datum.getMonth()}, ${datum.getDate()})`;
+                  
+                });
+                
+                setOglasList(formatiranaLista);
+                console.log(oglasList);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+         
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+ 
+    }, [username]);
     
   
     if (!user) {
       return <div>Korisnik nije pronađen.</div>;
     }
-  
+    const expenses = [
+      {
+        id: 'e1',
+        title: 'Toilet Paper',
+        amount: 4,
+        datum: new Date(2020, 7, 14),
+        korisnik:"veljkovv",
+        komentar:"Katastrofa, prevario me je"
+      },
+      { id: 'e2', title: 'New TV', amount: 2, datum: new Date(2021, 2, 12),korisnik:"Jasar Muhildzic", komentar:"Odlican posao smo sklopili"},
+      {
+        id: 'e3',
+        title: 'Car Insurance',
+        amount: 3,
+        datum: new Date(2021, 2, 28),
+        korisnik:"Ana Jovanovic",
+        komentar:"Sve preporuke za saradnju"
+      },
+      {
+        id: 'e4',
+        title: 'New Desk (Wooden)',
+        amount: 5,
+        datum: new Date(2021, 5, 12),
+        korisnik:"milos",
+        komentar:"Sve iz oglasa ispostovano"
+      },
+    ];
         return(
         <section style={{ backgroundColor: "#eee" }}>
         <div className="container py-5">
@@ -367,9 +499,6 @@ const ViewUser = ()=>{
                   <p className="text-muted mb-1">NaGlasu</p>
                   <p className="text-muted mb-4">{user.address}</p>
                   <div className="d-flex justify-content-center mb-2">
-                    <button type="button" className="btn btn-primary">
-                      Update
-                    </button>
                     <button type="button" className="btn btn-outline-primary ms-1">
                       Inbox
                     </button>
@@ -622,6 +751,7 @@ const ViewUser = ()=>{
               </div> */}
             </div>
           </div>
+          <ViewMarks items={oglasList}></ViewMarks>
           <ViewOglasi username={user.username}></ViewOglasi>
         </div>
         

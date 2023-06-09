@@ -6,7 +6,7 @@ function ExpenseItem(props) {
     const date= new Date(dateString);
   return (
     <div className="expense-item">
-      <ExpenseDate date={props.date}></ExpenseDate>
+      <ExpenseDate datum={props.datum}></ExpenseDate>
       <div className="expense-item__description">
         <h2>
             <h2>Naziv Oglasa: {props.title}</h2>

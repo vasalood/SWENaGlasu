@@ -21,7 +21,7 @@ const user = useSelector(state =>({
 
 useEffect(()=>{
    
-    fetch("http://localhost:5105/Oglas/VratiMTihNOglasa/10/0/popularnost/0",
+    fetch("http://localhost:5105/Oglas/VratiMTihNOglasa/10/0/datum/1",
         {
             method: "POST",
             headers:

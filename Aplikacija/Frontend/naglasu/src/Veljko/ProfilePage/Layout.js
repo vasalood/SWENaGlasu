@@ -26,133 +26,15 @@ import PedalBikeIcon from '@mui/icons-material/PedalBike';
 import Ugovori from "./Ugovori";
 import Expenses from "./Expenses";
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useContext } from "react";
+import { useContext,useEffect } from "react";
 import AuthContext from "../store/auth-context";
 import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import TabelaModerator from './TabelaModerator';
 import App3 from './UgovoriBootStrap';
 import Favoriti from "./Favoriti";
 const Layout =() =>{
-  const navigate =useNavigate();
-
-  const authCtx = useContext(AuthContext);
-  const [page, setPage] = useState({
-    favoriti:"",
-    tabele:"",
-    ugovori:"",
-    oglasi:"",
-    korisnik:"",
-    ocene:"",
-    izmene:"",
-    moderator:""
-  });
-  const dispatch=useDispatch();
-  const user = useSelector(state =>({
-    name:state.user.uname,
-    surname:state.user.usurname,
-    username:state.user.uusername,
-    address:state.user.uaddress,
-    email:state.user.uemail,
-    phone:state.user.uphone,
-    uplata:state.user.uuplata,
-    role:state.user.urole
-    //<span className="text-black-50">veljkoveljovic13@gmail.com</span>
-  }));
-  //console.log(user.name+" "+user.surname);
-  const savedUserState=localStorage.getItem('userState');
-  if(savedUserState)
-  {
-    dispatch(userActions.setValues(JSON.parse(savedUserState)));
-  }
-  dispatch(userActions.getValues());
-  console.log(user.name+" "+user.surname+""+user.role);
-  const[promenaUgovora,setPromenaUgovora]=useState(true);
-  const [promenaTabela,setPromenaTabela]= useState(true);
-  console.log(page);
-  const handlerUgovora = () =>{
-    setPage({
-      ugovori:"a",
-      favoriti:"",
-      tabele:"",
-      oglasi:"",
-      korisnik:"2",
-      ocene:"",
-      izmene:"",
-      moderator:""
-    });
-  }
-  const handlerTabela =() =>{
-    console.log("aaaaaaa");
-    setPage({
-      ugovori:"",
-      korisnik:"1",
-      favoriti:"",
-      oglasi:"",
-      tabela:"1",
-      ocene:"",
-      izmene:"",
-      moderator:""
-    });
-  }
-  console.log("profilnasidebar");
-  const [isPromena,SetPromena]=useState(true);
-  const handlerOglasa = ()=>{
-    setPage({
-      ugovori:"",
-      korisnik:"1",
-      favoriti:"",
-      oglasi:"1",
-      tabele:"",
-      ocene:"",
-      izmene:"",
-      moderator:""
-    })
-  }
-  const handler = ()=>{
-    console.log("2");
-    setPage({
-      ugovori:"",
-      favoriti:"",
-      tabele:"",
-      oglasi:"",
-      korisnik:"2",
-      ocene:"2",
-      izmene:"",
-      moderator:""
-    });
-  }
-  const handlerOcena = () =>{
-    console.log("2");
-    setPage({
-      ugovori:"",
-      favoriti:"",
-      tabele:"",
-      oglasi:"",
-      korisnik:"2",
-      ocene:"2",
-      izmene:"",
-      moderator:""
-    });
-  }
-  const handlerIzmena = () =>{
-    console.log("2");
-    setPage({
-      ugovori:"",
-      favoriti:"",
-      tabele:"",
-      oglasi:"",
-      korisnik:"2",
-      ocene:"",
-      izmene:"2",
-      moderator:""
-    });
-  }
-  let navigacija = useNavigate();
-  const routeChange = () =>{
-    let path = `/`;
-    navigacija(path);
-    console.log("hahahah");
-  }
+  const storedObj = JSON.parse(localStorage.getItem('userState'));
+  console.log(storedObj);
   const expenses = [
     {
       id: 'e1',
@@ -180,6 +62,276 @@ const Layout =() =>{
       komentar:"Sve iz oglasa ispostovano"
     },
   ];
+  const [oglasList,setOglasList]= useState([]);
+  const navigate =useNavigate();
+  useEffect(() => {
+    const url = `http://localhost:5105/Ocena/VratiMtihNOcena/${encodeURIComponent(storedObj.id)}?M=${0}&N=${10}`;
+    console.log(user.id);
+    fetch(url)
+    .then(odgovor => odgovor.json())
+    .then(odgovorTekst =>  {
+          console.log("ocene");
+          console.log(odgovorTekst);
+          const formatiranaLista = odgovorTekst.lista.map((element) => {
+            let dateString=element.datum;
+            console.log(dateString);
+            const year = parseInt(dateString.substring(0, 4));
+            const month = parseInt(dateString.substring(5, 7)) - 1; // Mesec treba biti umanjen za 1 jer meseci u Date objektu kreću od 0 (januar je 0, februar je 1, itd.)
+              const day = parseInt(dateString.substring(8, 10));
+
+// Kreiranje novog Date objekta
+            const noviDatum = new Date(year, month, day);
+            console.log(noviDatum);
+            return { ...element, datum: noviDatum };
+          //   const month = datum.toLocaleString('en-US', { month: 'long' });
+          //  const day = datum.toLocaleString('en-US', { day: '2-digit' });
+          //   const year = datum.getFullYear();
+          //   const noviDatum = new Date(year,month - 1,day);
+          //   console.log(noviDatum);
+            //const formatiranDatum = `new Date(${datum.getFullYear()}, ${datum.getMonth()}, ${datum.getDate()})`;
+            
+          });
+          
+          setOglasList(formatiranaLista);
+          console.log(oglasList);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    
+    console.log("Lista:");
+    console.log(oglasList);
+  }, []);
+  
+  console.log(oglasList);
+  const authCtx = useContext(AuthContext);
+  const storedPage = localStorage.getItem('page');
+const parsedPage = JSON.parse(storedPage);
+  const [page, setPage] = useState(parsedPage);
+  const dispatch=useDispatch();
+  const user = useSelector(state =>({
+    name:state.user.uname,
+    surname:state.user.usurname,
+    username:state.user.uusername,
+    address:state.user.uaddress,
+    email:state.user.uemail,
+    phone:state.user.uphone,
+    uplata:state.user.uuplata,
+    role:state.user.urole,
+    id:state.user.uid
+    //<span className="text-black-50">veljkoveljovic13@gmail.com</span>
+  }));
+  const fetchFavorites = (userId, M, N, orderBy, orderType) => {
+    console.log(userId);
+    const url = `http://localhost:5105/Ocena/VratiMtihNOcena/${storedObj.id}?M=${M}&N=${N}`;
+    
+    fetch(url)
+    .then(odgovor => odgovor.json())
+    .then(odgovorTekst =>  {
+          console.log("ocene");
+          console.log(odgovorTekst);
+          const formatiranaLista = odgovorTekst.lista.map((element) => {
+            let dateString=element.datum;
+            console.log(dateString);
+            const year = parseInt(dateString.substring(0, 4));
+            const month = parseInt(dateString.substring(5, 7)) - 1; // Mesec treba biti umanjen za 1 jer meseci u Date objektu kreću od 0 (januar je 0, februar je 1, itd.)
+              const day = parseInt(dateString.substring(8, 10));
+
+// Kreiranje novog Date objekta
+            const noviDatum = new Date(year, month, day);
+            console.log(noviDatum);
+            return { ...element, datum: noviDatum };
+          //   const month = datum.toLocaleString('en-US', { month: 'long' });
+          //  const day = datum.toLocaleString('en-US', { day: '2-digit' });
+          //   const year = datum.getFullYear();
+          //   const noviDatum = new Date(year,month - 1,day);
+          //   console.log(noviDatum);
+            //const formatiranDatum = `new Date(${datum.getFullYear()}, ${datum.getMonth()}, ${datum.getDate()})`;
+            
+          });
+          
+          setOglasList(formatiranaLista);
+          console.log(oglasList);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+  };
+  //console.log(user.name+" "+user.surname);
+  const savedUserState=localStorage.getItem('userState');
+  console.log(savedUserState);
+  if(savedUserState)
+  {
+    dispatch(userActions.setValues(JSON.parse(savedUserState)));
+  }
+  dispatch(userActions.getValues());
+  console.log(user.name+" "+user.surname+""+user.role);
+  const[promenaUgovora,setPromenaUgovora]=useState(true);
+  const [promenaTabela,setPromenaTabela]= useState(true);
+  console.log(page);
+  const handlerUgovora = () =>{
+    let obj={
+      ugovori:"a",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:"",
+      izmene:"",
+      moderator:""
+    }
+    localStorage.setItem('page', JSON.stringify(obj));
+    setPage({
+      ugovori:"a",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:"",
+      izmene:"",
+      moderator:""
+    });
+  }
+
+  const handlerTabela =() =>{
+    console.log("aaaaaaa");
+    let obj={
+      ugovori:"",
+      korisnik:"1",
+      favoriti:"",
+      oglasi:"",
+      tabela:"1",
+      ocene:"",
+      izmene:"",
+      moderator:""
+    }
+    localStorage.setItem('page', JSON.stringify(obj));
+
+    
+    setPage({
+      ugovori:"",
+      korisnik:"1",
+      favoriti:"",
+      oglasi:"",
+      tabela:"1",
+      ocene:"",
+      izmene:"",
+      moderator:""
+    });
+
+  }
+  console.log("profilnasidebar");
+  const [isPromena,SetPromena]=useState(true);
+  const handlerOglasa = ()=>{
+    let obj ={
+      ugovori:"",
+      korisnik:"1",
+      favoriti:"",
+      oglasi:"1",
+      tabele:"",
+      ocene:"",
+      izmene:"",
+      moderator:""
+    }
+    localStorage.setItem('page', JSON.stringify(obj));
+
+    setPage({
+      ugovori:"",
+      korisnik:"1",
+      favoriti:"",
+      oglasi:"1",
+      tabele:"",
+      ocene:"",
+      izmene:"",
+      moderator:""
+    })
+  }
+  const handler = ()=>{
+    console.log("2");
+    let obj={
+      ugovori:"",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:"2",
+      izmene:"",
+      moderator:""
+    }
+    localStorage.setItem('page', JSON.stringify(obj));
+    setPage({
+      ugovori:"",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:"2",
+      izmene:"",
+      moderator:""
+    });
+   
+
+  }
+  const handlerOcena = () =>{
+    console.log("2");
+    let obj={
+      ugovori:"",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:"2",
+      izmene:"",
+      moderator:""
+    };
+    localStorage.setItem('page', JSON.stringify(obj));
+    setPage({
+      ugovori:"",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:"2",
+      izmene:"",
+      moderator:""
+    });
+
+  }
+  const handlerIzmena = () =>{
+    console.log("2");
+    let obj={
+      ugovori:"",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:"",
+      izmene:"2",
+      moderator:""
+    };
+    localStorage.setItem('page', JSON.stringify(obj));
+    setPage({
+      ugovori:"",
+      favoriti:"",
+      tabele:"",
+      oglasi:"",
+      korisnik:"2",
+      ocene:"",
+      izmene:"2",
+      moderator:""
+    });
+    console.log("posle");
+    console.log(page);
+
+
+  }
+  let navigacija = useNavigate();
+  const routeChange = () =>{
+    let path = `/`;
+    navigacija(path);
+    console.log("hahahah");
+  }
+  
 const handlerLogout = () =>{
   authCtx.logout();
   console.log(authCtx.token);
@@ -193,6 +345,17 @@ const handlerLogout = () =>{
   navigate('/');
 }
 const handlerModerator = () =>{
+  let obj ={
+    ugovori:"",
+    favoriti:"",
+    tabele:"",
+    oglasi:"",
+    korisnik:"2",
+    ocene:"",
+    izmene:"",
+    moderator:"2"
+  };
+  localStorage.setItem('page', JSON.stringify(obj));
   setPage({
     ugovori:"",
     favoriti:"",
@@ -203,8 +366,18 @@ const handlerModerator = () =>{
     izmene:"",
     moderator:"2"
   });
+
 }
 const handlerMoji = () =>{
+  let obj ={ugovori:"",
+  favoriti:"",
+  tabele:"",
+  oglasi:"",
+  korisnik:"",
+  ocene:"",
+  izmene:"",
+  moderator:""}
+  localStorage.setItem('page', JSON.stringify(obj));
   setPage({
     ugovori:"",
     favoriti:"",
@@ -256,7 +429,7 @@ const handlerMoji = () =>{
         {page.favoriti==""?(<></>):<Oglasi></Oglasi>}
         {page.oglasi==""?(<></>):<Favoriti></Favoriti>}
         {page.korisnik!=""?(<></>):<Neka></Neka>}
-        {page.ocene==""?(<></>):<Expenses items={expenses}></Expenses>}
+        {page.ocene==""?(<></>):<Expenses items={oglasList}></Expenses>}
         {page.izmene==""?(<></>):<EditPage></EditPage>}
         {page.moderator==""?(<></>):<TabelaModerator></TabelaModerator>}
         

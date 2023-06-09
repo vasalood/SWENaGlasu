@@ -20,7 +20,16 @@ import Table2 from './Table2';
 import DataTable from "./Datatable";
 import Layout from "./Layout";
 import AuthContext from "../store/auth-context";
+import React from "react";
+import NavBarContext from "../../Uros/Contexts/NavBarContext";
+import SearchBar from "../../Uros/Stranice/Naslovna/Komponente/Searchbar/Searchbar";
 const Neka = () =>{
+  const { navbarSetCollapsable } = React.useContext(NavBarContext)
+  React.useEffect(() => {
+      
+      navbarSetCollapsable(false)
+      return ()=>navbarSetCollapsable(false)
+  }, [])
   const dispatch=useDispatch();
   const user = useSelector(state =>({
     name:state.user.uname,
@@ -309,6 +318,7 @@ const Neka = () =>{
           </div> */}
         </div>
       </div>
+      
       <h1 style={{ marginBottom: '1rem', fontSize: '2.5rem', fontWeight: 800, lineHeight: 1, color: '#333333' }}>
         Oglasi koje ste postavili su  <mark style={{ padding: '0.25rem 0.5rem', color: '#ffffff', backgroundColor: '#3B82F6', borderRadius: '0.25rem' }}>NaGlasu</mark> 
       </h1>

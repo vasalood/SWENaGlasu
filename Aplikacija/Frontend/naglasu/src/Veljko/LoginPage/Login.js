@@ -44,6 +44,17 @@ const navigate =useNavigate();
   const[promenaStrane,setPromenaStrane]=useState();
   const [isLogin, setLogin] = useState(false);
   const[errorPop,setErrorPop]=useState();
+  const [page, setPage] = useState({
+    favoriti:"",
+    tabele:"",
+    ugovori:"",
+    oglasi:"",
+    korisnik:"",
+    ocene:"",
+    izmene:"",
+    moderator:""
+  });
+  localStorage.setItem('page', JSON.stringify(page));
   useEffect(()=>{
     if(authCtx.token)
     {

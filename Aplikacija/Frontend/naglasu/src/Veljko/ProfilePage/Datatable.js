@@ -26,9 +26,9 @@ const columns = [
 {
     field:"lastName", headerName:"Prezime"
 },
-{
-    field:"email", headerName:"Email",width:230
-},
+// {
+//     field:"email", headerName:"Email",width:230
+// },
 {
     field:"rola", headerName:"Rola",width:120,
     cellRender:(params)=>{
@@ -93,6 +93,7 @@ export default function DataTable() {
    }) .catch((error) => {
      console.log(error);
    });
+   window.location.reload();
    };
   const postaviModeratoraOnClick = (rowData) =>{
     console.log(rowData.username);
@@ -236,10 +237,10 @@ export default function DataTable() {
             konacnoSuspendovan=false;
             return(
                   <div className="cellAction">
-                      <Button variant="outlined" color="error"onClick={() => handleActionClick2(params.row)} disabled={isAdmin|| suspended || suspended2} >BLOCK ON TIME</Button>
+                      <Button variant="outlined" color="error"onClick={() => handleActionClick(params.row)} disabled={isAdmin|| suspended || suspended2} >BLOCK ON TIME</Button>
                       <button type="button" class="btn btn-outline-success" onClick={() => unblockHandler(params.row) } disabled={isAdmin || !konacnoSuspendovan}>UNBLOCK</button>
                       <Button variant="outlined"onClick={() => postaviModeratoraOnClick(params.row)} disabled={isAdmin|| isModerator||suspended || suspended2}>SetAsModerator</Button>
-                      <button type="button" class="btn btn-outline-dark"onClick={() => handleActionClick(params.row)} disabled={suspended||isAdmin} >Black List</button>
+                      <button type="button" class="btn btn-outline-dark"onClick={() => handleActionClick2(params.row)} disabled={suspended||isAdmin} >Black List</button>
                   </div>
               )
           }

@@ -19,9 +19,13 @@ const user = useSelector(state =>({
   id:state.user.uid
   //<span className="text-black-50">veljkoveljovic13@gmail.com</span>
 }));
-
+let parsedData = localStorage.getItem('userState');
+let obj =JSON.parse(parsedData);
 useEffect(() => {
-    fetchFavorites(user.id, 0, 10, 'popularnost', '0');
+  console.log(obj);
+  console.log(obj.id);
+  console.log(obj.username);
+    fetchFavorites(obj.id, 0, 10, 'popularnost', '0');
     console.log(oglasList);
   }, []);
   const fetchFavorites = (userId, M, N, orderBy, orderType) => {

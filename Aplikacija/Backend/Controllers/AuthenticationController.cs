@@ -237,7 +237,7 @@ private readonly IStripeAppService _stripeService;
                 foreach(var error in resetPassResult.Errors)
                 ModelState.AddModelError(error.Code, error.Description);
 
-                return Ok(ModelState);
+                return BadRequest(ModelState);
             }
             return Ok("Sifra je uspesno promenjena");
         }
