@@ -55,7 +55,7 @@
   margin-bottom: 15px;
 }
 
-input, select{
+.inputselect{
   height: 36px;
   font-size: 20px;
   font-family: Roboto;
@@ -64,15 +64,15 @@ input, select{
   box-shadow: inset 1px 2px 3px rgba(0,0,0,0.05);
 }
 
-select {
+.selectt {
   height: 39.6px;
   width: 150px;
 }
 
-button {
+/* .buttonn {
   font-family: Roboto;
   cursor: pointer;
-}
+} 
 
 .dodaj-kategoriju-button{
   background-color: rgb(210, 0, 0);
@@ -86,15 +86,15 @@ button {
   padding-right: 16px;
   transition: opacity 0.15s;
   vertical-align: top;
-}
+} */
 
-.dodaj-kategoriju-button:hover{
+/* .dodaj-kategoriju-button:hover{
   opacity: 0.7;
 }
 
 .dodaj-kategoriju-button:active{
   opacity: 0.4;
-}
+} */
 
 .add-button {
   background-color: rgb(178, 178, 178);
@@ -132,7 +132,7 @@ button {
   margin: 0;
 }
 
-li {
+.lii {
   margin-bottom: 7px;
 }
 

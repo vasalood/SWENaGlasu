@@ -1,8 +1,17 @@
 import './KarticaOglasNova.css';
+import {Link} from 'react-router-dom';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PlaceHolder from "../../Uros/Res/Slike/placeholder.jpg";
 const KarticaOglasNova = (props)=>{
+  console.log(props.oglas.id);
+  // const fetchZaSlike = 'http://localhost:5105/Oglas/VratiSliku/';
+
+  // const naslovnaSlika = props.slika.length === 0 ? 
+  //                               PlaceHolder 
+  //                               :
+  //                               fetchZaSlike + props.slika.filter(slika => slika.redosled === 0)[0].naziv;
     return(<section className="section-meals">
-    
+      <Link  to={`/oglas/${props.oglas.id}`} style={{ textDecoration: 'none', color: 'black' }}>
       <div className="meal">
       <img src={"http://localhost:5105/Oglas/VratiSliku/"+props.slika} 
           className="meal-img"
@@ -38,7 +47,7 @@ const KarticaOglasNova = (props)=>{
           </ul>
         </div>
       </div>
-    
+      </Link>
   </section>
   )
 }

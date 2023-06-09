@@ -29,9 +29,13 @@ import QuoteItem from './Veljko/ProfilePage/QuoteItem';
 import { Collapse } from '@mui/material';
 import ForgotPasswordPage from './Veljko/LoginPage/ForgotPasswordPage';
 import Chat from './Uros/Stranice/Chat/Chat';
-// import Oglas from './Vasa/Komponente/Oglas';
-// import Kategorija from './Vasa/Komponente/Kategorija';
-// import PostaviOglas from './Vasa/Komponente/PostaviOglas';
+import Oglas from './Vasa/Komponente/Oglas';
+
+import Kategorija from './Vasa/Komponente/Kategorija';
+
+import PostaviOglas from './Vasa/Komponente/PostaviOglas';
+
+import { OglasLoader } from './Vasa/Komponente/Oglas';
 import './res/colors.css'
 import App3 from './Veljko/Kartica/App';
 import ViewUser from './Veljko/ProfilePage/ViewUser';
@@ -83,18 +87,39 @@ const router = createBrowserRouter(
       path: 'kartica',
       element:<KarticaOglasNova/>
     },
-    // {
-    //   path:'oglas',
-    //   element:<Oglas></Oglas>
-    // },
-    // {
-    //   path:'postavioglas',
-    //   element:<PostaviOglas></PostaviOglas>
-    // },
-    // {
-    //   path:'kategorija',
-    //   element:<Kategorija></Kategorija>
-    // }
+    {
+
+      path:'oglas/:oglasId',
+
+      element:<Oglas></Oglas>,
+
+      loader: OglasLoader
+
+    },
+
+    {
+
+      path: 'kartica',
+
+      element:<RecipeReviewCard/>
+
+    },
+
+    {
+
+      path:'postavioglas',
+
+      element:<PostaviOglas></PostaviOglas>
+
+    },
+
+    {
+
+      path:'kategorija',
+
+      element:<Kategorija></Kategorija>
+
+    }
   ]
 
    )

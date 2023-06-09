@@ -1,15 +1,38 @@
-import { useState } from "react";
+import React from "react";
+import { useState, useContext } from "react";
+import { useLoaderData } from "react-router";
+import { Link } from 'react-router-dom';
 import './Oglas.css';
-import bicikla1 from "./Hardkodirani podaci/bicikla1.jpeg";
-import bicikla2 from "./Hardkodirani podaci/bicikla2.jpeg";
-import bicikla3 from "./Hardkodirani podaci/bicikla3.jpeg";
-import bicikla4 from "./Hardkodirani podaci/bicikla4.jpeg";
-import bicikla5 from "./Hardkodirani podaci/bicikla5.jpeg";
-import data from "./PodaciOglas.json";
+import PlaceHolder from "../../Uros/Res/Slike/placeholder.jpg";
+import NavBarContext from "../../Uros/Contexts/NavBarContext";
+
+export async function OglasLoader({params}) {
+  if(params.oglasId == undefined) throw Error('GRESKA');
+  const responseZaBrPregleda = await fetch(`http://localhost:5105/Oglas/InkrementOglasPregledi/${params.oglasId}`,
+  {
+    method: 'PUT'
+  });
+  //console.log(responseZaBrPregleda);
+
+  const response = await fetch(`http://localhost:5105/Oglas/VratiOglas/${params.oglasId}`);
+  
+  if(!response.ok) throw Error('Greska!');
+  //else console.log('Ucitan oglas');
+  const data = await response.json();
+
+  return data;
+}
 
 export default function Oglas() {
 
-  const nizSlika = [bicikla1, bicikla2, bicikla3, bicikla4, bicikla5]
+  const data = useLoaderData();
+
+  const { navbarSetCollapsable } = useContext(NavBarContext)
+    React.useEffect(() => {
+        
+        navbarSetCollapsable(false)
+        return ()=>navbarSetCollapsable(true)
+    }, [])
 
   const [dugmePrati, setDugmePrati] = useState('Prati oglas!');
   const [slika, setSlika] = useState(0);
@@ -20,6 +43,15 @@ export default function Oglas() {
   if(data.slikeZaSlanje.length === 0){
     prikazSlika = false;
   }
+
+  const nizSlika = prikazSlika ? 
+                    data.slikeZaSlanje.sort((a, b) => {
+                      if(a < b) return 1;
+                      else if(a > b) return -1;
+                      else return 0;
+                    }).map(slika => slika.naziv)
+                    :
+                    [];
 
   if(data.stanje === 0){
     stanje = 'Novo';
@@ -75,20 +107,28 @@ export default function Oglas() {
     return nizPolja;
   }
 
+  const fetchZaSlike = 'http://localhost:5105/Oglas/VratiSliku/';
+
+  const naslovnaSlika = data.slikeZaSlanje.length === 0 ? 
+                                PlaceHolder 
+                                :
+                                fetchZaSlike + data.slikeZaSlanje.filter(slika => slika.redosled === 0)[0].naziv;
 
   return (
     <>
       <div className="oglas">
         <div className="oglas-header">
           <h1>{data.ime}</h1>
-          <button className="button-prvi-tip">Postavi oglas</button>
+          <Link to='/postavioglas'>
+            <button className="btn btn-primary button-prvi-tip">Postavi oglas</button>
+          </Link>
         </div>
         {/* <hr></hr> */}
         <div className="oglas-prikaz">
           
-          {prikazSlika && <div className="oglas-slika-div">
-            <img src={bicikla1} alt=""/>
-          </div>}
+          <div className="oglas-slika-div">
+            {<img src={naslovnaSlika} className="naslovna-slika-css" alt=""/>}
+          </div>
 
           <div className="oglas-informacije">
 
@@ -113,7 +153,7 @@ export default function Oglas() {
             </div>
 
             <div className="oglas-informacije-red">
-              <button className="button-drugi-tip" onClick={handleDugmePrati}>{dugmePrati}</button>
+              <button className="btn btn-primary button-drugi-tip" onClick={handleDugmePrati}>{dugmePrati}</button>
             </div>
 
           </div>
@@ -122,11 +162,11 @@ export default function Oglas() {
 
             <div className="oglas-informacije-red-korisnik">
               <label>Korisnik:</label>
-              <button className="button-prvi-tip">{data.vlasnikUsername}</button>
+              <Link  to={`/profil/${data.vlasnikUsername}`} className="btn btn-primary button-prvi-tip">{data.vlasnikUsername}</Link>
             </div>
 
             <div className="oglas-informacije-red">
-              <button  className="button-drugi-tip">Poruka</button>
+              <button className="btn btn-primary button-drugi-tip">Poruka</button>
             </div>
             
             <div className="oglas-informacije-red">
@@ -148,7 +188,7 @@ export default function Oglas() {
             <div className="oglas-pet-slika">
 
               <button onClick={handleSlikaLevo}> {'<'} </button>
-              <img src={nizSlika[slika]} className="oglas-slika" />
+              <img src={fetchZaSlike + nizSlika[slika]} className="oglas-slika" />
               <button onClick={handleSlikaDesno}> {'>'}</button>
 
             </div>

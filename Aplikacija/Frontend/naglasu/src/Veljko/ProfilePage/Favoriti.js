@@ -61,11 +61,11 @@ useEffect(() => {
 <p style={{ fontSize: '1.5rem', fontWeight: 'normal', color: '#888888', lineHeight: '1.2' }}>
  Sajt NaGlasu Vam omogućava da sve oglase koji su Vama interesantni zapratite 
 </p>
-<div className="container grid grid--3-cols margin-right-md">
-          {oglasList.map((oglas) => (
-            <KarticaOglasNova key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje[0].naziv}  />
-          ))}
-          </div>
+<div className="container grid grid--3-cols margin-right-md oglasiKartica" >
+        {oglasList.map((oglas) => (
+          <KarticaOglasNova key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje[0].naziv} />
+        ))}
+        </div>
        </div>
         </>
       );

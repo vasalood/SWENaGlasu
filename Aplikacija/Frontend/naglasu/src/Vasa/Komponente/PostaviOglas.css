@@ -2,24 +2,28 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #d2d2d2;
+  border: 1px solid #d2d2d2;
 }
 
-.postavi-oglas-form {
+#id-postavi-oglas-form {
   max-width: 400px;
-  padding: 20px;
-  border: 1px solid rgb(233, 232, 232);
+  padding: 20px !important; 
+  border: 1px solid rgb(186, 186, 186);
   border-radius: 5px;
   margin-top: 30px;
   margin-bottom: 30px;
   font-family: Roboto;
   background-color: rgb(233, 232, 232);
+  box-sizing: content-box;
+  box-shadow: inset 1px 2px 3px rgba(0,0,0,0.05);
 }
 
 .form-group {
   margin-bottom: 20px;
 }
 
-label {
+.labell {
   display: block;
   font-weight: bold;
   margin-bottom: 5px;
@@ -27,10 +31,7 @@ label {
   font-size: 16px;
 }
 
-input[type="text"],
-input[type="number"],
-textarea,
-select {
+.svi-isti {
   width: 100%;
   padding: 10px;
   font-size: 16px;
@@ -38,15 +39,14 @@ select {
   border-radius: 4px;
   font-family: Roboto;
   font-size: 16px;
+  box-shadow: inset 1px 2px 3px rgba(0,0,0,0.05);
 }
 
-input[type="text"],
-input[type="number"],
-textarea {
+.input-textarea {
   width: 379px
 }
 
-textarea {
+.samo-textarea {
   resize: vertical; 
 }
 
@@ -56,7 +56,7 @@ textarea {
   align-items: center;
 }
 
-button[type="submit"] {
+/* button[type="submit"] {
   background-color: rgb(210, 0, 0);
   color: white;
   padding: 7px 14px;
@@ -65,7 +65,7 @@ button[type="submit"] {
   cursor: pointer;
   font-family: Roboto;
   font-size: 16px;
-}
+} 
 
 button[type="submit"]:hover{
   opacity: 0.7;
@@ -73,17 +73,14 @@ button[type="submit"]:hover{
 
 button[type="submit"]:active{
   opacity: 0.4;
-}
+} */
 
 @media screen and (max-width: 480px) {
   .postavi-oglas-form {
     max-width: 100%;
   }
 
-  textarea,
-  input[type="text"],
-  input[type="number"]
-  {
+  .input-textarea{
     width: 320px; 
   }
 }
@@ -117,6 +114,6 @@ button[type="submit"]:active{
   align-items: center;
 }
 
-h3{
+/* h3{
   color: red;
-}
+} */

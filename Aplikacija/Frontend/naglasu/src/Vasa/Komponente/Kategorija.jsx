@@ -17,6 +17,53 @@ export default function Kategorija() {
   //state za cuvanje niza svih podkategorija koji se odnose na novu kategoriju
   const [podkategorije, setPodkategorije] = useState([]);
 
+  function handleDodajKategoriju(e) {
+    e.preventDefault();
+
+    const poljaZaReqBody = {}
+
+    if(polja.length == 0) {
+      alert("Unesite bar jedno polje");
+      return;
+    }
+    if(podkategorije.length == 0) {
+      alert('Unesite bar jednu podkategoriju');
+      return;
+    }
+
+    polja.forEach(polje => {
+      poljaZaReqBody[polje.naziv] = polje.tip;
+    })
+
+    const requestBody = {
+      ime: nazivKategorije,
+      polja: poljaZaReqBody,
+      podkategorije: podkategorije
+    }
+
+    fetch('http://localhost:5105/Kategorija/PostaviKategoriju',
+      {
+          method: "POST",
+          headers:
+          {
+              "Content-Type":"application/json"
+          },
+          body: JSON.stringify(
+            requestBody
+          )
+      }).then(s => {
+        if(s.ok) alert('Dodata je nova kategorija!');
+        else alert('Doslo je do greske');
+      })
+
+      setNazivKategorije('');
+      setNazivPolja('');
+      setTipUnosa('nijeIzabran');
+      setPolja([]);
+      setNazivPodkategorije('');
+      setPodkategorije([]);
+  }
+
   function handleNovoPolje(e) {
     e.preventDefault();
     
@@ -68,24 +115,24 @@ export default function Kategorija() {
   }
 
   return (
-    <form className="kategorija">
+    <form className="kategorija" onSubmit={handleDodajKategoriju}>
 
       <div className="kategorija-naslov">
 
-        <h2><label htmlFor="naslov">NAZIV KATEGORIJE:</label></h2>
+        <label htmlFor="naslov">Naziv kategorije:</label>
         <input 
           value={nazivKategorije} 
           onChange={e => setNazivKategorije(e.target.value)} 
           type="text" 
-          id="naslov" 
+          id="naslov"
           required></input>
 
       </div>
 
       <div className="kategorija-polja-naslov">
 
-        <h3><label htmlFor="nazivPolja">Polje kategorije</label></h3>
-        <h3><label htmlFor="tipPolja">Tip unosa</label></h3>
+        <label htmlFor="nazivPolja">Polje kategorije</label>
+        <label htmlFor="tipPolja">Tip unosa</label>
 
       </div>
 
@@ -95,8 +142,7 @@ export default function Kategorija() {
           value={nazivPolja} 
           onChange={e => setNazivPolja(e.target.value)} 
           type="text" 
-          id="nazivPolja" 
-          required></input>
+          id="nazivPolja"></input>
 
         <div className="select-i-button">
 
@@ -138,13 +184,13 @@ export default function Kategorija() {
 
       <div className="kategorija-naslov">
 
-        <h3><label htmlFor="podkategorije">Polje podkategorije:</label></h3>
+        <label htmlFor="podkategorije">Polje podkategorije:</label>
         <input 
           value={nazivPodkategorije} 
           onChange={e => setNazivPodkategorije(e.target.value)} 
           type="text" 
           id="podkategorije" 
-          required></input>
+          ></input>
         <button type="button" onClick={handleNovaPodkategorija}  className="add-button">+</button>
       </div>
 
@@ -164,7 +210,7 @@ export default function Kategorija() {
 
       <div className="kategorija-postavi">
 
-        <button type="submit" className="dodaj-kategoriju-button">Dodaj kategoriju</button>
+        <button type="submit" className="btn btn-primary dodaj-kategoriju-button">Dodaj kategoriju</button>
 
       </div>
 

@@ -2,6 +2,7 @@ import KarticaOglasNova from "./KarticaOglasNova";
 import { useEffect, useState } from "react";
 import './KarticaOglasNova.css';
 import { useSelector,useDispatch } from "react-redux";
+import PlaceHolder from "../../Uros/Res/Slike/placeholder.jpg";
 const KarticeZaPrikaz = () =>{
     const [oglasList,setOglasList]= useState([]);
 const dispatch=useDispatch();
@@ -17,7 +18,11 @@ const user = useSelector(state =>({
   slika:state.user.uslika
   //<span className="text-black-50">veljkoveljovic13@gmail.com</span>
 }));
-
+let data=localStorage.getItem('userState');
+  let parsedData = JSON.parse(data);
+  let id = parsedData.id;
+  console.log(parsedData.username);
+  console.log("hhhasdafshhjafaaAAAA");
 useEffect(()=>{
    
     fetch("http://localhost:5105/Oglas/VratiMTihNOglasa/10/0/datum/1",
@@ -29,7 +34,7 @@ useEffect(()=>{
             },
             body: JSON.stringify(
                 {
-                    username:user.username
+                    username:parsedData.username
                 }
             )
         })
@@ -37,7 +42,8 @@ useEffect(()=>{
       .then(odgovorTekst =>  {
             //console.log(odgovorTekst.lista.slikeZaSlanje[0].naziv);
             odgovorTekst.lista.forEach(element => {
-                console.log(element.slikeZaSlanje[0].naziv);
+              console.log(element.slikeZaSlanje);
+                //console.log(element.slikeZaSlanje[0].naziv);
             });
            // console.log(odgovorTekst.lista[0].slikeZaSlanje[0].naziv);
            setOglasList(odgovorTekst.lista);
@@ -51,7 +57,7 @@ useEffect(()=>{
   return (
 
     <>
-    <div className="container grid grid--3-cols margin-right-md">
+    <div className="container grid grid--3-cols margin-right-md oglasiKartica" >
         {oglasList.map((oglas) => (
           <KarticaOglasNova key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje[0].naziv} />
         ))}

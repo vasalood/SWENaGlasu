@@ -11,12 +11,12 @@ import { userActions } from "../store/user";
 import PopUpModal from './PopUpModal';
 import NavBarContext from "../../Uros/Contexts/NavBarContext";
 const Login = (props) => {
-  // const { navbarSetCollapsable } = React.useContext(NavBarContext)
-  //   React.useEffect(() => {
+  const { navbarSetCollapsable } = React.useContext(NavBarContext)
+    React.useEffect(() => {
         
-  //       navbarSetCollapsable(true)
-  //       return ()=>navbarSetCollapsable(false)
-  //   }, [])
+        navbarSetCollapsable(false)
+        return ()=>navbarSetCollapsable(false)
+    }, [])
   const dispatch=useDispatch();
   const user = useSelector(state =>({
     name:state.user.uname,

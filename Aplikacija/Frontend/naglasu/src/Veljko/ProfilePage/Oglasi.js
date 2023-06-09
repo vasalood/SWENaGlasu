@@ -18,19 +18,23 @@ const user = useSelector(state =>({
   slika:state.user.uslika
   //<span className="text-black-50">veljkoveljovic13@gmail.com</span>
 }));
-
+let data=localStorage.getItem('userState');
+  let parsedData = JSON.parse(data);
+  let id = parsedData.id;
+  console.log(parsedData.username);
+  console.log("hhhasdafshhjafaaAAAA");
 useEffect(()=>{
    
     fetch("http://localhost:5105/Oglas/VratiMTihNOglasa/10/0/datum/1",
         {
-            method: "POST",
+            method: "GET",
             headers:
             {
                 "Content-Type":"application/json"
             },
             body: JSON.stringify(
                 {
-                    username:user.username
+                    username:parsedData.username
                 }
             )
         })

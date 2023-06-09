@@ -8,7 +8,7 @@
   margin: -50px auto 10px; 
 } */
 
-button{
+/* button{
   cursor: pointer;
   font-family: Roboto, Arial, Helvetica, sans-serif;
   font-size: 16px;
@@ -62,35 +62,51 @@ button{
 
 .button-drugi-tip:active{
   opacity: 0.7;
+} */
+
+.button-drugi-tip {
+  width: 300px;
 }
 
 .oglas {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  border: 1px solid #dedcdb;
-  border-radius: 10px;
-  margin-top: 100px;
+  border: 1px solid #d2d2d2;
+  /*border-radius: 10px;
+  margin-top: 100px;*/
   font-family: Roboto, Arial, Helvetica, sans-serif;
-  background-color: #dedcdb;
+  background-color: #efefef;
 }
 
 .oglas-header {
   display: flex;
-  height: 30px;
+  height: 70px;
   align-items: center;
   justify-content: space-between;
   margin-top: 30px;
-  margin-right: 92px;
-  margin-left: 92px;
+  margin-right: 87px;
+  margin-left: 87px;
   flex-shrink: 0;
+  background-color:#E6E4DB;
+  border: 1px solid rgb(200, 200, 200);
+  padding-left: 15px;
+  padding-right: 15px;
+  border-radius: 5px;
+  box-shadow: inset 1px 2px 3px rgba(0,0,0,0.05);
+}
+
+.oglas-header > h1 {
+  margin-bottom: 0px;
 }
 
 .oglas-prikaz {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-top: 50px;
+  margin-left: 87px;
+  margin-right: 87px;
 }
 
 .oglas-slika-div {
@@ -98,16 +114,18 @@ button{
   justify-content: center;
   align-items: center;
   height: 370px;
-  width: 350;
-  border: 1px solid white;
+  width: 331.6px;
+  border: 1px solid rgb(200, 200, 200);
   border-radius: 5px;
-  background-color: white;
+  background-color: #E6E4DB;
   margin-bottom: 70px;
+  box-shadow: inset 1px 2px 3px rgba(0,0,0,0.05);
+  position: relative;
 }
 
-.oglas-slika-div > img {
-  height: 350px;
-  width: 300px;
+.naslovna-slika-css {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .oglas-informacije {
@@ -115,14 +133,15 @@ button{
   flex-direction: column;
   align-items:flex-start;
   justify-content: space-around;
-  height: 332px;
+  width: 331.6px;
+  height: 370px;
   font-size: 20px;
-  border: 1px solid white;
+  border: 1px solid rgb(200, 200, 200);
   border-radius: 5px;
   padding: 15px;
-  background-color: white;
+  background-color: #E6E4DB;
   margin-bottom: 70px;
-
+  box-shadow: inset 1px 2px 3px rgba(0,0,0,0.05);
 }
 
 .oglas-informacije-red {
@@ -147,12 +166,13 @@ button{
   align-items: center;
   justify-content: space-around;
   flex-wrap: wrap;
-  margin-right: 92px;
-  margin-left: 92px;
+  margin-right: 87px;
+  margin-left: 87px;
   margin-bottom: 70px;
-  border: 1px solid white;
-  background-color: white;
+  border: 1px solid rgb(200, 200, 200);
+  background-color:#E6E4DB;
   border-radius: 5px;
+  box-shadow: inset 1px 2px 3px rgba(0,0,0,0.05);
 }
 
 .oglas-pet-slika {
@@ -166,6 +186,7 @@ button{
   font-weight: 500;
   background-color: transparent;
   border: none;
+  border-radius: 5px;
   transition: background-color 0.15s, 
               color 0.15s;
   margin-top: 100px;
@@ -173,7 +194,7 @@ button{
 }
 
 .oglas-pet-slika > button:hover{
-  background-color: #dedcdb;
+  background-color: #d2d2d2;
   border-radius: 5px;
 }
 
@@ -183,7 +204,7 @@ button{
 
 .oglas-slika {
   height: 400px;
-  width: 350px;
+  width: 550px;
 }
 
 .polja{
@@ -199,19 +220,22 @@ button{
   margin-top: -10px;
   margin-bottom: -5px;
   margin-left: -20px;
+  font-weight: 500;
 }
 
 .oglas-opis{
-  background-color: white;
-  border: 1px solid white;
+  background-color:#E6E4DB;
+  border: 1px solid rgb(200, 200, 200);
   border-radius: 5px;
   padding: 20px;
   font-size: 20px;
-  margin-left: 92px;
-  margin-right: 92px;
+  margin-left: 87px;
+  margin-right: 87px;
   margin-bottom: 70px;
+  box-shadow: inset 1px 2px 3px rgba(0,0,0,0.05);
 }
 
 .oglas-opis-naslov{
   margin-top: -7px;
+  font-weight: 500;
 }

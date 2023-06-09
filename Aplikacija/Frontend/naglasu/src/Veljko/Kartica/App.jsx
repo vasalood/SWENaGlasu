@@ -1,6 +1,6 @@
 import "./styles.css";
 import Card from "./Card";
-
+import PopUpModal from '../LoginPage/PopUpModal';
 import { useState } from "react";
 import { CgEditFlipH } from "react-icons/cg";
 import { useDispatch,useSelector } from "react-redux";
@@ -44,6 +44,10 @@ export default function App() {
   const [cardHolder, setCardHolder] = useState("");
   const [expDate, setExpDate] = useState({ month: "10", year: 23 });
   const type = "visa"; /* or Discover,MasterCard HBK's Custom feature */
+  // setErrorPop({
+  //   title:"Please enter valid username"
+  // });
+  const[errorPop,setErrorPop]=useState();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -59,6 +63,7 @@ export default function App() {
       let cvvv=cvv;
       let expYear="20"+expDate.year;
       let expMonth=expDate.month;
+      let success=1;
       console.log(email+" "+name+" "+cardName+" "+cardNumberr+" "+" "+cvvv+" "+expYear+" "+expMonth );
       const customerData ={
         email:email,
@@ -83,7 +88,10 @@ export default function App() {
         if (response1.status === 200) {
           return response1.json();
         } else {
-          throw new Error('Status code is not 200');
+          success=-1;
+            setErrorPop({
+    title:"Nevalidna kartica"
+  });
         }
       })
       .then(data => {
@@ -104,7 +112,9 @@ export default function App() {
       })
       .then(response12 => {
         if (response12.status === 200) {
-          return response12.json();
+          setErrorPop({
+            title:"Čestitamo! Plaćanje je uspešno obavljeno, postali ste Premium član!"
+          });
         } else {
           return response12.text();
         }
@@ -115,12 +125,15 @@ export default function App() {
       .catch(error => {
         console.error(error);
       });
-      setSuccess(true);
-      setError("Your information have been captured successfully!");
-      setTimeout(() => {
-        setError("");
-        setSuccess(false);
-      }, 5000);
+      if(success==1)
+      {
+      // setSuccess(true);
+      // setError("Your information have been captured successfully!");
+      // setTimeout(() => {
+      //   setError("");
+      //   setSuccess(false);
+      // }, 5000);
+      }
     } else {
       setError("some of your information are invalid! please restart");
       setTimeout(() => {
@@ -187,8 +200,12 @@ export default function App() {
       return null;
     }
   };
+  const errorHandler = () =>{
+    setErrorPop(null);
+  }
   return (
     <div className="App">
+       {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
       <form className="forma" action="#" onSubmit={(e) => handleSubmit(e)}>
         <div
           onClick={() => {
