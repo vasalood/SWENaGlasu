@@ -14,9 +14,11 @@ export default function BuildChatHubConnection(setConnectionState, connectionSta
                 })
             .withAutomaticReconnect().build()
         signalRConnection.on("ReceiveMessage", (username, message) => {
-            handleMsgRcv(username,message)
-
+            handleMsgRcv(username, message)
         })
+        signalRConnection.on("Test", (msg) => alert(msg))
+        
+        signalRConnection.on("ReceiveMessageTest",(msg)=>alert(msg))
         
         setConnectionState(signalRConnection)
 

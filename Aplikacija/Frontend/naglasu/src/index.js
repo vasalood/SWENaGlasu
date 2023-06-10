@@ -28,7 +28,7 @@ import Navbar from './Uros/Komponente/Navbar/Navbar'
 import QuoteItem from './Veljko/ProfilePage/QuoteItem';
 import { Collapse } from '@mui/material';
 import ForgotPasswordPage from './Veljko/LoginPage/ForgotPasswordPage';
-import Chat from './Uros/Stranice/Chat/Chat';
+import Chat, { chatLoader } from './Uros/Stranice/Chat/Chat';
 import Oglas from './Vasa/Komponente/Oglas';
 import Kategorija from './Vasa/Komponente/Kategorija';
 import PostaviOglas from './Vasa/Komponente/PostaviOglas';
@@ -46,8 +46,9 @@ const router = createBrowserRouter(
       loader:naslovnaLoader
     },
     {
-      path: '/chat/:userId?',
-      element:<Chat/>
+      path: '/chat/:chatId/:oglasId?/:strankaId?',
+      element: <Chat />,
+      loader:chatLoader
     },
     {
       path: "login",

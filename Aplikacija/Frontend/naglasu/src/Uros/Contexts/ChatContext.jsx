@@ -5,10 +5,12 @@ const ChatContext = React.createContext(
         chatState: {
             currentChat:
             {
-                oglasId: null,
-                userId:null
+                id:0,
+                zaOglasNaziv: '',
+                zaOglasId: 0,
+                receiverUsername: '',
+                poruke:[]
             },
-            messages: [],
             inboxItems: []
         },
         setChatState:()=>{}

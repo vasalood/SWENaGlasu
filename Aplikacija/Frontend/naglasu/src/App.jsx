@@ -8,31 +8,75 @@ import ConnectionContext from './Uros/Contexts/ConnectionContext';
 import React from 'react'
 import ChatContext from './Uros/Contexts/ChatContext'
 
+export async function handleMessageTransaction(setChatState, message,forRecv)
+{
+    const newInboxItemRes = await fetch('http://localhost:5105/Poruka/VratiNaslovnuPoruku/' + message.chatId)
+    if (!newInboxItemRes.ok)
+          throw Error("Doslo je do greske.")
+    const newInboxItem = await newInboxItemRes.json()
+    setChatState(oldValue =>
+    {
+      const newInboxItems = oldValue.inboxItems.filter(item => item.chatId !== message.chatId)
+      newInboxItems.unshift(newInboxItem) 
+      if (oldValue.currentChat.id === message.chatId)
+      {
+
+        const newPoruke = oldValue.currentChat.poruke
+        if(forRecv) newPoruke.unshift(message)
+        return {
+              ...oldValue,
+              inboxItems: newInboxItems, 
+              currentChat:
+              {
+                  ...oldValue.currentChat,
+                  poruke:newPoruke
+              }
+              }
+      }
+      return {
+        ...oldValue,
+        inboxItems: newInboxItems, 
+      }
+      
+    })
+}
 
 function App({ children }) {
   const [chatState, setChatState] = React.useState(
     {
       currentChat:
       {
-          oglasId: null,
-          userId:null
+        id:0,
+        zaOglasNaziv: '',
+        zaOglasId: 0,
+        receiverUsername: '',
+        poruke:[]
       },
-      messages: [],
       inboxItems: []
     }
   )
 
-  function handleMsgRcv(user, msg) {
-    msg['from'] = user
-    setChatState(oldValue => {
-      const newState = {}
-      newState['inboxItems'] = oldValue.inboxItems.length() != 0 ? oldValue.inboxItems.filter(item => item.from !== user).push(msg) : []
-      newState['currentMessages'] = oldValue.currentMessages
-      if (oldValue.currentUser === user)
-        oldValue.currentMessages.unshift(msg)
-      newState['currentUser'] = oldValue.currentUser
-      return newState
-    })
+  function handleMsgRcv(user, msgJSON) {
+    const msg = JSON.parse(msgJSON)
+    handleMessageTransaction(setChatState,msg,true)
+    /* setChatState(oldValue => {
+      if (oldValue.currentChat.id === msg.chatId)
+      {
+        const newPoruke = oldValue.currentChat.poruke
+        newPoruke.unshift(msg)
+        return {
+          ...oldValue,
+          currentChat:
+          {
+            ...oldValue.currentChat,
+            poruke:newPoruke
+        }
+        }
+      }
+      else
+        return oldValue
+
+    }) */
   }
 
   const [connectionState, setConnectionState] = React.useState(null)
