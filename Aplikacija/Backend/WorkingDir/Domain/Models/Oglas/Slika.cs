@@ -33,6 +33,13 @@ namespace Domain.Models
         [JsonIgnore]
         public byte[] Data{ get; set; }
 
+        [NotMapped]
+        [JsonIgnore]
+        public string Naziv{ get
+        {
+                return System.IO.Path.GetFileName(Path)??"";
+            }  }
+
         public long OglasId{ get; set; }
 
         public int Redosled{ get; set; }

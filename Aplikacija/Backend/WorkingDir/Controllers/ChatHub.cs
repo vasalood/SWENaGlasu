@@ -1,3 +1,4 @@
+using Domain.Models;
 using Microsoft.AspNetCore.SignalR;
 namespace Controllers;
 
@@ -11,6 +12,22 @@ public class ChatHub : Hub
         await Clients.All.SendAsync("Test",msg);
     }
 
+    public async Task SendMessage(object dto) //PorukaDto
+    {
+        string? name = Context.User?.Identity?.Name;
+        if(name==null)
+            throw new ArgumentNullException("name is null!");
+        await Clients.All.SendAsync("ReceiveMessage", name, dto);
+    }
+
+    public async Task SendMessageTest(string test)
+    {
+               string? name = Context.User?.Identity?.Name;
+        if(name==null)
+            throw new ArgumentNullException("name is null!");
+        await Clients.All.SendAsync("ReceiveMessageTest", name, test);
+    }
+
     public async override Task OnConnectedAsync()
         {
 
@@ -20,6 +37,7 @@ public class ChatHub : Hub
         if(name!=null)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, name);
+
             using(FileStream fs = new FileStream("connectionLog.txt",FileMode.Append))
             {
                 using(TextWriter tw = new StreamWriter(fs))
@@ -30,6 +48,7 @@ public class ChatHub : Hub
             }
             await base.OnConnectedAsync();
         }
+
        
     }
 

@@ -19,6 +19,8 @@ namespace Business.Contexts
         public DbSet<FavoritSpoj> Favoriti { get; set; }
 
         public DbSet<Poruka> Poruke{ get; set; }
+
+        public DbSet<Chat> Chatovi{ get; set; }
         //Ovde se konfigurise izgled baze
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,7 +39,10 @@ namespace Business.Contexts
             });
 
             modelBuilder.Entity<Ugovor>().HasOne(u => u.Ocena).WithOne(o=>o.Ugovor).HasForeignKey<Ocena>("UgovorId").OnDelete(DeleteBehavior.NoAction);
-            modelBuilder.Entity<Poruka>().HasOne(p=>p.ZaOglas).WithMany().OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Poruka>().HasOne(p => p.Chat).WithMany(c => c.Poruke).HasForeignKey("ChatId").OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Chat>().HasAlternateKey("ZaOglasId","StrankaId");
+            modelBuilder.Entity<Chat>().HasOne(c => c.ZaOglas).WithMany().HasForeignKey("ZaOglasId").OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Chat>().HasOne(c => c.Stranka).WithMany().HasForeignKey("StrankaId").OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Ocena>().HasAlternateKey("UgovorId");
             modelBuilder.Entity<FavoritSpoj>().HasAlternateKey("KorisnikId", "OglasId");
         }

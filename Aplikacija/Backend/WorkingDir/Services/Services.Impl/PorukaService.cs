@@ -13,6 +13,8 @@ public class PorukaService : IPorukaService
     {
         _repo = repo;
     }
+
+
     public void ObeleziProcitanim(long[] ids)
     {
         List<Poruka> list = _repo.VratiPoruke(ids);
@@ -24,19 +26,49 @@ public class PorukaService : IPorukaService
             }
     }
 
-    public void PosaljiPoruku(PorukaDto dto)
+        public void ObeleziProcitanom(long id)
+    {
+        Poruka poruka = _repo.VratiPoruku(id);
+        poruka.Procitana = true;
+        _repo.AzurirajPoruku(poruka);
+    }
+
+
+    public long PosaljiPoruku(PorukaDto dto)
     {
         Poruka p = new Poruka(dto);
-        _repo.UpisiPoruku(p);
+        return _repo.UpisiPoruku(p);
+
     }
 
-    public List<Poruka> VratiNaslovnePorukeZaKorisnika(string id)
+    public List<Poruka> VratiInbox(string id)
     {
-        return _repo.VratiNaslovnePorukeZaKorisnika(id);
+        return _repo.VratiInbox(id);
     }
 
-    public List<Poruka> VratiPorukeZaOglas(long oglasId, string posiljaocId)
+    public Chat VratiChat(long chatId)
     {
-        return _repo.VratiPorukeZaOglas(oglasId, posiljaocId);
+        return _repo.VratiChat(chatId);
     }
+
+    public Chat VratiIliKreirajChat(long oglasId,string strankaId)
+    {
+        var chat = _repo.VratiChat(oglasId, strankaId);
+        if(chat==null)
+        {
+            chat = new Chat
+            {
+                ZaOglas = new Oglas { Id = oglasId },
+                Stranka = new Models.Korisnik { Id = strankaId }
+            };
+            long chatId = _repo.KreirajChat(chat);
+            chat=_repo.VratiChat(chatId);
+        }
+        return chat;
+    }
+
+     public Poruka VratiNaslovnuPoruku(long chatId)
+    {
+        return _repo.VratiNaslovnuPoruku(chatId);
+    } 
 }

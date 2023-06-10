@@ -63,12 +63,14 @@ public class UgovorController : ControllerBase
                     DatumSklapanja=u.DatumSklapanja,
                     Opis=u.Opis,
                     OglasId=u.Oglas.Id,
+                    OglasNaziv=u.Oglas.Ime,
                     KupacUsername=u.Kupac.UserName,
                     KupacId=u.Kupac.Id,
                     Kolicina=u.Kolicina,
                     Prihvacen=u.Prihvacen,
                     Cena=u.Oglas.Cena,
-                    Ukupna_Cena=u.Oglas.Cena*u.Kolicina
+                    Ukupna_Cena=u.Oglas.Cena*u.Kolicina,
+                    ProdavacUsername=u.Oglas.Vlasnik.UserName
                 }).ToList();
 
                 object retobj = new { Lista = lista2 };
@@ -161,7 +163,7 @@ public class UgovorController : ControllerBase
                 Oglas=oglas
             };
             _service.UpisiUgovor(ugovor);
-            return Ok(new {UgovorId=ugovor.Id});
+            return Ok(ugovor.Id);
 
         }
         catch(Exception e)

@@ -6,11 +6,13 @@ namespace Services.Abs;
 public interface IPorukaService
 {
 
-    public List<Poruka> VratiNaslovnePorukeZaKorisnika(string id);
+    public List<Poruka> VratiInbox(string id);
 
+    public Poruka VratiNaslovnuPoruku(long chatId);
+    public Chat VratiChat(long chatId);
+    public Chat VratiIliKreirajChat(long oglasId, string strankaId);
 
-    public List<Poruka> VratiPorukeZaOglas(long oglasId, string posiljaocId);
-
-    public void PosaljiPoruku(PorukaDto dto);
+    public long PosaljiPoruku(PorukaDto dto);
     public void ObeleziProcitanim(long[] ids);
+    public void ObeleziProcitanom(long id);
 }
