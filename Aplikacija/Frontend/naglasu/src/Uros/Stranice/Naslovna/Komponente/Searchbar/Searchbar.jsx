@@ -84,13 +84,20 @@ export default function SearchBar({userId,route})
     //const { opacityStyle } = React.useContext(NavBarContext)
     const {trenutnaStranica, ukupanBr }=React.useContext(NaslovnaContext)
     const maxStranica = (ukupanBr / sortStanja.brojOglasa) >> 0
+
+    function buildSearchUrl(M)
+    {
+        return `${actualRoute}/${sortStanja.brojOglasa}/${M!=undefined?M:0}/` +
+                `${sortStanja.orderBy !== '' ? sortStanja.orderBy : 'kredit'}` +
+                `/${sortStanja.orderType}/${
+                        stringFilterStanja
+                    }`
+    }
+
     return (
         <div className='searchbar--container' /* style={opacityStyle} */>
             {trenutnaStranica !== 0?
-                <Link to={`/${actualRoute}/${sortStanja.brojOglasa}/${trenutnaStranica - 1}/` +
-                    `${sortStanja.orderBy !== '' ? sortStanja.orderBy : 'kredit'}` +
-                    `/${sortStanja.orderType}/${stringFilterStanja
-                    }`} state={{ ukupanBr: ukupanBr }}>
+                <Link to={buildSearchUrl(trenutnaStranica-1)} state={{ ukupanBr: ukupanBr }}>
                     <button className="searchbar--nav_btn searchbar--prev_btn">
                         <BsChevronLeft  size={35}  style={{color:'#3B82F6', fontWeight:'bold',navButtonStyle}} />
                     </button>
@@ -119,10 +126,7 @@ export default function SearchBar({userId,route})
                 }>
                     <BsFilter size={30}/>
                 </button>
-                <Link to={`/${actualRoute}/${sortStanja.brojOglasa}/0/${sortStanja.orderBy !== '' ? sortStanja.orderBy : 'kredit'}` +
-                    `/${sortStanja.orderType}/${
-                            stringFilterStanja
-                    }`}>
+                <Link to={buildSearchUrl(0)}>
                 <button className='searchbar--search_btn'>
                     <BsSearch size={30} />
                 </button>
@@ -130,11 +134,7 @@ export default function SearchBar({userId,route})
            
             </div>  
             {trenutnaStranica !== maxStranica?
-                <Link to={`/${actualRoute}/${sortStanja.brojOglasa}/${trenutnaStranica +1}/` +
-                `${sortStanja.orderBy !== '' ? sortStanja.orderBy : 'kredit'}` +
-                `/${sortStanja.orderType}/${
-                        stringFilterStanja
-                    }`} state={{ukupanBr:ukupanBr}}>
+                <Link to={buildSearchUrl(trenutnaStranica+1)} state={{ukupanBr:ukupanBr}}>
                     <button className="searchbar--nav_btn searchbar--next_btn" style={navButtonStyle}>
                         <BsChevronRight style={{color:'#3B82F6', fontWeight:'bold'}} size={35} />
                     </button>

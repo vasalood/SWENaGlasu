@@ -72,10 +72,10 @@ function App({ children }) {
 
   React.useEffect(() =>
   {   
-    const token = localStorage.getItem('token')
-    if (connectionState === null && token!=null)
+    const userState = localStorage.getItem('userState')
+    if (connectionState === null && userState!=undefined)
     {
-      console.log('connected with token: '+token)
+      //console.log('connected with token: '+token)
       BuildChatHubConnection(setConnectionState,connectionState,handleMsgRcv,handleContractUpdate)
     }
           
