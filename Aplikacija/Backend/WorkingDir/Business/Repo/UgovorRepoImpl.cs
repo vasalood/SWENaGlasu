@@ -52,14 +52,14 @@ public class UgovorRepoImpl : IUgovorRepo
         }).Where(u=> u.Kupac.Id==id||u.Oglas.Vlasnik.Id==id );
 
         var ugovoriZaOglasePostavljeneQuery = _context.Ugovori.Where(u => u.Prihvacen == (potvrdjeni ?? u.Prihvacen))
-        .Include(u => u.Kupac).Join(_context.Oglasi.Include(o=>o.Vlasnik).Where(o => o.Vlasnik.Id == id), u => u.Oglas.Id, o => o.Id, (u, o) =>
+        .Include(u => u.Kupac).Join(_context.Oglasi.Where(o => o.Vlasnik.Id == id).Include(o=>o.Vlasnik), u => u.Oglas.Id, o => o.Id, (u, o) =>
         new Ugovor
         {
             Id = u.Id,
             Kolicina = u.Kolicina,
             DatumSklapanja = u.DatumSklapanja,
             Opis = u.Opis,
-            Oglas = u.Oglas,
+            Oglas = o,
             Prihvacen = u.Prihvacen,
             Odbijen=u.Odbijen,
             Kupac = u.Kupac
