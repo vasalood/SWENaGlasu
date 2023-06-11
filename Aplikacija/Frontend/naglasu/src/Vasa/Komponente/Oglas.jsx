@@ -8,7 +8,6 @@ import NavBarContext from "../../Uros/Contexts/NavBarContext";
 import { Escalator } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import PopUpModal from '../../Veljko/LoginPage/PopUpModal';
-import { Button } from "bootstrap";
 export async function OglasLoader({params}) {
   if(params.oglasId == undefined) throw Error('GRESKA');
   const responseZaBrPregleda = await fetch(`http://localhost:5105/Oglas/InkrementOglasPregledi/${params.oglasId}`,
