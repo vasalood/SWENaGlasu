@@ -1,7 +1,7 @@
 using Domain.Models;
 using Microsoft.AspNetCore.SignalR;
 namespace Controllers;
-
+using Newtonsoft.Json;
 public class ChatHub : Hub
 {
 
@@ -17,7 +17,27 @@ public class ChatHub : Hub
         string? name = Context.User?.Identity?.Name;
         if(name==null)
             throw new ArgumentNullException("name is null!");
-        await Clients.All.SendAsync("ReceiveMessage", name, dto);
+         dynamic obj = JsonConvert.DeserializeObject(dto.ToString());
+                string prop = obj.receiverUsername;
+           /*  using(FileStream fs = new FileStream("connectionLog.txt",FileMode.Append))
+            {
+                using(TextWriter tw = new StreamWriter(fs))
+                {
+               
+                tw.WriteLine($"Obj received: {dto.ToString()}");
+                tw.WriteLine($"Primer: {prop}");
+                tw.Flush();
+                }
+            } */
+        await Clients.Group(prop).SendAsync("ReceiveMessage", name, dto);
+    }
+
+    public async Task ConfirmOrRejectContract(string receiverUsername,long id,bool value)
+    {
+        string? name = Context.User?.Identity?.Name;
+        if(name==null)
+            throw new ArgumentNullException("name is null");
+        await Clients.Group(receiverUsername).SendAsync("UpdateContract", id, value);
     }
 
     public async Task SendMessageTest(string test)

@@ -7,8 +7,45 @@ import Typography from '@mui/material/Typography';
 
 import React from 'react'
 
-export default function UgovorStavka({opis,kolicina,smer})
+export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen})
 {
+
+    const [ugovorState, setUgovorState] = React.useState(
+        {
+            prihvacen: prihvacen,
+            odbijen:odbijen
+        }
+    )
+    async function onClickEventHandler(ev)
+    {
+        const sendVal = ev.target.id === 'prihvati' ? true : false
+        try {
+            const response = await fetch('http://localhost:5105/Ugovor/PrihvatiIliOdbijUgovor/' + id + '/' + sendVal,
+                {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }
+            })
+            if (response.ok)
+            {
+                const prop = sendVal ? 'prihvacen' : 'odbijen'
+                setUgovorState(oldValue =>
+                {
+                    return {
+                        ...oldValue,
+                        [prop]:true
+                    }
+                    })
+            }
+            else
+                throw Error('Doslo je do greske.')
+        }
+        catch (e)
+        {
+            console.log(e.message)
+        }
+      
+    }
+    console.log(  ugovorState.prihvacen  )
     return (
         <Card sx={{ minWidth: 275 }}>
             <CardContent>
@@ -23,10 +60,14 @@ export default function UgovorStavka({opis,kolicina,smer})
                     {kolicina!==undefined?'Količina: '+kolicina:''}
                 </Typography>
             </CardContent>
-            {smer!==0&&<CardActions>
-                <Button size="small">Prihvati</Button>
-                <Button size="small">Odbij</Button>
-            </CardActions>}
+            <CardActions>
+                {smer !== 0?
+                    !ugovorState.prihvacen && !ugovorState.odbijen &&<>
+                        <Button size="small" id='prihvati' onClick={onClickEventHandler}>Prihvati</Button>
+                        <Button size="small" id='odbij' onClick={onClickEventHandler}>Odbij</Button>
+                    </>:
+                    ugovorState.prihvacen&&<Button size='small' id ='oceni'>Oceni</Button>}
+                </CardActions>
     </Card>
     )
 }

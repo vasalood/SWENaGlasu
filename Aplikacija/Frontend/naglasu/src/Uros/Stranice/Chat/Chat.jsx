@@ -88,21 +88,22 @@ export default function Chat() {
         navbarSetCollapsable(false)
     }, [loaderData])
     const {connectionState,setConnectionState,handleMsgRcv}=React.useContext(ConnectionContext)
-    React.useEffect(() =>
+   /*  React.useEffect(() =>
     {   
         if (connectionState === null)
             BuildChatHubConnection(setConnectionState,connectionState,handleMsgRcv)
 
-    },[connectionState])
+    },[connectionState]) */
     
     const chatHistoryItems = chatState.inboxItems.length !== 0 ?
         chatState.inboxItems.map((item) =>
         {
+            console.log(item)
             return <ChatHistoryStavka
                 oglasNaziv={item.oglasNaziv}
                 oglasSlika={item.naslovnaSlika}
                 receiverUsername={item.strankaUsername === userState.username ? item.vlasnikOglasaUsername : item.strankaUsername}
-                key={item.id}
+                key={item.chatId}
                 chatId={item.chatId} />
         }) : null
 
@@ -117,11 +118,13 @@ export default function Chat() {
     const chatMsgItems = chatState.currentChat.poruke.length !== 0 ?
         chatState.currentChat.poruke.map((m =>
         {
+            if (m.ugovor)
+                console.log(m.ugovor)
             const source = m.posiljaocId===userState.id?0:1
             const timestamp = new Date(m.timestamp)
             const content = m.ugovor !== null && m.ugovor !== undefined ? <UgovorStavka
                 opis={m.ugovor.opis} kolicina={m.ugovor.kolicina} smer={source}
-                key={m.ugovor.id} id={m.ugovor.id} /> : m.sadrzaj
+                key={m.ugovor.id} id={m.ugovor.id} prihvacen={m.ugovor.prihvacen} odbijen={m.ugovor.odbijen} /> : m.sadrzaj
 
             
             return <MsgItem timestamp={timestamp}
@@ -142,7 +145,7 @@ export default function Chat() {
     public long? UgovorId{ get; set; }
 
     public string ReceiverUsername{ get; set; } */ //porukaDto
-        if (!inputState&&ugovorId===0)
+        if (!inputState&&ugovorId==undefined)
             return
         const token = localStorage.getItem('token')
         const message = {
@@ -212,7 +215,8 @@ export default function Chat() {
                 onSubmit={onSubmit}
                 dialogState={ugovorDialogState}
                 setDialogState={setUgovorDialogState}
-            oglasId={chatState.currentChat.zaOglasId}/>
+                oglasId={chatState.currentChat.zaOglasId}
+                isVlasnik={chatState.currentChat.zaOglasVlasnikId===userState.id } />
         </div>
     </div>)
 }

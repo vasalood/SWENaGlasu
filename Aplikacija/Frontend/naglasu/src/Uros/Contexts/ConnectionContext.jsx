@@ -5,7 +5,8 @@ const ConnectionContext = React.createContext(
     {
         connectionState:null,
         setConnectionState: (value) => { },
-        handleMsgRcv:()=>{}
+        handleMsgRcv: () => { },
+        handleContractUpdate:()=>{}
     }
 )
 

@@ -32,6 +32,7 @@ public class UgovorController : ControllerBase
                 Id = ugovor.Id,
                 Kolicina = ugovor.Kolicina,
                 Prihvacen = ugovor.Prihvacen,
+                Odbijen=ugovor.Odbijen,
                 DatumSklapanja = ugovor.DatumSklapanja,
                 Opis = ugovor.Opis,
                 KupacUsername = ugovor.Kupac.UserName,
@@ -68,6 +69,7 @@ public class UgovorController : ControllerBase
                     KupacId=u.Kupac.Id,
                     Kolicina=u.Kolicina,
                     Prihvacen=u.Prihvacen,
+                    Odbijen=u.Odbijen,
                     Cena=u.Oglas.Cena,
                     Ukupna_Cena=u.Oglas.Cena*u.Kolicina,
                     ProdavacUsername=u.Oglas.Vlasnik.UserName
@@ -110,14 +112,17 @@ public class UgovorController : ControllerBase
     } */
 
     [HttpPut]
-    [Route("PrihvatiUgovor/{id}")]
-    public ActionResult PrihvatiUgovor(long id)
+    [Route("PrihvatiIliOdbijUgovor/{id}/{value}")]
+    public ActionResult PrihvatiUgovor(long id,bool value)
     {
         try{
             Ugovor u =_service.VratiUgovor(id);
-            u.Prihvacen = true;
+            if(value)
+                u.Prihvacen = true;
+            else
+                u.Odbijen = true;
             _service.AzurirajUgovor(u);
-            return Ok("Ugovor prihvacen.");
+            return Ok();
         }
         catch(Exception e)
         {
@@ -158,6 +163,7 @@ public class UgovorController : ControllerBase
                 DatumSklapanja = DateTime.Now,
                 Kolicina = ugovorDto.Kolicina,
                 Prihvacen = ugovorDto.Prihvacen,
+                Odbijen=ugovorDto.Odbijen,
                 Opis = ugovorDto.Opis,
                 Kupac=kupac,
                 Oglas=oglas

@@ -9,7 +9,8 @@ const ChatContext = React.createContext(
                 zaOglasNaziv: '',
                 zaOglasId: 0,
                 receiverUsername: '',
-                poruke:[]
+                poruke: [],
+                zaOglasVlasnikId:''
             },
             inboxItems: []
         },

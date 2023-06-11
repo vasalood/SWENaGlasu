@@ -7,6 +7,7 @@ import SignUp from './Veljko/LoginPage/SignUp';
 import ConnectionContext from './Uros/Contexts/ConnectionContext';
 import React from 'react'
 import ChatContext from './Uros/Contexts/ChatContext'
+import BuildChatHubConnection from './Uros/Utils/ChatHubConnectionBuilder';
 
 export async function handleMessageTransaction(setChatState, message,forRecv)
 {
@@ -22,7 +23,7 @@ export async function handleMessageTransaction(setChatState, message,forRecv)
       {
 
         const newPoruke = oldValue.currentChat.poruke
-        if(forRecv) newPoruke.unshift(message)
+        newPoruke.unshift(message)
         return {
               ...oldValue,
               inboxItems: newInboxItems, 
@@ -58,31 +59,24 @@ function App({ children }) {
 
   function handleMsgRcv(user, msgJSON) {
     const msg = JSON.parse(msgJSON)
-    handleMessageTransaction(setChatState,msg,true)
-    /* setChatState(oldValue => {
-      if (oldValue.currentChat.id === msg.chatId)
-      {
-        const newPoruke = oldValue.currentChat.poruke
-        newPoruke.unshift(msg)
-        return {
-          ...oldValue,
-          currentChat:
-          {
-            ...oldValue.currentChat,
-            poruke:newPoruke
-        }
-        }
-      }
-      else
-        return oldValue
+    handleMessageTransaction(setChatState, msg, true)
+  }
 
-    }) */
+  function handleContractUpdate(id, value)
+  {
+      chatState.poruke.filter(m=>m.ugovor!=undefined&&m.ugovor.id===id)
   }
 
   const [connectionState, setConnectionState] = React.useState(null)
 
+  React.useEffect(() =>
+  {   
+      if (connectionState === null)
+          BuildChatHubConnection(setConnectionState,connectionState,handleMsgRcv,handleContractUpdate)
+
+  },[connectionState])
   return (
-    <ConnectionContext.Provider value={{ connectionState, setConnectionState: setConnectionState, handleMsgRcv }}>
+    <ConnectionContext.Provider value={{ connectionState, setConnectionState: setConnectionState, handleMsgRcv,handleContractUpdate }}>
       <ChatContext.Provider value={{ chatState, setChatState }}>
         {children}
       </ChatContext.Provider>

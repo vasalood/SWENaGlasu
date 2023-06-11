@@ -61,7 +61,7 @@ public class PorukaController : ControllerBase
             var chat =_service.VratiChat(chatId);
             string receiverUsername = (myUsername!=null?myUsername == chat.Stranka.UserName ?
              chat.ZaOglas.Vlasnik.UserName : chat.Stranka.UserName:"")??"";
-            var chatPogled = new ChatPogled(chat.Id,chat.ZaOglas.Ime,chat.ZaOglas.Id,receiverUsername,chat.Poruke);
+            var chatPogled = new ChatPogled(chat.Id,chat.ZaOglas.Ime,chat.ZaOglas.Id,receiverUsername,chat.Poruke,chat.ZaOglas.Vlasnik.Id);
             
             return Ok(chatPogled);
         }
@@ -78,15 +78,6 @@ public class PorukaController : ControllerBase
     {
         try{
             long id= _service.PosaljiPoruku(dto);
-            
-          var Identity = (ClaimsIdentity)User?.Identity;
-            var claim =   Identity?.FindFirst(ClaimTypes.Name);
-            var myUsername=claim?.Value;
-            if(myUsername!=null)
-            {
-                //await _chatHub.Clients.Group(dto.ReceiverUsername).SendAsync("ReceiveMessage",myUsername,dto);
-                //await _chatHub.Clients.Client("ppsNqunS__KCvWkkznZQQg").SendAsync("ReceiveMessage", myUsername, dto);
-            }
                 
             return Ok(id);
         }
@@ -141,7 +132,7 @@ public class PorukaController : ControllerBase
             var chat = _service.VratiIliKreirajChat(oglasId, strankaId);
             string receiverUsername = (myUsername!=null?myUsername == chat.Stranka.UserName ?
              chat.ZaOglas.Vlasnik.UserName : chat.Stranka.UserName:"")??"";
-            var chatPogled = new ChatPogled(chat.Id,chat.ZaOglas.Ime,chat.ZaOglas.Id,receiverUsername,chat.Poruke);
+            var chatPogled = new ChatPogled(chat.Id,chat.ZaOglas.Ime,chat.ZaOglas.Id,receiverUsername,chat.Poruke,chat.ZaOglas.Vlasnik.Id);
             return Ok(chatPogled);
         }
         catch(Exception e)

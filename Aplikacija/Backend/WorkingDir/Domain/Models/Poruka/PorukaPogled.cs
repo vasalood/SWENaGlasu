@@ -22,7 +22,7 @@ public class PorukaPogled
         ChatId = chatId;
         if(ugovor!=null)
         {
-            Ugovor = new UgovorPorukaDto(ugovor.Opis, ugovor.Kolicina, ugovor.Prihvacen, ugovor.Id);
+            Ugovor = new UgovorPorukaDto(ugovor.Opis, ugovor.Kolicina, ugovor.Prihvacen,ugovor.Odbijen, ugovor.Id);
         }
         PosiljaocId = posiljaocId;
     }

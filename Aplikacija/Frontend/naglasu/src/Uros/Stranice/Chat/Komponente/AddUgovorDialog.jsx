@@ -25,7 +25,8 @@ export default function AddUgovorDialog({onSubmit,dialogState,setDialogState,ogl
               id: 0,
               kupacId: mId,
               oglasId: oglasId,
-              prihvacen: false,
+            prihvacen: false,
+              odbijen:false,
               opis: dialogState.opis,
               kolicina:Number.parseInt(dialogState.kolicina)
           }

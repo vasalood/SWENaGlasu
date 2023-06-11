@@ -16,4 +16,6 @@ public class Ugovor
     public Ocena Ocena{ get; set; }
     public bool Prihvacen{ get; set; }
 
+    public bool Odbijen{ get; set; }
+
 }

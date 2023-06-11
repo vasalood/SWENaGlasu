@@ -10,6 +10,7 @@ public class UgovorDto
     public int Kolicina { get; set; }
     public string Opis { get; set; }
     public bool Prihvacen{ get; set; }
+    public bool Odbijen{ get; set; }
     public int? Cena{ get; set; }
     public int? Ukupna_Cena{ get; set; }
     public string? OglasNaziv{ get; set; }

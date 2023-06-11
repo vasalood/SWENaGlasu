@@ -90,12 +90,7 @@ export async function naslovnaLoader({params})
 export default function Naslovna()
 {
     const {connectionState,setConnectionState,handleMsgRcv}=React.useContext(ConnectionContext)
-    useEffect(() =>
-    {   
-        if (connectionState === null)
-            BuildChatHubConnection(setConnectionState,connectionState,handleMsgRcv)
 
-    },[connectionState])
     const stavkaWidth=window.innerWidth>450?440:320
     const [mainContainerStyle, dispatch] = useReducer(reducer, {
         width: `${window.innerWidth - (window.innerWidth % stavkaWidth)}px`
@@ -111,7 +106,7 @@ export default function Naslovna()
     }, [])
     
     const { oglasNiz, trenutnaStranica,ukupanBr } = useLoaderData()
-
+    
     const oglasiStavke = oglasNiz.map((o,index) =>
     {
         return <OglasStavka oglas={o} key={index} />
@@ -131,7 +126,7 @@ export default function Naslovna()
     return (
         
         <div className="naslovna">
-            <Link to='/chat'>OVDE</Link>
+            <Link to='/chat/0/40013/8e8a68cb-8f41-47a7-ab69-7467236bc88e'>OVDE</Link>
             <NaslovnaContext.Provider value= 
             {
                 {

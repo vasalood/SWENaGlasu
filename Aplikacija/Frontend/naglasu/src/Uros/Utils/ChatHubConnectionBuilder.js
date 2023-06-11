@@ -2,7 +2,7 @@ import * as SignalR from '@microsoft/signalr'
 import { useLocation } from 'react-router-dom'
 import React from 'react'
 
-export default function BuildChatHubConnection(setConnectionState, connectionState,handleMsgRcv)
+export default function BuildChatHubConnection(setConnectionState, connectionState,handleMsgRcv,handleContractUpdate)
 {
     const token = localStorage.getItem('token')
     const userState = localStorage.getItem('userState')
@@ -16,9 +16,14 @@ export default function BuildChatHubConnection(setConnectionState, connectionSta
         signalRConnection.on("ReceiveMessage", (username, message) => {
             handleMsgRcv(username, message)
         })
-        signalRConnection.on("Test", (msg) => alert(msg))
+       // signalRConnection.on("Test", (msg) => alert(msg))
         
-        signalRConnection.on("ReceiveMessageTest",(msg)=>alert(msg))
+        //signalRConnection.on("ReceiveMessageTest",(msg)=>alert(msg))
+
+        signalRConnection.on('UpdateContract', (id, value) =>
+        {
+            handleContractUpdate(id,value)
+        })
         
         setConnectionState(signalRConnection)
 

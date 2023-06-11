@@ -63,6 +63,7 @@ public class UgovorService : IUgovorService
         stariUgovor.Kolicina = ugovor.Kolicina;
         stariUgovor.Opis = ugovor.Opis;
         stariUgovor.Prihvacen = ugovor.Prihvacen;
+        stariUgovor.Odbijen = ugovor.Odbijen;
         if(ugovor.Prihvacen==true)
         {
             stariUgovor.Oglas.Kolicina -= stariUgovor.Kolicina;

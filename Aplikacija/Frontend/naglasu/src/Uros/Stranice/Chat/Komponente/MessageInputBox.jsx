@@ -3,13 +3,14 @@ import { BsSend } from 'react-icons/bs'
 import { FaFileContract } from 'react-icons/fa' 
 import Button from '@mui/material/Button';
 import AddUgovorDialog from './AddUgovorDialog';
-export default function MessageInputBox({className,inputState,setInputState,onSubmit,dialogState,setDialogState,oglasId})
+export default function MessageInputBox({className,inputState,setInputState,onSubmit,dialogState,setDialogState,oglasId,isVlasnik})
 {
     const inputRef = React.useRef(null)
     function enterHandler(ev)
     {
         if (ev.key === 'Enter')
         {
+
             //console.log("IT WORKS")
             //onSubmit()
         }
@@ -29,12 +30,15 @@ export default function MessageInputBox({className,inputState,setInputState,onSu
                 value={inputState} onChange={(ev)=>setInputState(ev.target.value)}>
                 
                 </input>
-                <AddUgovorDialog onSubmit={onSubmit} dialogState={dialogState} setDialogState={setDialogState} oglasId={oglasId} />
-              {/*   <Button className='border-0 bg-white' style={{outline: 'none !important',boxShadow: 'none !important'}}>
-                    <FaFileContract size={30} />
-                </Button> */}
+                {!isVlasnik &&
+                    <AddUgovorDialog
+                        onSubmit={onSubmit}
+                        dialogState={dialogState}
+                        setDialogState={setDialogState}
+                        oglasId={oglasId} />}
                 <Button className='border-0 bg-white' style={{ outline: 'none !important', boxShadow: 'none !important' }}
-                    onClick={ev=> onSubmit()}>
+                    onClick={ev => onSubmit()}
+                 >
                     <BsSend size ={30}/>
                 </Button>
             </div>

@@ -46,6 +46,7 @@ public class UgovorRepoImpl : IUgovorRepo
             Opis = u.Opis,
             Oglas = u.Oglas,
             Prihvacen = u.Prihvacen,
+            Odbijen=u.Odbijen,
             Kupac=u.Kupac
         }).Where(u=> u.Kupac.Id==id||u.Oglas.Vlasnik.Id==id );
 
@@ -59,6 +60,7 @@ public class UgovorRepoImpl : IUgovorRepo
             Opis = u.Opis,
             Oglas = u.Oglas,
             Prihvacen = u.Prihvacen,
+            Odbijen=u.Odbijen,
             Kupac = u.Kupac
         });
 
@@ -72,6 +74,7 @@ public class UgovorRepoImpl : IUgovorRepo
             Opis = u.Opis,
             Oglas = o,
             Prihvacen = u.Prihvacen,
+            Odbijen=u.Odbijen,
             Kupac = u.Kupac
         });
 
@@ -116,6 +119,7 @@ public class UgovorRepoImpl : IUgovorRepo
              Opis = u.Opis,
              Oglas = u.Oglas,
              Prihvacen = u.Prihvacen,
+             Odbijen=u.Odbijen,
              Kupac = u.Kupac
          }).Where(u => u.Kupac.Id == id || u.Oglas.Vlasnik.Id == id).Count()
         : zaKupca==false?
@@ -129,6 +133,7 @@ public class UgovorRepoImpl : IUgovorRepo
             Opis = u.Opis,
             Oglas = u.Oglas,
             Prihvacen = u.Prihvacen,
+            Odbijen=u.Odbijen,
             Kupac = u.Kupac
         }).Count():
         _context.Ugovori
