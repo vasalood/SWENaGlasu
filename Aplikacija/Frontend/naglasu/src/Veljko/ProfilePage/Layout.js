@@ -48,7 +48,7 @@ export function layoutLoader({ params })
 const Layout =() =>{
   let token2 = localStorage.getItem('token');
   const storedObj = JSON.parse(localStorage.getItem('userState'));
-  console.log(storedObj);
+  //console.log(storedObj);
   const expenses = [
     {
       id: 'e1',
@@ -82,22 +82,22 @@ const Layout =() =>{
     if(storedObj)
     {
     const url = `http://localhost:5105/Ocena/VratiMtihNOcena/${encodeURIComponent(storedObj.id)}?M=${0}&N=${10}`;
-    console.log(user.id);
+    //console.log(user.id);
     fetch(url)
     .then(odgovor => odgovor.json())
     .then(odgovorTekst =>  {
-          console.log("ocene");
-          console.log(odgovorTekst);
+          //console.log("ocene");
+          //console.log(odgovorTekst);
           const formatiranaLista = odgovorTekst.lista.map((element) => {
             let dateString=element.datum;
-            console.log(dateString);
+            //console.log(dateString);
             const year = parseInt(dateString.substring(0, 4));
             const month = parseInt(dateString.substring(5, 7)) - 1; // Mesec treba biti umanjen za 1 jer meseci u Date objektu kreću od 0 (januar je 0, februar je 1, itd.)
               const day = parseInt(dateString.substring(8, 10));
             
 // Kreiranje novog Date objekta
             const noviDatum = new Date(year, month, day);
-            console.log(noviDatum);
+            //console.log(noviDatum);
             return { ...element, datum: noviDatum };
           //   const month = datum.toLocaleString('en-US', { month: 'long' });
           //  const day = datum.toLocaleString('en-US', { day: '2-digit' });
@@ -109,17 +109,18 @@ const Layout =() =>{
           });
           
           setOglasList(formatiranaLista);
-          console.log(oglasList);
+          //console.log(oglasList);
           })
           .catch((error) => {
             console.log(error);
           });
     
-    console.log("Lista:");
-    console.log(oglasList);}
+    //console.log("Lista:");
+      //console.log(oglasList);
+    }
   }, []);
   
-  console.log(oglasList);
+  //console.log(oglasList);
   const authCtx = useContext(AuthContext);
   const storedPage = localStorage.getItem('page');
 const parsedPage = JSON.parse(storedPage);
@@ -138,24 +139,24 @@ const parsedPage = JSON.parse(storedPage);
     //<span className="text-black-50">veljkoveljovic13@gmail.com</span>
   }));
   const fetchFavorites = (userId, M, N, orderBy, orderType) => {
-    console.log(userId);
+    //console.log(userId);
     const url = `http://localhost:5105/Ocena/VratiMtihNOcena/${storedObj.id}?M=${M}&N=${N}`;
     
     fetch(url)
     .then(odgovor => odgovor.json())
     .then(odgovorTekst =>  {
-          console.log("ocene");
-          console.log(odgovorTekst);
+          //console.log("ocene");
+          //console.log(odgovorTekst);
           const formatiranaLista = odgovorTekst.lista.map((element) => {
             let dateString=element.datum;
-            console.log(dateString);
+            //console.log(dateString);
             const year = parseInt(dateString.substring(0, 4));
             const month = parseInt(dateString.substring(5, 7)) - 1; // Mesec treba biti umanjen za 1 jer meseci u Date objektu kreću od 0 (januar je 0, februar je 1, itd.)
               const day = parseInt(dateString.substring(8, 10));
 
 // Kreiranje novog Date objekta
             const noviDatum = new Date(year, month, day);
-            console.log(noviDatum);
+            //console.log(noviDatum);
             return { ...element, datum: noviDatum };
           //   const month = datum.toLocaleString('en-US', { month: 'long' });
           //  const day = datum.toLocaleString('en-US', { day: '2-digit' });
@@ -167,7 +168,7 @@ const parsedPage = JSON.parse(storedPage);
           });
           
           setOglasList(formatiranaLista);
-          console.log(oglasList);
+          //console.log(oglasList);
           })
           .catch((error) => {
             console.log(error);
@@ -175,16 +176,16 @@ const parsedPage = JSON.parse(storedPage);
   };
   //console.log(user.name+" "+user.surname);
   const savedUserState=localStorage.getItem('userState');
-  console.log(savedUserState);
+  //console.log(savedUserState);
   if(savedUserState)
   {
     dispatch(userActions.setValues(JSON.parse(savedUserState)));
   }
   dispatch(userActions.getValues());
-  console.log(user.name+" "+user.surname+""+user.role);
+  //console.log(user.name+" "+user.surname+""+user.role);
   const[promenaUgovora,setPromenaUgovora]=useState(true);
   const [promenaTabela,setPromenaTabela]= useState(true);
-  console.log(page);
+  //console.log(page);
   const handlerUgovora = () =>{
     let obj={
       ugovori:"a",
@@ -210,7 +211,7 @@ const parsedPage = JSON.parse(storedPage);
   }
 
   const handlerTabela =() =>{
-    console.log("aaaaaaa");
+    //console.log("aaaaaaa");
     let obj={
       ugovori:"",
       korisnik:"1",
@@ -236,7 +237,7 @@ const parsedPage = JSON.parse(storedPage);
     });
 
   }
-  console.log("profilnasidebar");
+  //console.log("profilnasidebar");
   const [isPromena,SetPromena]=useState(true);
   const handlerOglasa = ()=>{
     let obj ={
@@ -263,7 +264,7 @@ const parsedPage = JSON.parse(storedPage);
     })
   }
   const handler = ()=>{
-    console.log("2");
+    //console.log("2");
     let obj={
       ugovori:"",
       favoriti:"",
@@ -289,7 +290,7 @@ const parsedPage = JSON.parse(storedPage);
 
   }
   const handlerOcena = () =>{
-    console.log("2");
+    //console.log("2");
     let obj={
       ugovori:"",
       favoriti:"",
@@ -314,7 +315,7 @@ const parsedPage = JSON.parse(storedPage);
 
   }
   const handlerIzmena = () =>{
-    console.log("2");
+    //console.log("2");
     let obj={
       ugovori:"",
       favoriti:"",
@@ -336,8 +337,8 @@ const parsedPage = JSON.parse(storedPage);
       izmene:"2",
       moderator:""
     });
-    console.log("posle");
-    console.log(page);
+    //console.log("posle");
+    //console.log(page);
 
 
   }
@@ -345,15 +346,15 @@ const parsedPage = JSON.parse(storedPage);
   const routeChange = () =>{
     let path = `/`;
     navigacija(path);
-    console.log("hahahah");
+    //console.log("hahahah");
   }
   
 const handlerLogout = () =>{
   authCtx.logout();
-  console.log(authCtx.token);
+  //console.log(authCtx.token);
 
   dispatch(userActions.resetValues());
-  console.log(userActions.getValues());
+  //console.log(userActions.getValues());
 
   // Remove user state from localStorage
   localStorage.removeItem("userState");
@@ -410,7 +411,7 @@ const handlerMoji = () =>{
 
 
   const loaderData = useLoaderData();
-  console.log(loaderData)
+  //console.log(loaderData)
 
   const { collapseSidebar } = useProSidebar();
     if(savedUserState)

@@ -21,8 +21,8 @@ const user = useSelector(state =>({
 let data=localStorage.getItem('userState');
   let parsedData = JSON.parse(data);
   let id = parsedData.id;
-  console.log(parsedData.username);
-  console.log("hhhasdafshhjafaaAAAA");
+  //console.log(parsedData.username);
+  //console.log("hhhasdafshhjafaaAAAA");
 /* useEffect(()=>{
    
     fetch("http://localhost:5105/Oglas/VratiMTihNOglasa/10/0/datum/1",
