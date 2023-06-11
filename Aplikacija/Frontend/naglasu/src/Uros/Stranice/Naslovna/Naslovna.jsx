@@ -12,9 +12,9 @@ import * as SignalR from '@microsoft/signalr'
 import ConnectionContext from "../../Contexts/ConnectionContext";
 import { Link } from 'react-router-dom'
 import BuildChatHubConnection from "../../Utils/ChatHubConnectionBuilder";
+import KarticaOglasNova from "../../../Veljko/ProfilePage/KarticaOglasNova";
 const changeWindowWidth = 'change-window-width'
 const actionChangeWindowWidth = { type: changeWindowWidth }
-
 const ROOT_API_URL = "http://localhost:5105/"
 
 function reducer(state,action)
@@ -106,11 +106,11 @@ export default function Naslovna()
     }, [])
     
     const { oglasNiz, trenutnaStranica,ukupanBr } = useLoaderData()
-    
-    const oglasiStavke = oglasNiz.map((o,index) =>
-    {
-        return <OglasStavka oglas={o} key={index} />
-    })
+
+    // const oglasiStavke = oglasNiz.map((o,index) =>
+    // {
+    //     return <OglasStavka oglas={o} key={index} />
+    // })
 
     const { navbarSetCollapsable } = React.useContext(NavBarContext)
     React.useEffect(() => {
@@ -136,9 +136,13 @@ export default function Naslovna()
             }>
                 <Header/>
                 <SearchBar />
-                <div className="naslovna--oglasi_stavke_container" style={mainContainerStyle}>
-                    {oglasiStavke}
-                </div>
+                <>
+    <div className="container grid grid--3-cols margin-right-md oglasiKartica" >
+        {oglasNiz.map((oglas) => (
+          <KarticaOglasNova key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje} />
+        ))}
+        </div>
+      </>
             </NaslovnaContext.Provider>
         </div>
     )

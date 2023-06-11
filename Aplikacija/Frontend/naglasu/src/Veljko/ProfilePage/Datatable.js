@@ -8,15 +8,25 @@ import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { useContext } from 'react';
 import AuthContext from '../store/auth-context';
+import PopUpModal from '../LoginPage/PopUpModal';
+import defaultSlika from './istockphoto-1300845620-612x612.jpg';
 import { GridToolbarContainer,GridToolbarColumnsButton,GridToolbarFilterButton,GridToolbarDensitySelector,GridToolbarQuickFilter   } from '@mui/x-data-grid';
+import Kategorija from '../../Vasa/Komponente/Kategorija';
 const columns = [
-  {field:"user",headerName:"User",width:230,
-    renderCell:(params)=>{
-        return(
-            <div className="cellWithImg">
-                <img className ="cellImg" src={`data:image/jpeg;base64, ${params.row.slika}`} alt="Slika"/>
-                {params.row.username}
-            </div>
+  {
+    field: 'user',
+    headerName: 'User',
+    width: 230,
+    renderCell: (params) => {
+      const slikaSrc = params.row.slika
+        ? `data:image/jpeg;base64, ${params.row.slika}`
+        : defaultSlika;
+
+      return (
+        <div className="cellWithImg">
+          <img className="cellImg" src={slikaSrc} alt="Slika" />
+          {params.row.username}
+        </div>
         )
     }
 },
@@ -26,9 +36,9 @@ const columns = [
 {
     field:"lastName", headerName:"Prezime"
 },
-{
-    field:"email", headerName:"Email",width:230
-},
+// {
+//     field:"email", headerName:"Email",width:230
+// },
 {
     field:"rola", headerName:"Rola",width:120,
     cellRender:(params)=>{
@@ -55,6 +65,8 @@ renderCell: (params) => {
 
 
 export default function DataTable() {
+  const[errorPop,setErrorPop]=useState();
+  let token = localStorage.getItem('token');
   const authCtx = useContext(AuthContext);
     const [selectedRow, setSelectedRow] = useState(null);
   console.log(authCtx.token);
@@ -71,7 +83,9 @@ export default function DataTable() {
      
     }),
   }).then(odgovorTekst=>{
-    console.log(odgovorTekst);
+    setErrorPop({
+      title:"Uspešno ste blokirali korisnika na mesec dana"
+    });
   }) .catch((error) => {
     console.log(error);
   });
@@ -89,7 +103,9 @@ export default function DataTable() {
       
      }),
    }).then(odgovorTekst=>{
-     console.log(odgovorTekst);
+    setErrorPop({
+      title:"Uspešno ste blokirali korisnika."
+    });
    }) .catch((error) => {
      console.log(error);
    });
@@ -107,12 +123,15 @@ export default function DataTable() {
       
      }),
    }).then(odgovorTekst=>{
-     console.log(odgovorTekst);
+    setErrorPop({
+      title:"Korisnik je postao moderator"
+    });
    }) .catch((error) => {
      console.log(error);
    });
   }
-    
+    //   window.location.reload();
+
     //                        <button type="button" class="btn btn-outline-success">Success</button>
 
     // const actionColun2 = [
@@ -153,7 +172,9 @@ export default function DataTable() {
           
          }),
        }).then(odgovorTekst=>{
-         console.log(odgovorTekst);
+        setErrorPop({
+          title:"Korisnik je odblokiran"
+        });
        }) .catch((error) => {
          console.log(error);
        });
@@ -174,43 +195,73 @@ export default function DataTable() {
     //     }
     // ]
     const [userRole, setUserRole] = useState('');
-    let token = localStorage.getItem('token');
+    
+    console.log(token);
     const [users,SetUsers]=useState([]);
     const fetchUsers = () =>{
-        fetch("http://localhost:5105/Authentication/GetAllUsers",{
-          headers:{
-            "Authorization":`Bearer ${token}`
-          }
-          })
-          .then(odgovor => odgovor.json())
-            .then(odgovorTekst =>  {
-                console.log(odgovorTekst);
-                const fetchedUsers = odgovorTekst.map((user) => ({
-                    firstName: user.ime,
-                    lastName: user.prezime,
-                    email: user.email,
-                    username:user.userName,
-                    rola:user.rola,
-                    telefon:user.telefon,
-                    adresa:user.adresa,
-                    uplata:user.uplata,
-                    slika:user.slika,
-                    suspendOnTime:user.suspendOnTime,
-                    suspendForEver:user.suspendForEver
-                  }));
-                  console.log(fetchedUsers);
-                  SetUsers(fetchedUsers);
-                  setUserRole(fetchedUsers[0].rola);
-             } )
-                  .catch((error) => {
-                    console.log(error);
-                  });
+        // fetch("http://localhost:5105/Authentication/GetAllUsers",{
+        //   headers:{
+        //     "Authorization":`Bearer ${token}`
+        //   }
+        //   })
+        //   .then(odgovor => odgovor.json())
+        //     .then(odgovorTekst =>  {
+        //         console.log(odgovorTekst);
+        //         const fetchedUsers = odgovorTekst.map((user) => ({
+        //             firstName: user.ime,
+        //             lastName: user.prezime,
+        //             email: user.email,
+        //             username:user.userName,
+        //             rola:user.rola,
+        //             telefon:user.telefon,
+        //             adresa:user.adresa,
+        //             uplata:user.uplata,
+        //             slika:user.slika,
+        //             suspendOnTime:user.suspendOnTime,
+        //             suspendForEver:user.suspendForEver
+        //           }));
+        //           console.log(fetchedUsers);
+        //           SetUsers(fetchedUsers);
+        //           setUserRole(fetchedUsers[0].rola);
+        //      } )
+        //           .catch((error) => {
+        //             console.log(error);
+        //           });
       
         
     }
     useEffect(()=>{
-        fetchUsers();
-        console.log(users[0]);
+      fetch("http://localhost:5105/Authentication/GetAllUsers",{
+        headers:{
+          "Authorization":`Bearer ${token}`
+        }
+        })
+        .then(odgovor => odgovor.json())
+          .then(odgovorTekst =>  {
+              console.log(odgovorTekst);
+              console.log(token);
+              const fetchedUsers = odgovorTekst.map((user) => ({
+                  firstName: user.ime,
+                  lastName: user.prezime,
+                  email: user.email,
+                  username:user.userName,
+                  rola:user.rola,
+                  telefon:user.telefon,
+                  adresa:user.adresa,
+                  uplata:user.uplata,
+                  slika:user.slika,
+                  suspendOnTime:user.suspendOnTime,
+                  suspendForEver:user.suspendForEver
+                }));
+                console.log(fetchedUsers);
+                SetUsers(fetchedUsers);
+                setUserRole(fetchedUsers[0].rola);
+           } )
+                .catch((error) => {
+                  console.log(error);
+                  console.log(token);
+                });
+      
     },[]);
 
     const actionColun = [
@@ -236,18 +287,28 @@ export default function DataTable() {
             konacnoSuspendovan=false;
             return(
                   <div className="cellAction">
-                      <Button variant="outlined" color="error"onClick={() => handleActionClick2(params.row)} disabled={isAdmin|| suspended || suspended2} >BLOCK ON TIME</Button>
+                      <Button variant="outlined" color="error"onClick={() => handleActionClick(params.row)} disabled={isAdmin|| suspended || suspended2} >BLOCK ON TIME</Button>
                       <button type="button" class="btn btn-outline-success" onClick={() => unblockHandler(params.row) } disabled={isAdmin || !konacnoSuspendovan}>UNBLOCK</button>
                       <Button variant="outlined"onClick={() => postaviModeratoraOnClick(params.row)} disabled={isAdmin|| isModerator||suspended || suspended2}>SetAsModerator</Button>
-                      <button type="button" class="btn btn-outline-dark"onClick={() => handleActionClick(params.row)} disabled={suspended||isAdmin} >Black List</button>
+                      <button type="button" class="btn btn-outline-dark"onClick={() => handleActionClick2(params.row)} disabled={suspended||isAdmin} >Black List</button>
                   </div>
               )
           }
       }
   ]
-
+  const errorHandler = () =>{
+    setErrorPop(null);
+    window.location.reload();
+  }
   return (
+    <>
+    <div>
+    <h1 style={{ marginBottom: '1rem', fontSize: '3rem', fontWeight: '800', color: '#333333', lineHeight: '1' }}>
+  <span style={{ background: 'linear-gradient(to right, #3B82F6, #10B981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Admin</span> Panel
+</h1>
+    </div>
     <div className='datatable'>
+       {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
       <DataGrid
         rows={users}
         columns={columns.concat(actionColun)}
@@ -259,7 +320,11 @@ export default function DataTable() {
       }}
       
       />
-      
+       <h1 style={{ marginBottom: '3rem', fontSize: '3rem', fontWeight: '800', color: '#333333', lineHeight: '1',marginTop:'3rem' }}>
+  <span style={{ background: 'linear-gradient(to right, #3B82F6, #10B981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Postavite novu </span> kategoriju
+</h1>
+      <Kategorija></Kategorija>
     </div>
+    </>
   );
 }

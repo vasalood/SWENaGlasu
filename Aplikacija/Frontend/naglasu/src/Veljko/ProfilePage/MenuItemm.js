@@ -14,14 +14,14 @@ return(
             
             <img src={"http://localhost:5105/Oglas/VratiSliku/"+props.slika} alt=""/>
             <div class="info">
-            <h5 style={{ marginBottom: '1rem', fontSize: '2.0rem', fontWeight: '800', color: '#333333', lineHeight: '1' }}>
-            <span style={{ background: 'linear-gradient(to right, #FFFFFF, #10B981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Naziv: </span>{props.oglas.ime}
+            <h5 style={{ marginBottom: '1rem', fontSize: '2.0rem', fontWeight: '800', color: '#AAEFF3', lineHeight: '1' }}>
+            <span style={{ background: 'linear-gradient(to right, #FFFFFF, #AAEFF3)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Naziv: </span>{props.oglas.ime}
             </h5>
-            <h5 style={{ marginBottom: '1rem', fontSize: '2.0rem', fontWeight: '800', color: '#333333', lineHeight: '1' }}>
-            <span style={{ background: 'linear-gradient(to right, #FFFFFF, #10B981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Podkategorija: </span>{props.oglas.podkategorija.kategorijaNaziv}
+            <h5 style={{ marginBottom: '1rem', fontSize: '2.0rem', fontWeight: '800', color: '#AAEFF3', lineHeight: '1' }}>
+            <span style={{ background: 'linear-gradient(to right, #FFFFFF, #AAEFF3)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Podkategorija: </span>{props.oglas.podkategorija.kategorijaNaziv}
             </h5>
-            <h5 style={{ marginBottom: '1rem', fontSize: '2.0rem', fontWeight: '800', color: '#333333', lineHeight: '1' }}>
-            <span style={{ background: 'linear-gradient(to right, #FFFFFF, #10B981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Postavio: </span>{props.oglas.vlasnikUsername}
+            <h5 style={{ marginBottom: '1rem', fontSize: '2.0rem', fontWeight: '800', color: '#AAEFF3', lineHeight: '1' }}>
+            <span style={{ background: 'linear-gradient(to right, #FFFFFF, #AAEFF3)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Postavio: </span>{props.oglas.vlasnikUsername}
             </h5>
                 <a href="#" class="btn">Read More</a>
             </div>

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import PopUpModal from './PopUpModal';
 import { useNavigate } from "react-router-dom";
 const SignUp = props =>{
+  let token = localStorage.getItem('token');
   const navigate =useNavigate();
     const usernameInputRef = useRef();
     const confInputSlika = useRef();
@@ -40,7 +41,7 @@ const SignUp = props =>{
          event.preventDefault();
          const username = usernameInputRef.current.value;
          const ime = nameInputRef.current.value;
-         const prezime = nameInputRef.current.value;
+         const prezime = surnameInputRef.current.value;
         const email = emailInputRef.current.value;
         const adresa = adresaInputRef.current.value;
         const password = passwordInputRef.current.value;
@@ -49,56 +50,56 @@ const SignUp = props =>{
          if(username.trim().length===0)
         {
           setErrorPop({
-            title:"Please enter valid username"
+            title:"Unesite validan username"
           });
           f=1;
         }
         if(ime.trim().length<2)
         {
           setErrorPop({
-            title:"Vase ime mora da sadrzi barem 2 karaktera"
+            title:"Vaše ime mora sadržati barem 2 karaktera"
           });
           f=1;
         }
         if(prezime.trim().length<2)
         {
           setErrorPop({
-            title:"Vase prezime mora da sadrzi barem 2 karaktera"
+            title:"Vaše prezime mora sadržati barem 2 karaktera"
           });
           f=1;
         }
         if(adresa.trim().length<2)
         {
           setErrorPop({
-            title:"Vase adresa mora da sadrzi barem 2 karaktera"
+            title:"Vaša adresa mora da sadrži barem 2 karaktera"
           });
           f=1;
         }
         if(/\d/.test(ime))
         {
           setErrorPop({
-            title:"Vase ime ne sme da sadrzi cifru."
+            title:"Vaše ime ne sme da sadrži cifru."
           });
           f=1;
         }
         if(/\d/.test(prezime))
         {
           setErrorPop({
-            title:"Vase prezime ne sme da sadrzi cifru."
+            title:"Vaše prezime ne sme da sadrži cifru."
           });
           f=1;
         }
         if(email.trim().length<5)
         {
           setErrorPop({
-            title:"Vase email mora da sadrzi barem 5 karaktera."
+            title:"Vaš email mora sadržati barem 5 karaktera."
           });
           f=1;
         }
         if (!email.includes("@") || !email.includes("."))
         {
           setErrorPop({
-            title:"Vas email nije validan"
+            title:"Vaš email nije validan"
           });
           f=1;
         }
@@ -152,18 +153,24 @@ const SignUp = props =>{
             return response.text();
           } else if (response.status === 400) {
             letka = 1;
-            setErrorPop({
-              title:"Nevalidna lozina",
-              message:"Lozinka mora sadrzati najmanje 7 znakova, mora sadrzati cifru, veliko slovo i jedan specijalni karakter"
-            })
+            return response.text();
           } else {
             throw new Error("Neuspešan zahtev");
           }
         })
         .then((odgovorTekst) => {
           console.log(odgovorTekst);
-          if(letka == -1)
+          if(letka == -1 &&confInputSlika.current.files.length > 0)
           handlerSlike();
+          else if(letka ==1)
+          {
+            setErrorPop({
+              title:"Greška",
+              message:odgovorTekst
+            })
+          }
+          else if(letka ==-1)
+          navigate('/login');
         })
         .catch((error) => {
           console.error(error);
@@ -174,6 +181,8 @@ const SignUp = props =>{
       setErrorPop(null);
     }
         return (
+          <>
+          {!token ?(
        <div className={classes.klasa}>
             {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
         <div className={classes.box}>
@@ -229,7 +238,8 @@ const SignUp = props =>{
           <input type = "submit" value="Sign Up" onClick={switchPageHandler}></input>
         </form>
         </div>
-        </div>
+        </div>):<></>}
+        </>
       );  
 };
 export default SignUp;

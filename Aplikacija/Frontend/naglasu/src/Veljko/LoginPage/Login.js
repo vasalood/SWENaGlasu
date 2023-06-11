@@ -10,13 +10,16 @@ import { getListSubheaderUtilityClass } from "@mui/material";
 import { userActions } from "../store/user";
 import PopUpModal from './PopUpModal';
 import NavBarContext from "../../Uros/Contexts/NavBarContext";
+import Naslovna from "../../Uros/Stranice/Naslovna/Naslovna";
 const Login = (props) => {
-  // const { navbarSetCollapsable } = React.useContext(NavBarContext)
-  //   React.useEffect(() => {
+ 
+  let token = localStorage.getItem('token');
+  const { navbarSetCollapsable } = React.useContext(NavBarContext)
+    React.useEffect(() => {
         
-  //       navbarSetCollapsable(true)
-  //       return ()=>navbarSetCollapsable(false)
-  //   }, [])
+        navbarSetCollapsable(false)
+        return ()=>navbarSetCollapsable(false)
+    }, [])
   const dispatch=useDispatch();
   const user = useSelector(state =>({
     name:state.user.uname,
@@ -44,6 +47,17 @@ const navigate =useNavigate();
   const[promenaStrane,setPromenaStrane]=useState();
   const [isLogin, setLogin] = useState(false);
   const[errorPop,setErrorPop]=useState();
+  const [page, setPage] = useState({
+    favoriti:"",
+    tabele:"",
+    ugovori:"",
+    oglasi:"",
+    korisnik:"",
+    ocene:"",
+    izmene:"",
+    moderator:""
+  });
+  localStorage.setItem('page', JSON.stringify(page));
   useEffect(()=>{
     if(authCtx.token)
     {
@@ -88,7 +102,7 @@ const navigate =useNavigate();
          if(username.trim().length===0)
         {
           setErrorPop({
-            title:"Please enter valid username"
+            title:"Unesite validan username"
           });
           setIsValidForm(false);
           return;
@@ -97,7 +111,7 @@ const navigate =useNavigate();
         {
           setIsValidForm(true);
           setErrorPop({
-            title:"Please enter valid password"
+            title:"Unesite validan password"
           });
           setIsValidForm2(false);
           return;
@@ -120,8 +134,8 @@ const navigate =useNavigate();
           {
            
             setErrorPop({
-          title:"Greska",
-          message:odgovorTekst
+          title:odgovorTekst
+          
          // message:odgovorTekst
          });
          setIsValidForm(false);
@@ -130,8 +144,8 @@ const navigate =useNavigate();
           else if(odgovorTekst.includes('password'))
           {
             setErrorPop({
-              title:"Greska",
-          message:odgovorTekst
+              title:odgovorTekst
+          
               
              // message:odgovorTekst
              });
@@ -141,8 +155,8 @@ const navigate =useNavigate();
           else if(odgovorTekst.includes('confirm') || odgovorTekst.includes('suspendovan'))
           {
             setErrorPop({
-              title:"Greska",
-              message:odgovorTekst
+              title:odgovorTekst
+             
               
              // message:odgovorTekst
              });
@@ -174,33 +188,50 @@ const navigate =useNavigate();
   }
   return (
   
-      <div className = {classes.klasa}>
-        {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
-         <div className={classes.box}>
-    <form>
-      <h2>Login</h2>
-      <div className = {classes.inputBox}>
-        <input type="text" required="required" ref={usernameInputRef}></input>
-        <span  >Username</span>
-        <i></i>
+    <>
+    {!token ? (
+      <div className={classes.klasa}>
+        {errorPop ? (
+          <PopUpModal
+            title={errorPop.title}
+            message={errorPop.message}
+            onConfirm={errorHandler}
+          />
+        ) : null}
+        <div className={classes.box}>
+          <form>
+            <h2>Login</h2>
+            <div className={classes.inputBox}>
+              <input
+                type="text"
+                required="required"
+                ref={usernameInputRef}
+              />
+              <span>Username</span>
+              <i></i>
+            </div>
+            <div className={classes.links}></div>
+            <div className={classes.inputBox}>
+              <input
+                type="password"
+                required="required"
+                ref={passwordInputRef}
+              />
+              <span>Password</span>
+              <i></i>
+            </div>
+            <div className={classes.links}>
+              <a href="/email">Forgot Password</a>
+              <Link to="/signup">SignUp</Link>
+            </div>
+            <input type="submit" value="Login" onClick={handler} />
+          </form>
+        </div>
       </div>
-      <div className = {classes.links}>
-      </div>
-      <div className = {classes.inputBox}>
-        <input type="password" required="required" ref={passwordInputRef}></input>
-        <span>Password</span>
-        <i></i>
-      </div>
-      <div className = {classes.links}>
-        <a href="/email" >Forgot Password </a>
-        <Link to="/signup" >SignUp</Link>
-      </div>
-      <input type = "submit" value="Login" onClick={handler}></input>
-    </form>
-    </div>
-
-    </div> 
-  
-  );
+    ) : (
+      <></>
+    )}
+  </>
+);
 };
 export default Login;

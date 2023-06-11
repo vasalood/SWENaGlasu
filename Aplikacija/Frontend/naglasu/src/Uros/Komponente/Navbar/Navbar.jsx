@@ -8,7 +8,7 @@ import NavBarContext  from '../../Contexts/NavBarContext'
 
 export default function Navbar({children})
 {
-
+        let token = localStorage.getItem('token');
     const color_secondary = '#ff3333';
     const [isCollapsable, setCollapsable] = React.useState(true)
     const [isDropdownSelected,setDropdownSelected] = React.useState(false)
@@ -48,13 +48,26 @@ export default function Navbar({children})
             return ()=>window.removeEventListener("scroll",opacityOnScroll)
         },[]
     )
-
-
-    const menuItems = [
-    <a href="/">PROFIL</a>,
-    <a href="/">FAVORITI</a>,
-    <a href="/">UGOVORI</a>,
-    <a href="/">ODJAVA</a>]
+    const handleLogout = () =>{
+        localStorage.removeItem('token');
+        localStorage.removeItem('page');
+        localStorage.removeItem('userState');
+    }
+    let menuItems=[];
+        if(token)
+        {
+            menuItems = [
+                <a href="/test">Profil</a>,
+                <a href="/postavioglas">Nov oglas</a>,
+                <a href="/" onClick={handleLogout}>Logout</a>];
+        }
+        else
+        {
+            menuItems = [
+                <a href="/login">Login</a>,
+                <a href="/signup">Sign up</a>
+            ]
+        }
 
     
     return (
@@ -67,10 +80,10 @@ export default function Navbar({children})
             }
         }>
             {isEnabled && <nav className="mnavbar" style={isCollapsable ? opacityStyle : { opacity: '1' }}>
-                <img className="mnavbar--banner" src={BannerLogo}></img>
+               <a href='/'> <img className="mnavbar--banner" src={BannerLogo}></img></a>
                 <DropDownMenu
-                    ButtonIconOn={<BsChevronUp size={35} color={color_secondary} />}
-                    ButtonIconOff={<BsChevronDown size={35} color={color_secondary} />}
+                    ButtonIconOn={<BsChevronUp size={35} style={{color:"#3B82F6"}} />}
+                    ButtonIconOff={<BsChevronDown size={35} style={{color:"#3B82F6"}} />}
                     items={menuItems}
                     className="mnavbar--dropdown"
                     isSelected={isDropdownSelected}

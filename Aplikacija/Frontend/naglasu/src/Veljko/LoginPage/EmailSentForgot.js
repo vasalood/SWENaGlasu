@@ -5,14 +5,25 @@ import PopUpModal from './PopUpModal';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 const EmailSentForgot = () =>{
+  let token = localStorage.getItem('token');
+  const validateEmail = (email) => {
+    // Provera da li email adresa sadrži simbol "@" i tačku "."
+    const hasAtSymbol = email.includes("@");
+    const hasDot = email.includes(".");
+    const hasLength = email.length>5;
+    // Vraćanje rezultata validacije
+    return hasAtSymbol && hasDot && hasLength;
+  };
   const navigate =useNavigate();
   const[errorPop,setErrorPop]=useState();
     const emailRef=useRef();
     const handler = (event) =>{
+      const email = emailRef.current.value;
+      const isEmailValid = validateEmail(email);
         event.preventDefault(); 
         let a="a";
         console.log(emailRef.current.value);
-        if(emailRef.current.value.length>0)
+        if(isEmailValid)
         {
         fetch("http://localhost:5105/Authentication/ForgotPassword/" + emailRef.current.value, {
           method: "POST",
@@ -58,6 +69,13 @@ const EmailSentForgot = () =>{
             console.error("Došlo je do greške prilikom izvršavanja zahteva:", error);
           });
         }
+        else
+        {
+          setErrorPop({
+            title:"Nevalidan email",
+            message:""
+          })
+        }
     };
     const errorHandler = () =>{
       if(errorPop.title.includes("Poštovani"))
@@ -68,7 +86,10 @@ const EmailSentForgot = () =>{
       else
         setErrorPop(null);
     }
-    return(<div className={classes.klasa}>
+    return(
+    <>
+    {!token?(
+    <div className={classes.klasa}>
       {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
         <div className={classes.box}>
         <form>
@@ -84,6 +105,8 @@ const EmailSentForgot = () =>{
           <input type = "submit" value="Send" onClick={handler}></input>
         </form>
         </div>
-        </div>)
+        </div>):<></>}
+        </>
+        )
 }
 export default EmailSentForgot;

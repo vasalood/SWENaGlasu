@@ -20,7 +20,18 @@ import Table2 from './Table2';
 import DataTable from "./Datatable";
 import Layout from "./Layout";
 import AuthContext from "../store/auth-context";
-const Neka = () =>{
+import React from "react";
+import NavBarContext from "../../Uros/Contexts/NavBarContext";
+import SearchBar from "../../Uros/Stranice/Naslovna/Komponente/Searchbar/Searchbar";
+import defaultImage from './istockphoto-1300845620-612x612.jpg';
+import KarticeZaPrikaz from "./KarticeZaPrikaz";
+const Neka = (props) =>{
+  const { navbarSetCollapsable } = React.useContext(NavBarContext)
+  React.useEffect(() => {
+      
+      navbarSetCollapsable(false)
+      return ()=>navbarSetCollapsable(false)
+  }, [])
   const dispatch=useDispatch();
   const user = useSelector(state =>({
     name:state.user.uname,
@@ -35,26 +46,29 @@ const Neka = () =>{
     //<span className="text-black-50">veljkoveljovic13@gmail.com</span>
   }));
   const { collapseSidebar } = useProSidebar();
+  const handlerStranica = () =>{
+    props.handlerIzmena();
+  }
     return(
     
-    <section style={{ backgroundColor: "#eee" }}>
+    <section style={{ backgroundColor: "#efefef" }}>
     <div className="container py-5">
      
       <div className="row">
         <div className="col-lg-4">
           <div className="card mb-4">
             <div className="card-body text-center">
-              <img
-                src={`data:image/jpeg;base64, ${user.slika}`}
-                alt="avatar"
-                className="rounded-circle img-fluid"
-                style={{ width: 150 }}
-              />
+            <img
+  src={user.slika ? `data:image/jpeg;base64, ${user.slika}` : defaultImage}
+  alt="avatar"
+  className="rounded-circle img-fluid"
+  style={{ width: 150 }}
+/>
               <h5 className="my-3">{user.username}</h5>
               <p className="text-muted mb-1">NaGlasu</p>
               <p className="text-muted mb-4">{user.address}</p>
               <div className="d-flex justify-content-center mb-2">
-                <button type="button" className="btn btn-primary">
+                <button type="button" className="btn btn-primary" onClick={handlerStranica}>
                   Update
                 </button>
                 <button type="button" className="btn btn-outline-primary ms-1">
@@ -107,7 +121,7 @@ const Neka = () =>{
             <div className="card-body">
               <div className="row">
                 <div className="col-sm-3">
-                  <p className="mb-0">Full Name</p>
+                  <p className="mb-0">Ime</p>
                 </div>
                 <div className="col-sm-9">
                   <p className="text-muted mb-0">{user.name}</p>
@@ -134,7 +148,7 @@ const Neka = () =>{
               <hr />
               <div className="row">
                 <div className="col-sm-3">
-                  <p className="mb-0">Mobile</p>
+                  <p className="mb-0">Telefon</p>
                 </div>
                 <div className="col-sm-9">
                   <p className="text-muted mb-0">{user.phone}</p>
@@ -143,7 +157,7 @@ const Neka = () =>{
               <hr />
               <div className="row">
                 <div className="col-sm-3">
-                  <p className="mb-0">Address</p>
+                  <p className="mb-0">Adresa</p>
                 </div>
                 <div className="col-sm-9">
                   <p className="text-muted mb-0">{user.address}</p>
@@ -309,11 +323,12 @@ const Neka = () =>{
           </div> */}
         </div>
       </div>
+      
       <h1 style={{ marginBottom: '1rem', fontSize: '2.5rem', fontWeight: 800, lineHeight: 1, color: '#333333' }}>
         Oglasi koje ste postavili su  <mark style={{ padding: '0.25rem 0.5rem', color: '#ffffff', backgroundColor: '#3B82F6', borderRadius: '0.25rem' }}>NaGlasu</mark> 
       </h1>
       
-      <Oglasi></Oglasi>
+      <KarticeZaPrikaz></KarticeZaPrikaz>
     </div>
     
 </section>

@@ -30,11 +30,17 @@ import { Collapse } from '@mui/material';
 import ForgotPasswordPage from './Veljko/LoginPage/ForgotPasswordPage';
 import Chat, { chatLoader } from './Uros/Stranice/Chat/Chat';
 import Oglas from './Vasa/Komponente/Oglas';
+
 import Kategorija from './Vasa/Komponente/Kategorija';
+
 import PostaviOglas from './Vasa/Komponente/PostaviOglas';
+
+import { OglasLoader } from './Vasa/Komponente/Oglas';
 import './res/colors.css'
-
-
+import App3 from './Veljko/Kartica/App';
+import ViewUser from './Veljko/ProfilePage/ViewUser';
+import RecipeReviewCard from './Veljko/ProfilePage/KarticaNekaMui';
+import KarticaOglasNova from './Veljko/ProfilePage/KarticaOglasNova';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 
@@ -72,19 +78,28 @@ const router = createBrowserRouter(
     },
     {
       path:'neka',
-      element:<Collapse></Collapse>
+      element:<App3></App3>
     },
     {
-      path:'oglas',
-      element:<Oglas></Oglas>
+      path: '/profil/:username',
+      element:<ViewUser/>
     },
     {
+
+      path:'oglas/:oglasId',
+
+      element:<Oglas></Oglas>,
+
+      loader: OglasLoader
+
+    },
+
+    {
+
       path:'postavioglas',
+
       element:<PostaviOglas></PostaviOglas>
-    },
-    {
-      path:'kategorija',
-      element:<Kategorija></Kategorija>
+
     }
   ]
 

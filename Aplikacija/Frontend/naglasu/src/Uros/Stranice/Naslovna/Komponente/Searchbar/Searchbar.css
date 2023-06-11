@@ -5,6 +5,7 @@
     height: 52px;
     border: none;
     outline: none;
+    border-radius: 16px;
 }
 
 .searchbar--container
@@ -19,7 +20,7 @@
     top:85px;
     padding-top: 20px;
     padding-bottom:20px;
-    background-color: var(--color_secondary);
+    background-color: #e5e5e5;
 }
 
 .searchbar--wrapper
@@ -28,9 +29,11 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    border: 1px solid var(--color_on_secondary);
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
     height: fit-content;
     background-color: white;
+    margin-left: 30px;
 }
 
 .searchbar--container button

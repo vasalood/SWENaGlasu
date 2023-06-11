@@ -13,7 +13,7 @@ const ExpensesFilterMark = (props) => {
     <div className='expenses-filter'>
         <div className='expenses-filter__container'>
       <div className='expenses-filter__control'>
-        <label style={{color:"gray"}}>Filter ocene</label>
+        <label style={{color:"gray"}}></label>
         
        < select value={props.selectedMark} onChange={dropdownChangeHandler}>
        <option value=''>Izaberite Ocenu</option>
