@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import ExpensesFilter from "./ExpensesFilter";
 import AuthContext from "../store/auth-context";
+import KarticaOglasNova from "./KarticaOglasNova";
 const ViewOglasi = (props) =>{
 const [oglasList,setOglasList]= useState([]);
 const authCtx = useContext(AuthContext);
@@ -28,7 +29,7 @@ useEffect(()=>{
       .then(odgovorTekst =>  {
             //console.log(odgovorTekst.lista.slikeZaSlanje[0].naziv);
             odgovorTekst.lista.forEach(element => {
-                console.log(element.slikeZaSlanje[0].naziv);
+                //console.log(element.slikeZaSlanje[0].naziv);
             });
            // console.log(odgovorTekst.lista[0].slikeZaSlanje[0].naziv);
            setOglasList(odgovorTekst.lista);
@@ -41,11 +42,18 @@ useEffect(()=>{
   ,[props.username])
   return (
 
-    <div className="oglas-container">
-      {oglasList.map((oglas) => (
-        <MenuItemm key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje[0].naziv} />
-      ))}
-    </div>
+    <>
+          {oglasList.length === 0 ? null : (
+  <h1 style={{ marginBottom: '2rem', fontSize: '2.5rem', fontWeight: 800, lineHeight: 1, color: '#333333',marginTop:'4rem'}}>
+    Oglasi koje je <mark style={{ paddingRight:'0.3rem', color: '#ffffff', backgroundColor: '#3B82F6', borderRadius: '0.25rem', paddingTop:'0.3rem' }}>{props.username}</mark> postavio
+  </h1>
+)}
+    <div className="container grid grid--3-cols margin-right-md oglasiKartica" >
+        {oglasList.map((oglas) => (
+          <KarticaOglasNova key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje} />
+        ))}
+        </div>
+      </>
   );
 
 };

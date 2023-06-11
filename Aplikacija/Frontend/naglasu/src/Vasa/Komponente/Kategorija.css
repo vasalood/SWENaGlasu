@@ -2,14 +2,16 @@
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  /* align-items: center;
-  justify-content: space-around; */
-  width: 600px;
+  /* align-items: center; */
+  justify-content: space-around;
+  height:320px;
+  width: 880px;
   margin: 0 auto;
-  font-family: Roboto;
+  font-family: "Rubik", sans-serif;;
   font-size: 20px;
-  background-color: rgb(233, 232, 232);
+  background-color:#FFFFFF;
   border-radius: 5px;
+  border:  1px solid rgb(200, 200, 200);
 }
 
 .kategorija-naslov {
@@ -57,10 +59,11 @@
 
 .inputselect{
   height: 36px;
+  width: 450px;
   font-size: 20px;
-  font-family: Roboto;
+  font-family: "Rubik", sans-serif;;
   border: 1px solid rgb(192,192,192);
-  border-radius: 2px;
+  border-radius: 5px;
   box-shadow: inset 1px 2px 3px rgba(0,0,0,0.05);
 }
 

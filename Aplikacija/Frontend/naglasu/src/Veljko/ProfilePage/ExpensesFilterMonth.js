@@ -14,21 +14,22 @@ const ExpensesFilterMonth = (props) => {
     <div className='expenses-filter'>
         <div className='expenses-filter__container'>
       <div className='expenses-filter__control'>
-        <label style={{color:"gray"}}>Filter by year </label>
+        <label style={{color:"gray"}}></label>
         
        < select value={props.selectedYear} onChange={dropdownChangeHandler}>
-       <option value=''>Select Month</option>
-          <option value='January'>January</option>
-          <option value='February'>February</option>
-          <option value='March'>March</option>
+       <option value=''>Izaberite Mesec</option>
+          <option value='January'>Januar</option>
+          <option value='February'>Februar</option>
+          <option value='March'>Mart</option>
           <option value='April'>April</option>
-          <option value='May'>May</option>
-          <option value='June'>June</option>
-          <option value='August'>August</option>
-          <option value='September'>September</option>
-          <option value='October'>October</option>
-          <option value='November'>November</option>
-          <option value='December'>December</option>
+          <option value='May'>Maj</option>
+          <option value='June'>Jun</option>
+          <option value='July'>Jul</option>
+          <option value='August'>Avgust</option>
+          <option value='September'>Septembar</option>
+          <option value='October'>Oktobar</option>
+          <option value='November'>Novembar</option>
+          <option value='December'>Decembar</option>
 
         </select>
         </div>

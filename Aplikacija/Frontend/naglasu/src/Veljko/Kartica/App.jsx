@@ -203,10 +203,11 @@ export default function App() {
   const errorHandler = () =>{
     setErrorPop(null);
   }
+  let token = localStorage.getItem('token');
   return (
     <div className="App">
        {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
-      <form className="forma" action="#" onSubmit={(e) => handleSubmit(e)}>
+      {token?(<form className="forma" action="#" onSubmit={(e) => handleSubmit(e)}>
         <div
           onClick={() => {
             setFlip(!flip);
@@ -333,7 +334,7 @@ export default function App() {
 
           <button className="buttonn"type="submit">Submit</button>
         </div>
-      </form>
+      </form>):<></>}
     </div>
   );
 }

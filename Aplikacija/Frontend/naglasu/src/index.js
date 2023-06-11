@@ -84,10 +84,6 @@ const router = createBrowserRouter(
       element:<ViewUser/>
     },
     {
-      path: 'kartica',
-      element:<KarticaOglasNova/>
-    },
-    {
 
       path:'oglas/:oglasId',
 
@@ -99,25 +95,9 @@ const router = createBrowserRouter(
 
     {
 
-      path: 'kartica',
-
-      element:<RecipeReviewCard/>
-
-    },
-
-    {
-
       path:'postavioglas',
 
       element:<PostaviOglas></PostaviOglas>
-
-    },
-
-    {
-
-      path:'kategorija',
-
-      element:<Kategorija></Kategorija>
 
     }
   ]

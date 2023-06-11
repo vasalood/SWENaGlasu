@@ -24,7 +24,7 @@ function ViewMarks(props) {
     //setFilteredMonth(selectedMonth);
   };
 const filteredExpenses = props.items.filter(expense =>{
-  const expenseMark = expense.amount;
+  const expenseMark = expense.vrednost;
   let expenseYear="";
   let expenseMonth="";
   if(expense.datum!=undefined)
@@ -35,7 +35,7 @@ const filteredExpenses = props.items.filter(expense =>{
   console.log(expenseMonth);
   console.log(expenseMark);
   console.log(filteredMark);
-  if(expenseMark===filteredMark)
+  if(expenseMark==filteredMark)
   console.log("ABE");
   return (
     (filteredYear === '' || expenseYear === filteredYear) &&

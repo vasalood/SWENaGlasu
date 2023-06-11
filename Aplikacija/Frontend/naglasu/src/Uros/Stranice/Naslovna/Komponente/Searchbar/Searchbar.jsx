@@ -89,7 +89,7 @@ export default function SearchBar()
                     `/${sortStanja.orderType}/${stringFilterStanja
                     }`} state={{ ukupanBr: ukupanBr }}>
                     <button className="searchbar--nav_btn searchbar--prev_btn">
-                        <BsChevronLeft size={35} style={navButtonStyle} />
+                        <BsChevronLeft  size={35}  style={{color:'#3B82F6', fontWeight:'bold',navButtonStyle}} />
                     </button>
                 </Link> : <div className="searchbar--nav_btn" />
             }
@@ -133,7 +133,7 @@ export default function SearchBar()
                         stringFilterStanja
                     }`} state={{ukupanBr:ukupanBr}}>
                     <button className="searchbar--nav_btn searchbar--next_btn" style={navButtonStyle}>
-                        <BsChevronRight size={35} />
+                        <BsChevronRight style={{color:'#3B82F6', fontWeight:'bold'}} size={35} />
                     </button>
                     
                 </Link>:<div className='searchbar--nav_btn'/>}

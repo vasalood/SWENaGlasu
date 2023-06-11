@@ -42,7 +42,7 @@ useEffect(()=>{
       .then(odgovorTekst =>  {
             //console.log(odgovorTekst.lista.slikeZaSlanje[0].naziv);
             odgovorTekst.lista.forEach(element => {
-              console.log(element.slikeZaSlanje);
+              //console.log(element.slikeZaSlanje);
                 //console.log(element.slikeZaSlanje[0].naziv);
             });
            // console.log(odgovorTekst.lista[0].slikeZaSlanje[0].naziv);
@@ -59,7 +59,7 @@ useEffect(()=>{
     <>
     <div className="container grid grid--3-cols margin-right-md oglasiKartica" >
         {oglasList.map((oglas) => (
-          <KarticaOglasNova key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje[0].naziv} />
+          <KarticaOglasNova key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje} />
         ))}
         </div>
       </>

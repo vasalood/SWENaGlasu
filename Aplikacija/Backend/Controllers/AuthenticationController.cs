@@ -66,9 +66,14 @@ private readonly IStripeAppService _stripeService;
         
         ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
         var userExist= await _userManager.FindByEmailAsync(korisnik.Email);
+        var userExist2 = await _userManager.FindByNameAsync(korisnik.UserName);
         if(userExist!=null)
         {
-            return BadRequest("Email vec postoji.");
+            return BadRequest("Email već postoji.");
+        }
+        if(userExist2!=null)
+        {
+            return BadRequest("Username već postoji");
         }
        /* var userExist2 =await _userManager.FindByEmailAsync(korisnik.UserName);
           if(userExist2!=null)
@@ -93,7 +98,7 @@ private readonly IStripeAppService _stripeService;
             if(!result.Succeeded)
              {
              var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
-            return BadRequest($"Neuspesna registracija: {errorMessages}");
+            return BadRequest("Nažalost došlo je do greške. Proverite da li Vaša nova lozinka sadrži veliko slovo, cifru i da ima više od 7 karaktera, takođe proverite da li se lozinke poklapaju.");
              }
             await _userManager.AddToRoleAsync(user,"User");
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -188,7 +193,7 @@ private readonly IStripeAppService _stripeService;
         var token = new JwtSecurityToken(
             issuer:_configuration["JWT:ValidIssuer"],
             audience:_configuration["JWT:ValidAudience"],
-            expires:DateTime.Now.AddHours(1),
+            expires:DateTime.Now.AddHours(3),
             claims:authClaims,
             signingCredentials:new SigningCredentials(authSigningKey,SecurityAlgorithms.HmacSha256)
             
@@ -290,24 +295,35 @@ private readonly IStripeAppService _stripeService;
     {
        
         var userExist = await _userManager.FindByNameAsync(userName);
-        
-        if(userExist==null)
+
+if (userExist == null)
+{
+    return BadRequest("User ne postoji!");
+}
+else
+{
+    var roles = await _userManager.GetRolesAsync(userExist);
+
+    if (roles.Contains("User") || roles.Contains("PremiumUser"))
+    {
+        var result = await _userManager.RemoveFromRolesAsync(userExist, roles);
+
+        if (result.Succeeded)
         {
-            return BadRequest("User ne postoji!");
+            result = await _userManager.AddToRoleAsync(userExist, "Moderator");
+            return Ok("Uspesno promenjena rola");
         }
         else
         {
-           var result = await _userManager.RemoveFromRoleAsync(userExist,"User");
-                if(result.Succeeded)
-                {
-                    result=await _userManager.AddToRoleAsync(userExist,"Moderator");
-                    return Ok("Uspesno promenjena rola");
-                }
-                else
-                {
-                    return BadRequest("Neuspesna promena role");
-                }
+            return BadRequest("Neuspesna promena role");
         }
+    }
+    else
+    {
+        return BadRequest("Korisnik nije obican korisnik ili premium korisnik");
+    }
+}
+
     }
     [Authorize(Roles ="Admin, Moderator")]
     [Route("SuspendujKorisnika/{userName}")]
@@ -439,7 +455,7 @@ private readonly IStripeAppService _stripeService;
             };
        return Ok(model);
     }
-    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
+   [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [Route("GetAllUsers")]
     [HttpGet]
     public async Task<IActionResult>GetAllUsers()

@@ -29,6 +29,11 @@ const PostaviOglas = () => {
   //cuva string vrednost potrebno parsovati u number
   const [stanje, setStanje] = useState("nijeIzabrano");
 
+  const [tipOglasa, setTipOglasa] = useState("nijeIzabrano");
+  
+    const [smerOglasa, setSmerOglasa] = useState("nijeIzabrano");
+  
+    const [prikazStanja, setPrikazStanja] = useState(true);
   //state za cuvanje vrednosti textarea opis
   //cuva string vrednost
   const [opis, setOpis] = useState("");
@@ -126,7 +131,9 @@ const PostaviOglas = () => {
   function handleChange(e) {
 
     if(e.target.files.length > 5) {
-      alert("Mozete izabrati najvise 5 slika!");
+      setErrorPop({
+        title:"Možete izabrati najviše pet slika"
+      });
       e.target.value = null;
       return;
     }
@@ -143,7 +150,34 @@ const PostaviOglas = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    if(tipOglasa === 'nijeIzabrano') {
 
+      setErrorPop({
+        title:"Morate da izaberete tip oglasa"
+      });
+
+      return;
+
+    }
+
+    if(smerOglasa === 'nijeIzabrano') {
+
+      setErrorPop({
+        title:"Morate da izaberete smer oglasa"
+      });
+      return;
+
+    }
+
+    if(tipOglasa === '0' && stanje === 'nijeIzabrano'){
+
+      setErrorPop({
+        title:"Morate da izaberete stanje oglasa"
+      });
+
+      return;
+
+    }
     const formData = new FormData();
 
     let poljeImena = [];
@@ -156,8 +190,42 @@ const PostaviOglas = () => {
     }
 
     formData.append('Ime', nazivOglasa);
-    formData.append('PodkategorijaId', odabranaPodkategorija);
-    formData.append('KategorijaId', odabranaKategorija);
+    if(odabranaKategorija === '4'){
+
+      formData.append('PodkategorijaId', 4);
+
+      formData.append('KategorijaId', odabranaKategorija);
+
+    }
+
+    else{
+
+      if(odabranaKategorija ==='nijeIzabrana'){
+
+        setErrorPop({
+          title:"Morate da izaberete kategoriju"
+        });
+
+        return;
+
+      }
+
+      if(odabranaPodkategorija === 'nijeIzabrana'){
+
+        setErrorPop({
+          title:"Morate da izaberete podkategoriju"
+        });
+
+        return;
+
+      }
+
+      formData.append('PodkategorijaId', odabranaPodkategorija);
+
+      formData.append('KategorijaId', odabranaKategorija);
+
+    }
+   
 
     for (let i = 0; i < poljeImena.length; i++) 
     {  
@@ -179,7 +247,17 @@ const PostaviOglas = () => {
     }
 
     formData.append('Lokacija', lokacija);
-    formData.append('Stanje', stanje);
+    
+
+    if(tipOglasa == '1'){
+
+      formData.append('Stanje', 0);
+
+    } else {
+
+      formData.append('Stanje', stanje);
+
+    }
     formData.append('Opis', opis);
     
     fetch(`http://localhost:5105/Oglas/PostaviOglas`, {
@@ -251,23 +329,115 @@ const errorHandler =()=>{
           />
         </div>
 
+        
         <div className="form-group">
-          <label className="labell" htmlFor="stanje">Stanje:</label>
-          <select
-            id="stanje"
-            className="svi-isti"
-            value={stanje}
-            onChange={(e) => setStanje(e.target.value)}
-            required
-          >
-            <option value="nijeIzabrano">Izaberite stanje</option>
-            <option value="0">Novo - neotpakovano</option>
-            <option value="1">Kao novo - nekorisceno</option>
-            <option value="2">Polovno - ocuvano</option>
-            <option value="3">Polovno</option>
-            <option value="4">Polovno - neupotrebivo</option>
-          </select>
-        </div>
+
+<label className="labell" htmlFor="tipOglasa">Tip oglasa:</label>
+
+<select
+
+  id="tipOglasa"
+
+  className="svi-isti"
+
+  value={tipOglasa}
+
+  onChange={(e) => {
+
+    if(e.target.value === '1') {
+
+      setPrikazStanja(false);
+
+    } else {
+
+      setPrikazStanja(true);
+
+    }
+
+    setTipOglasa(e.target.value);
+
+  }}
+
+  required
+
+>
+
+  <option value="nijeIzabrano">Izaberite tip oglasa</option>
+
+  <option value="0">Proizvod</option>
+
+  <option value="1">Usluga</option>
+
+</select>
+
+</div>
+
+
+
+
+<div className="form-group">
+
+<label className="labell" htmlFor="smerOglasa">Smer oglasa:</label>
+
+<select
+
+  id="smerOglasa"
+
+  className="svi-isti"
+
+  value={smerOglasa}
+
+  onChange={(e) => setSmerOglasa(e.target.value)}
+
+  required
+
+>
+
+  <option value="nijeIzabrano">Izaberite smer oglasa</option>
+
+  <option value="0">Nudim</option>
+
+  <option value="1">Trazim</option>
+
+</select>
+
+</div>
+
+
+
+{prikazStanja && <div className="form-group">
+
+<label className="labell" htmlFor="stanje">Stanje:</label>
+
+<select
+
+  id="stanje"
+
+  className="svi-isti"
+
+  value={stanje}
+
+  onChange={(e) => setStanje(e.target.value)}
+
+  required
+
+>
+
+  <option value="nijeIzabrano">Izaberite stanje</option>
+
+  <option value="0">Novo - neotpakovano</option>
+
+  <option value="1">Kao novo - nekorišćeno</option>
+
+  <option value="2">Polovno - očuvano</option>
+
+  <option value="3">Polovno</option>
+
+  <option value="4">Polovno - neupotrebivo</option>
+
+</select>
+
+</div>}
 
         <div className="form-group">
           <label className="labell" htmlFor="opis">Opis:</label>
@@ -316,7 +486,9 @@ const errorHandler =()=>{
             </select>
         </div>
         
-        {odabranaKategorija !== "nijeIzabrana" && (
+        {
+
+      (odabranaKategorija !== 'nijeIzabrana' && odabranaKategorija != 4) && (
            <div className="form-group">
              <h3>Popunite polja kategorije!</h3>
              {skupiPoljaKategorije().map(polje => {
@@ -338,7 +510,9 @@ const errorHandler =()=>{
          )}
         
         
-        {odabranaKategorija !== "nijeIzabrana" && (
+        {
+
+      (odabranaKategorija !== 'nijeIzabrana' && odabranaKategorija != 4) && (
           <div className="form-group">
             <label className="labell" htmlFor="podkategorija">Podkategorija:</label>
             <select

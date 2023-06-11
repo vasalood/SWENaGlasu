@@ -8,15 +8,24 @@ import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { useContext } from 'react';
 import AuthContext from '../store/auth-context';
+import PopUpModal from '../LoginPage/PopUpModal';
+import defaultSlika from './istockphoto-1300845620-612x612.jpg';
 import { GridToolbarContainer,GridToolbarColumnsButton,GridToolbarFilterButton,GridToolbarDensitySelector,GridToolbarQuickFilter   } from '@mui/x-data-grid';
 const columns = [
-  {field:"user",headerName:"User",width:230,
-    renderCell:(params)=>{
-        return(
-            <div className="cellWithImg">
-                <img className ="cellImg" src={`data:image/jpeg;base64, ${params.row.slika}`} alt="Slika"/>
-                {params.row.username}
-            </div>
+  {
+    field: 'user',
+    headerName: 'User',
+    width: 230,
+    renderCell: (params) => {
+      const slikaSrc = params.row.slika
+        ? `data:image/jpeg;base64, ${params.row.slika}`
+        : defaultSlika;
+
+      return (
+        <div className="cellWithImg">
+          <img className="cellImg" src={slikaSrc} alt="Slika" />
+          {params.row.username}
+        </div>
         )
     }
 },
@@ -26,9 +35,9 @@ const columns = [
 {
     field:"lastName", headerName:"Prezime"
 },
-{
-    field:"email", headerName:"Email",width:230
-},
+// {
+//     field:"email", headerName:"Email",width:230
+// },
 {
     field:"rola", headerName:"Rola",width:120,
     cellRender: (params) => {
@@ -59,6 +68,7 @@ renderCell: (params) => {
 
 
 export default function DataTable() {
+  const[errorPop,setErrorPop]=useState();
     let token = localStorage.getItem('token');
     console.log(token);
   const authCtx = useContext(AuthContext);
@@ -77,7 +87,9 @@ export default function DataTable() {
      
     }),
   }).then(odgovorTekst=>{
-    console.log(odgovorTekst);
+    setErrorPop({
+      title:"Uspešno ste blokirali korisnika "
+    });
   }) .catch((error) => {
     console.log(error);
   });
@@ -95,32 +107,18 @@ export default function DataTable() {
       
      }),
    }).then(odgovorTekst=>{
-     console.log(odgovorTekst);
+    setErrorPop({
+      title:"Korisnik je blokiran na mesec dana."
+    });
    }) .catch((error) => {
      console.log(error);
    });
    };
   
-    
-    //                        <button type="button" class="btn btn-outline-success">Success</button>
-
-    // const actionColun2 = [
-    //     {
-    //         field:"action2",
-    //         headerName:"SetModerator",
-    //         width:250,
-    //         renderCell:(params)=>{
-    //             return(
-                    
-    //                     <Button variant="outlined"onClick={() => postaviModeratoraOnClick(params.row)}>SetAsModerator</Button>
-
-                    
-    //             )
-    //         }
-    //     }
-    // ]
 
     const CustomToolbar = () => {
+      let obj= localStorage.getItem('userState');
+      let parsed = JSON.parse(obj);
       return (
         <GridToolbarContainer>
           <GridToolbarQuickFilter ></GridToolbarQuickFilter> 
@@ -142,26 +140,13 @@ export default function DataTable() {
           
          }),
        }).then(odgovorTekst=>{
-         console.log(odgovorTekst);
+        setErrorPop({
+          title:"Korisnik je odblokiran"
+        });
        }) .catch((error) => {
          console.log(error);
        });
     }
-    // const actionColun3 = [
-    //     {
-    //         field:"action3",
-    //         headerName:"UnBlockUser",
-    //         width:250,
-    //         renderCell:(params)=>{
-    //             return(
-    //                 <div className="cellAction">
-    //                     <button type="button" class="btn btn-outline-success" onClick={() => unblockHandler(params.row)}>Odblokiraj korisnika</button>
-
-    //                 </div>
-    //             )
-    //         }
-    //     }
-    // ]
     const [userRole, setUserRole] = useState('');
 
     const [users,SetUsers]=useState([]);
@@ -211,6 +196,7 @@ export default function DataTable() {
           width:600,
           renderCell:(params)=>{
             const isAdmin = params.row.rola ==="Admin";
+            //const username = params.row.username===parsed.userName;
             const isModerator = params.row.rola ==="Moderator";
             const suspended = params.row.suspendOnTime ;
             const suspended2 = params.row.suspendForEver;
@@ -231,9 +217,18 @@ export default function DataTable() {
           }
       }
   ]
-
+  const errorHandler = () =>{
+    setErrorPop(null);
+    window.location.reload();
+  }
   return (
     <div className='datatable'>
+          <div>
+    <h1 style={{ marginBottom: '1rem', fontSize: '3rem', fontWeight: '800', color: '#333333', lineHeight: '1' }}>
+  <span style={{ background: 'linear-gradient(to right, #3B82F6, #10B981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Moderator </span> Panel
+</h1>
+    </div>
+      {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
       <DataGrid
         rows={users.filter(user=>user.role!=='Admin')}
         columns={columns.concat(actionColun)}

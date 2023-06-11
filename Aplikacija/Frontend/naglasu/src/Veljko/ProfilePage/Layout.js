@@ -33,6 +33,7 @@ import TabelaModerator from './TabelaModerator';
 import App3 from './UgovoriBootStrap';
 import Favoriti from "./Favoriti";
 const Layout =() =>{
+  let token2 = localStorage.getItem('token');
   const storedObj = JSON.parse(localStorage.getItem('userState'));
   console.log(storedObj);
   const expenses = [
@@ -65,6 +66,8 @@ const Layout =() =>{
   const [oglasList,setOglasList]= useState([]);
   const navigate =useNavigate();
   useEffect(() => {
+    if(storedObj)
+    {
     const url = `http://localhost:5105/Ocena/VratiMtihNOcena/${encodeURIComponent(storedObj.id)}?M=${0}&N=${10}`;
     console.log(user.id);
     fetch(url)
@@ -100,7 +103,7 @@ const Layout =() =>{
           });
     
     console.log("Lista:");
-    console.log(oglasList);
+    console.log(oglasList);}
   }, []);
   
   console.log(oglasList);
@@ -342,6 +345,8 @@ const handlerLogout = () =>{
   // Remove user state from localStorage
   localStorage.removeItem("userState");
   localStorage.removeItem('token');
+  localStorage.removeItem("email");
+  localStorage.removeItem("page");
   navigate('/');
 }
 const handlerModerator = () =>{
@@ -393,9 +398,10 @@ const handlerMoji = () =>{
     if(savedUserState)
     {  
   return (
-
+      <>
+      
       <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
-        <Sidebar style={{ height: "100vh" }}>
+        <Sidebar style={{ height: "100vh", backgroundColor:"#FFFFFF" }}>
         <Menu>
           <MenuItem
             icon={<MenuOutlinedIcon />}
@@ -428,17 +434,18 @@ const handlerMoji = () =>{
         {page.tabele==""?(<></>):<DataTable></DataTable>}
         {page.favoriti==""?(<></>):<Oglasi></Oglasi>}
         {page.oglasi==""?(<></>):<Favoriti></Favoriti>}
-        {page.korisnik!=""?(<></>):<Neka></Neka>}
+        {page.korisnik!=""?(<></>):<Neka handlerIzmena={handlerIzmena}></Neka>}
         {page.ocene==""?(<></>):<Expenses items={oglasList}></Expenses>}
         {page.izmene==""?(<></>):<EditPage></EditPage>}
         {page.moderator==""?(<></>):<TabelaModerator></TabelaModerator>}
         
       </main>
       </div>
+      </>
     );
           }
           else{
-            return<div>{user.address}</div>
+            return<div></div>
           }
 }
 export default Layout;

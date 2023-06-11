@@ -9,15 +9,24 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useContext } from 'react';
 import AuthContext from '../store/auth-context';
 import PopUpModal from '../LoginPage/PopUpModal';
+import defaultSlika from './istockphoto-1300845620-612x612.jpg';
 import { GridToolbarContainer,GridToolbarColumnsButton,GridToolbarFilterButton,GridToolbarDensitySelector,GridToolbarQuickFilter   } from '@mui/x-data-grid';
+import Kategorija from '../../Vasa/Komponente/Kategorija';
 const columns = [
-  {field:"user",headerName:"User",width:230,
-    renderCell:(params)=>{
-        return(
-            <div className="cellWithImg">
-                <img className ="cellImg" src={`data:image/jpeg;base64, ${params.row.slika}`} alt="Slika"/>
-                {params.row.username}
-            </div>
+  {
+    field: 'user',
+    headerName: 'User',
+    width: 230,
+    renderCell: (params) => {
+      const slikaSrc = params.row.slika
+        ? `data:image/jpeg;base64, ${params.row.slika}`
+        : defaultSlika;
+
+      return (
+        <div className="cellWithImg">
+          <img className="cellImg" src={slikaSrc} alt="Slika" />
+          {params.row.username}
+        </div>
         )
     }
 },
@@ -75,7 +84,7 @@ export default function DataTable() {
     }),
   }).then(odgovorTekst=>{
     setErrorPop({
-      title:"Uspešno ste blokirali korisnika na određeno vreme"
+      title:"Uspešno ste blokirali korisnika na mesec dana"
     });
   }) .catch((error) => {
     console.log(error);
@@ -292,6 +301,12 @@ export default function DataTable() {
     window.location.reload();
   }
   return (
+    <>
+    <div>
+    <h1 style={{ marginBottom: '1rem', fontSize: '3rem', fontWeight: '800', color: '#333333', lineHeight: '1' }}>
+  <span style={{ background: 'linear-gradient(to right, #3B82F6, #10B981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Admin</span> Panel
+</h1>
+    </div>
     <div className='datatable'>
        {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
       <DataGrid
@@ -305,7 +320,11 @@ export default function DataTable() {
       }}
       
       />
-      
+       <h1 style={{ marginBottom: '3rem', fontSize: '3rem', fontWeight: '800', color: '#333333', lineHeight: '1',marginTop:'3rem' }}>
+  <span style={{ background: 'linear-gradient(to right, #3B82F6, #10B981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Postavite novu </span> kategoriju
+</h1>
+      <Kategorija></Kategorija>
     </div>
+    </>
   );
 }

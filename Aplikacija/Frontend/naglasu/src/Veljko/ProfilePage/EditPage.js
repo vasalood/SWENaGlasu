@@ -52,6 +52,7 @@ const EditPage = () =>{
 
   console.log(user.name+" "+user.surname+""+user.role);
 const handlerIzmena = ()=>{
+  let proba =-1;
   const ime = ImeRef.current.value;
   const prezime = PrezimeRef.current.value;
   const telefon = TelefonRef.current.value;
@@ -73,14 +74,27 @@ const handlerIzmena = ()=>{
      
     }),
   }).then(odgovorTekst=>{
+    if(odgovorTekst.ok)
+    {
+      proba =1;
     setErrorPop({
       title:"Uspešno ste izmenili svoje podatke",
       message:""
      });
-    console.log(odgovorTekst);
+    }
+    else
+    {
+      setErrorPop({
+        title:"Došlo je do greške",
+        message:""
+       });
+    }
+    
   }) .catch((error) => {
     console.log(error);
   });
+  if(proba ==1)
+  {
   console.log(savedUserState);
   console.log(savedUserState.id);
     let obj ={
@@ -98,6 +112,7 @@ const handlerIzmena = ()=>{
   let jsonStr=JSON.stringify(obj);
   localStorage.setItem("userState",jsonStr);
   dispatch(userActions.setValues(JSON.parse(jsonStr)));
+}
 }
 else
 {
@@ -170,10 +185,7 @@ return(<div className="container rounded bg-white mt-5 mb-5" style={{ width: '10
                     <div className="col-md-12"><label className="labels">Telefon</label><input type="text" className="form-control" defaultValue={user.phone} ref={TelefonRef}/></div>
                     <div className="col-md-12"><label className="labels">Adresa</label><input type="text" className="form-control" defaultValue={user.address} ref={AdresaRef}/></div>
                 </div>
-                <div className="row mt-3">
-                    <div className="col-md-6"><label className="labels">Country</label><input type="text" className="form-control" placeholder="country" value=""/></div>
-                    <div className="col-md-6"><label className="labels">State/Region</label><input type="text" className="form-control" value="" placeholder="state"/></div>
-                </div>
+               
                 <div className="mt-5 text-center"><button className="btn btn-primary" type="button" onClick={handlerIzmena}>Save Profile</button></div>
             </div>
         </div>

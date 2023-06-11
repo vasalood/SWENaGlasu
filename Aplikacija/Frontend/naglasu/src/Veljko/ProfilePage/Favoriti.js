@@ -63,7 +63,7 @@ useEffect(() => {
 </p>
 <div className="container grid grid--3-cols margin-right-md oglasiKartica" >
         {oglasList.map((oglas) => (
-          <KarticaOglasNova key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje[0].naziv} />
+          <KarticaOglasNova key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje} />
         ))}
         </div>
        </div>

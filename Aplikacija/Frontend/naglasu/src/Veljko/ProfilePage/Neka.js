@@ -25,7 +25,7 @@ import NavBarContext from "../../Uros/Contexts/NavBarContext";
 import SearchBar from "../../Uros/Stranice/Naslovna/Komponente/Searchbar/Searchbar";
 import defaultImage from './istockphoto-1300845620-612x612.jpg';
 import KarticeZaPrikaz from "./KarticeZaPrikaz";
-const Neka = () =>{
+const Neka = (props) =>{
   const { navbarSetCollapsable } = React.useContext(NavBarContext)
   React.useEffect(() => {
       
@@ -46,9 +46,12 @@ const Neka = () =>{
     //<span className="text-black-50">veljkoveljovic13@gmail.com</span>
   }));
   const { collapseSidebar } = useProSidebar();
+  const handlerStranica = () =>{
+    props.handlerIzmena();
+  }
     return(
     
-    <section style={{ backgroundColor: "#eee" }}>
+    <section style={{ backgroundColor: "#efefef" }}>
     <div className="container py-5">
      
       <div className="row">
@@ -65,7 +68,7 @@ const Neka = () =>{
               <p className="text-muted mb-1">NaGlasu</p>
               <p className="text-muted mb-4">{user.address}</p>
               <div className="d-flex justify-content-center mb-2">
-                <button type="button" className="btn btn-primary">
+                <button type="button" className="btn btn-primary" onClick={handlerStranica}>
                   Update
                 </button>
                 <button type="button" className="btn btn-outline-primary ms-1">
@@ -118,7 +121,7 @@ const Neka = () =>{
             <div className="card-body">
               <div className="row">
                 <div className="col-sm-3">
-                  <p className="mb-0">Full Name</p>
+                  <p className="mb-0">Ime</p>
                 </div>
                 <div className="col-sm-9">
                   <p className="text-muted mb-0">{user.name}</p>
@@ -145,7 +148,7 @@ const Neka = () =>{
               <hr />
               <div className="row">
                 <div className="col-sm-3">
-                  <p className="mb-0">Mobile</p>
+                  <p className="mb-0">Telefon</p>
                 </div>
                 <div className="col-sm-9">
                   <p className="text-muted mb-0">{user.phone}</p>
@@ -154,7 +157,7 @@ const Neka = () =>{
               <hr />
               <div className="row">
                 <div className="col-sm-3">
-                  <p className="mb-0">Address</p>
+                  <p className="mb-0">Adresa</p>
                 </div>
                 <div className="col-sm-9">
                   <p className="text-muted mb-0">{user.address}</p>

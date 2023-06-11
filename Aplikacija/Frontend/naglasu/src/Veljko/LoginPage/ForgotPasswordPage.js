@@ -4,6 +4,7 @@ import classes from './Email.module.css';
 import PopUpModal from './PopUpModal';
 
 const ForgotPassword = (props) =>{
+ let token2 = localStorage.getItem('token');
   const [errorPop,setErrorPop]=useState();
     const emailRef=useRef();
     const email = localStorage.getItem("email");
@@ -75,7 +76,10 @@ const ForgotPassword = (props) =>{
     const errorHandler = () =>{
       setErrorPop(null);
     }
-    return( <div className={classes.klasa} >
+    return(
+      <>
+      {!token2?(
+      <div className={classes.klasa} >
       {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
         <div className={classes.box} style={{width:"390px", height:"515px"} }>
         <form>
@@ -102,7 +106,8 @@ const ForgotPassword = (props) =>{
           <input type = "submit" value="Sign Up" onClick={handler} ></input>
         </form>
         </div>
-        </div>
+        </div>):<></>}
+        </>
         )
 }
 export default ForgotPassword;

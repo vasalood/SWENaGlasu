@@ -1,8 +1,9 @@
 import { useState } from "react";
 import "./Kategorija.css"
+import PopUpModal from '../../Veljko/LoginPage/PopUpModal';
 
 export default function Kategorija() {
-
+  const[errorPop,setErrorPop]=useState();
   //state za cuvanje vrednosti inputa za naziv nove kategorije
   const [nazivKategorije, setNazivKategorije] = useState("");
   //state za cuvanje vrednosti inputa za naziv polja kategorije
@@ -23,11 +24,15 @@ export default function Kategorija() {
     const poljaZaReqBody = {}
 
     if(polja.length == 0) {
-      alert("Unesite bar jedno polje");
+      setErrorPop({
+        title:"Unesite bar jedno polje"
+      });
       return;
     }
     if(podkategorije.length == 0) {
-      alert('Unesite bar jednu podkategoriju');
+      setErrorPop({
+        title:"Unesite bar jednu podkategoriju"
+      });
       return;
     }
 
@@ -52,8 +57,12 @@ export default function Kategorija() {
             requestBody
           )
       }).then(s => {
-        if(s.ok) alert('Dodata je nova kategorija!');
-        else alert('Doslo je do greske');
+        if(s.ok) setErrorPop({
+          title:"Dodata je nova kategorija"
+        });
+        else setErrorPop({
+          title:"Došlo je do greške"
+        });
       })
 
       setNazivKategorije('');
@@ -71,12 +80,16 @@ export default function Kategorija() {
       return;
 
     if (polja.some((polje) => polje.naziv.toLowerCase() === nazivPolja.toLowerCase())) {
-      alert("Već ste dodali takvo polje");
+      setErrorPop({
+        title:"Već ste dodali takvo polje"
+      });
       return;
     }
 
     if(tipUnosa === 'nijeIzabran') {
-      alert('Morate da odaberete tip unosa!');
+      setErrorPop({
+        title:"Morate da odaberete tip unosa"
+      });
       return;
     }
 
@@ -101,7 +114,9 @@ export default function Kategorija() {
       return;
 
     if (podkategorije.some(podkategorija => podkategorija.toLowerCase() === nazivPodkategorije.toLowerCase())) {
-      alert("Već ste dodali takvo polje");
+      setErrorPop({
+        title:"Već ste dodali takvo polje"
+      });
       return;
     }
 
@@ -113,10 +128,12 @@ export default function Kategorija() {
   function obrisiPodkategoriju(naziv) {
     setPodkategorije(currentPodkategorije => currentPodkategorije.filter(podkategorija => podkategorija !== naziv))
   }
-
+  const errorHandler = ()=>{
+    setErrorPop(null);
+  }
   return (
     <form className="kategorija" onSubmit={handleDodajKategoriju}>
-
+        {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
       <div className="kategorija-naslov">
 
         <label htmlFor="naslov">Naziv kategorije:</label>
@@ -125,37 +142,36 @@ export default function Kategorija() {
           onChange={e => setNazivKategorije(e.target.value)} 
           type="text" 
           id="naslov"
+          className="inputselect"
           required></input>
 
       </div>
 
-      <div className="kategorija-polja-naslov">
+      {/* <div className="kategorija-polja-naslov">
 
         <label htmlFor="nazivPolja">Polje kategorije</label>
-        <label htmlFor="tipPolja">Tip unosa</label>
+        <label htmlFor="tipPolja"></label>
 
-      </div>
+      </div> */}
 
       <div className="kategorija-polja">
-
+      <label htmlFor="nazivPolja">Polje kategorije</label>
         <input 
           value={nazivPolja} 
           onChange={e => setNazivPolja(e.target.value)} 
           type="text" 
-          id="nazivPolja"></input>
-
+          id="nazivPolja"
+          className="inputselect"
+          ></input>
         <div className="select-i-button">
 
-          <select id="tipPolja" onChange={e => setTipUnosa(e.target.value)}>
+          <select className="inputselect selectt" id="tipPolja" onChange={e => setTipUnosa(e.target.value)}>
             <option value="nijeIzabran">Izaberi</option>
             <option value="text">Text</option>
             <option value="number">Number</option>
             <option value="email">Email</option>
-            <option value="password">Password</option>
             <option value="date">Date</option>
             <option value="checkbox">Checkbox</option>
-            <option value="radio">Radio</option>
-            <option value="file">File</option>
           </select>
           <button 
             type="button" 
@@ -190,6 +206,7 @@ export default function Kategorija() {
           onChange={e => setNazivPodkategorije(e.target.value)} 
           type="text" 
           id="podkategorije" 
+          className="inputselect"
           ></input>
         <button type="button" onClick={handleNovaPodkategorija}  className="add-button">+</button>
       </div>
