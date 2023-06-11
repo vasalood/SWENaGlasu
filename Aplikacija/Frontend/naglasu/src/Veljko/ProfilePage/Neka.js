@@ -25,6 +25,8 @@ import NavBarContext from "../../Uros/Contexts/NavBarContext";
 import SearchBar from "../../Uros/Stranice/Naslovna/Komponente/Searchbar/Searchbar";
 import defaultImage from './istockphoto-1300845620-612x612.jpg';
 import KarticeZaPrikaz from "./KarticeZaPrikaz";
+import { Link } from "react-router-dom";
+
 const Neka = (props) =>{
   const { navbarSetCollapsable } = React.useContext(NavBarContext)
   React.useEffect(() => {
@@ -45,6 +47,9 @@ const Neka = (props) =>{
     slika:state.user.uslika
     //<span className="text-black-50">veljkoveljovic13@gmail.com</span>
   }));
+  let obj= localStorage.getItem('userState');
+
+  let parsed = JSON.parse(obj);
   const { collapseSidebar } = useProSidebar();
   const handlerStranica = () =>{
     props.handlerIzmena();
@@ -70,10 +75,13 @@ const Neka = (props) =>{
               <div className="d-flex justify-content-center mb-2">
                 <button type="button" className="btn btn-primary" onClick={handlerStranica}>
                   Update
-                </button>
-                <button type="button" className="btn btn-outline-primary ms-1">
+                    </button>
+                    <Link to='/chat/0'>
+                    <button type="button" className="btn btn-outline-primary ms-1">
                   Inbox
                 </button>
+                    </Link>
+             
               </div>
             </div>
           </div>
@@ -327,8 +335,8 @@ const Neka = (props) =>{
       <h1 style={{ marginBottom: '1rem', fontSize: '2.5rem', fontWeight: 800, lineHeight: 1, color: '#333333' }}>
         Oglasi koje ste postavili su  <mark style={{ padding: '0.25rem 0.5rem', color: '#ffffff', backgroundColor: '#3B82F6', borderRadius: '0.25rem' }}>NaGlasu</mark> 
       </h1>
-      
-      <KarticeZaPrikaz></KarticeZaPrikaz>
+          <SearchBar userId={parsed.id} route="test"/>
+      <KarticeZaPrikaz oglasList={props.loaderData.oglasNiz}></KarticeZaPrikaz>
     </div>
     
 </section>

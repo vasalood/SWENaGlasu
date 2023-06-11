@@ -131,7 +131,7 @@ namespace Services.Impl
             _repo.SkiniFavorita(Id);
         }
 
-        public bool JelFavorit(long oglasId, string id)
+        public int JelFavorit(long oglasId, string id)
         {
             return _repo.JelFavorit(oglasId, id);
         }

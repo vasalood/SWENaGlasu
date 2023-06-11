@@ -52,7 +52,7 @@ public class OglasFilteri
         //Ako kresuje nesto, mozda je ovaj kast dole. 
         Expression<Func<Oglas, bool>> stanja = Stanja != null ? o => Stanja.Contains((Stanje)o.Stanje) : _defaultLambda;
 
-        return CombineAnd(username,cenaOd, cenaDo, ime, kategorija, podkategorija,lokacija,tip,smer,stanja);
+        return CombineAnd(username,userId, cenaDo, ime, kategorija, podkategorija,lokacija,tip,smer,stanja);
     }
 
     private Expression<Func<Oglas,bool>> CombineAnd( List<Expression<Func<Oglas,bool>>> list)

@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import './KarticaOglasNova.css';
 import { useSelector,useDispatch } from "react-redux";
 import PlaceHolder from "../../Uros/Res/Slike/placeholder.jpg";
-const KarticeZaPrikaz = () =>{
-    const [oglasList,setOglasList]= useState([]);
+const KarticeZaPrikaz = ({oglasList}) =>{
+    //const [oglasList,setOglasList]= useState([]);
 const dispatch=useDispatch();
 const user = useSelector(state =>({
   name:state.user.uname,
@@ -23,7 +23,7 @@ let data=localStorage.getItem('userState');
   let id = parsedData.id;
   console.log(parsedData.username);
   console.log("hhhasdafshhjafaaAAAA");
-useEffect(()=>{
+/* useEffect(()=>{
    
     fetch("http://localhost:5105/Oglas/VratiMTihNOglasa/10/0/datum/1",
         {
@@ -53,7 +53,7 @@ useEffect(()=>{
               console.log(error);
             });
         }
-  ,[])
+  ,[]) */
   return (
 
     <>

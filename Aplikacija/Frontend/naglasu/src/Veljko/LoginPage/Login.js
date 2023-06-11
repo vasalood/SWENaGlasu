@@ -11,6 +11,7 @@ import { userActions } from "../store/user";
 import PopUpModal from './PopUpModal';
 import NavBarContext from "../../Uros/Contexts/NavBarContext";
 import Naslovna from "../../Uros/Stranice/Naslovna/Naslovna";
+import ConnectionContext from "../../Uros/Contexts/ConnectionContext";
 const Login = (props) => {
  
   let token = localStorage.getItem('token');
@@ -86,7 +87,7 @@ const navigate =useNavigate();
             dispatch(userActions.getValues());
             console.log(odgovorTekst.slika);
             localStorage.setItem('userState', JSON.stringify(obj));
-            navigate('/test');
+            navigate('/');
 
        } )
             .catch((error) => {

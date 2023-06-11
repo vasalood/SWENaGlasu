@@ -39,7 +39,7 @@ useEffect(() => {
     .then(odgovorTekst =>  {
           //console.log(odgovorTekst.lista.slikeZaSlanje[0].naziv);
           odgovorTekst.lista.forEach(element => {
-              console.log(element.slikeZaSlanje[0].naziv);
+              //console.log(element.slikeZaSlanje[0].naziv);
           });
          // console.log(odgovorTekst.lista[0].slikeZaSlanje[0].naziv);
          setOglasList(odgovorTekst.lista);

@@ -32,6 +32,7 @@ export async function naslovnaLoader({params})
             0}`
     const filtersArray = params.filters != undefined ? params.filters.split('&') : []
     
+    
     const filters = {}
     if (filtersArray.length != 0)
     {
@@ -52,7 +53,8 @@ export async function naslovnaLoader({params})
             }
             filters[kvTmp[0]] =kvTmp[1]
             
-            })
+        })
+        console.log(filters)
         
     }
     const response1 =
@@ -89,7 +91,7 @@ export async function naslovnaLoader({params})
 
 export default function Naslovna()
 {
-    const {connectionState,setConnectionState,handleMsgRcv}=React.useContext(ConnectionContext)
+    const {connectionState,setConnectionState,handleMsgRcv,handleContractUpdate}=React.useContext(ConnectionContext)
 
     const stavkaWidth=window.innerWidth>450?440:320
     const [mainContainerStyle, dispatch] = useReducer(reducer, {
@@ -121,7 +123,16 @@ export default function Naslovna()
     
    
     const fromLocUkupanBr = useLocation().state?.ukupanBr
+    useEffect(() =>
+  {
+    const token = localStorage.getItem('token')
+    if (token != null)
+    {
+      BuildChatHubConnection(setConnectionState, connectionState, handleMsgRcv, handleContractUpdate)
+      //console.log('connected with token: '+token)
+    }
 
+  },[])
 
     return (
         

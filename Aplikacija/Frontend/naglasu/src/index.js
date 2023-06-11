@@ -13,7 +13,7 @@ import SignUp from './Veljko/LoginPage/SignUp';
 import App from './App'
 import Profile from './Veljko/ProfilePage/Profile';
 import { ProSidebarProvider } from 'react-pro-sidebar';
-import Layout from './Veljko/ProfilePage/Layout';
+import Layout, { layoutLoader } from './Veljko/ProfilePage/Layout';
 import {naslovnaLoader} from './Uros/Stranice/Naslovna/Naslovna'
 import ForgotPassword from './Veljko/LoginPage/ForgotPassword';
 import EmailSentForgot from './Veljko/LoginPage/EmailSentForgot';
@@ -65,8 +65,9 @@ const router = createBrowserRouter(
       element: <SignUp />
     },
     {
-      path: 'test',
-      element:<Layout/>
+      path: 'test/:N?/:M?/:orderBy?/:orderType?/:filters?',
+      element: <Layout />,
+      loader:layoutLoader
     },
     {
       path:'forgot',

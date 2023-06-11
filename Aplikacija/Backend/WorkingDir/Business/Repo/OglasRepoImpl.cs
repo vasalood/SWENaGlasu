@@ -193,9 +193,10 @@ namespace Business.Repo
             _context.SaveChanges();
         }
 
-        public bool JelFavorit(long oglasId,string userId)
+        public int JelFavorit(long oglasId,string userId)
         {
-            return null!=_context.Favoriti.Where(f => f.Oglas.Id == oglasId&&f.Korisnik.Id==userId).FirstOrDefault();
+            var fav = _context.Favoriti.Where(f => f.Oglas.Id == oglasId && f.Korisnik.Id == userId).FirstOrDefault();
+            return fav!=null?fav.Id:0;
         }
 
         public async Task<List<Oglas>> VratiFavorite(string userId,int M, int N,Order order)

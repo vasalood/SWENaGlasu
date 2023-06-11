@@ -11,7 +11,7 @@ import WavingHandIcon from '@mui/icons-material/WavingHand';
 import { useState } from "react";
 import  './Layout.module.css';
 import EditPage from "./EditPage";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 import MenuItemm from "./MenuItemm";
 import { userActions } from "../store/user";
 import { useSelector,useDispatch } from "react-redux";
@@ -32,6 +32,19 @@ import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import TabelaModerator from './TabelaModerator';
 import App3 from './UgovoriBootStrap';
 import Favoriti from "./Favoriti";
+import { naslovnaLoader as oglasiLoader } from "../../Uros/Stranice/Naslovna/Naslovna";
+
+export function layoutLoader({ params })
+{
+  const userState = localStorage.getItem('userState')
+  const userStateObj = JSON.parse(userState)
+  if (params.filters == undefined)
+      params.filters=''
+  params.filters += `&userId=${userStateObj.id}`
+  //console.log(params.filtersArray)
+  return oglasiLoader({params})
+}
+
 const Layout =() =>{
   let token2 = localStorage.getItem('token');
   const storedObj = JSON.parse(localStorage.getItem('userState'));
@@ -81,7 +94,7 @@ const Layout =() =>{
             const year = parseInt(dateString.substring(0, 4));
             const month = parseInt(dateString.substring(5, 7)) - 1; // Mesec treba biti umanjen za 1 jer meseci u Date objektu kreću od 0 (januar je 0, februar je 1, itd.)
               const day = parseInt(dateString.substring(8, 10));
-
+            
 // Kreiranje novog Date objekta
             const noviDatum = new Date(year, month, day);
             console.log(noviDatum);
@@ -393,7 +406,12 @@ const handlerMoji = () =>{
     izmene:"",
     moderator:""
   });
-}
+  }
+
+
+  const loaderData = useLoaderData();
+  console.log(loaderData)
+
   const { collapseSidebar } = useProSidebar();
     if(savedUserState)
     {  
@@ -434,7 +452,7 @@ const handlerMoji = () =>{
         {page.tabele==""?(<></>):<DataTable></DataTable>}
         {page.favoriti==""?(<></>):<Oglasi></Oglasi>}
         {page.oglasi==""?(<></>):<Favoriti></Favoriti>}
-        {page.korisnik!=""?(<></>):<Neka handlerIzmena={handlerIzmena}></Neka>}
+        {page.korisnik!=""?(<></>):<Neka handlerIzmena={handlerIzmena} loaderData={loaderData}></Neka>}
         {page.ocene==""?(<></>):<Expenses items={oglasList}></Expenses>}
         {page.izmene==""?(<></>):<EditPage></EditPage>}
         {page.moderator==""?(<></>):<TabelaModerator></TabelaModerator>}

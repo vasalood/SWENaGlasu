@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import SortWindow from "../SortWindow/SortWindow";
 import NaslovnaContext from "../../../../Contexts/NaslovnaContext";
 
-export default function SearchBar()
+export default function SearchBar({userId,route})
 {
 
     const emptykat = {id:'',ime:'Prazno', podkategorije: [
@@ -26,6 +26,7 @@ export default function SearchBar()
         cenaOd: '',
         cenaDo: '',
         lokacija: '',
+        userId:userId,
         stringify: function () 
         {
             let retValue = ''
@@ -55,7 +56,8 @@ export default function SearchBar()
             }
             retValue += this.cenaDo !== '' ? `&cenaDo=${this.cenaDo}` : ''
             retValue += this.cenaOd !== '' ? `&cenaOd=${this.cenaOd}` : ''
-            retValue+=this.lokacija!==''?`&lokacija=${this.lokacija}`:''
+            retValue += this.lokacija !== '' ? `&lokacija=${this.lokacija}` : ''
+            retValue+=this.userId!=undefined?('&userId='+this.userId):''
             return retValue
         }
     }
@@ -75,16 +77,17 @@ export default function SearchBar()
         }
     )
     const stringFilterStanja = filterStanja.stringify()
+    const actualRoute = route!=undefined?route:''
 
     const [filterWindowActive, setFilterWindowActive] = React.useState(false)
     const [sortWindowActive,setSortWindowActive]=React.useState(false)
-    const { opacityStyle } = React.useContext(NavBarContext)
+    //const { opacityStyle } = React.useContext(NavBarContext)
     const {trenutnaStranica, ukupanBr }=React.useContext(NaslovnaContext)
     const maxStranica = (ukupanBr / sortStanja.brojOglasa) >> 0
     return (
-        <div className='searchbar--container' style={opacityStyle}>
+        <div className='searchbar--container' /* style={opacityStyle} */>
             {trenutnaStranica !== 0?
-                <Link to={`/${sortStanja.brojOglasa}/${trenutnaStranica - 1}/` +
+                <Link to={`/${actualRoute}/${sortStanja.brojOglasa}/${trenutnaStranica - 1}/` +
                     `${sortStanja.orderBy !== '' ? sortStanja.orderBy : 'kredit'}` +
                     `/${sortStanja.orderType}/${stringFilterStanja
                     }`} state={{ ukupanBr: ukupanBr }}>
@@ -116,7 +119,7 @@ export default function SearchBar()
                 }>
                     <BsFilter size={30}/>
                 </button>
-                <Link to={`/${sortStanja.brojOglasa}/0/${sortStanja.orderBy !== '' ? sortStanja.orderBy : 'kredit'}` +
+                <Link to={`/${actualRoute}/${sortStanja.brojOglasa}/0/${sortStanja.orderBy !== '' ? sortStanja.orderBy : 'kredit'}` +
                     `/${sortStanja.orderType}/${
                             stringFilterStanja
                     }`}>
@@ -127,7 +130,7 @@ export default function SearchBar()
            
             </div>  
             {trenutnaStranica !== maxStranica?
-                <Link to={`/${sortStanja.brojOglasa}/${trenutnaStranica +1}/` +
+                <Link to={`/${actualRoute}/${sortStanja.brojOglasa}/${trenutnaStranica +1}/` +
                 `${sortStanja.orderBy !== '' ? sortStanja.orderBy : 'kredit'}` +
                 `/${sortStanja.orderType}/${
                         stringFilterStanja

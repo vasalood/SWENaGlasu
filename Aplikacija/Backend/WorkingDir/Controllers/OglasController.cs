@@ -112,7 +112,7 @@ public class OglasController : ControllerBase
     {
         try{
             
-            return Ok(_service.JelFavorit(oglasId,id));
+            return Ok(_service.JelFavorit(oglasId,id)); // id ako je favorit, 0 ako nije
         }
         catch(Exception e)
         {
@@ -158,7 +158,7 @@ public class OglasController : ControllerBase
     }
 
     
-    [HttpPost]
+    [HttpDelete]
     [Route("SkiniFavorita")]
     public ActionResult SkiniFavorita(int Id)
     {

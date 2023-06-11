@@ -24,7 +24,7 @@ namespace Services.Abs
         
         public void SkiniFavorita(int Id);
 
-        public bool JelFavorit(long oglasId, string id);
+        public int JelFavorit(long oglasId, string id);
 
         public Task<List<Oglas>> VratiFavorite(string userId,int M, int N,Order order);
 

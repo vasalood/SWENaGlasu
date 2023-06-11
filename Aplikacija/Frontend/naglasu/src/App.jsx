@@ -43,6 +43,7 @@ export async function handleMessageTransaction(setChatState, message,forRecv)
 }
 
 function App({ children }) {
+  const [tokenState,setTokenState]=React.useState('')
   const [chatState, setChatState] = React.useState(
     {
       currentChat:
@@ -71,12 +72,24 @@ function App({ children }) {
 
   React.useEffect(() =>
   {   
-      if (connectionState === null)
-          BuildChatHubConnection(setConnectionState,connectionState,handleMsgRcv,handleContractUpdate)
+    const token = localStorage.getItem('token')
+    if (connectionState === null && token!=null)
+    {
+      console.log('connected with token: '+token)
+      BuildChatHubConnection(setConnectionState,connectionState,handleMsgRcv,handleContractUpdate)
+    }
+          
 
-  },[connectionState])
+  }, [connectionState])
+  function reRenderApp() {
+    window.location.reload();
+  }
   return (
-    <ConnectionContext.Provider value={{ connectionState, setConnectionState: setConnectionState, handleMsgRcv,handleContractUpdate }}>
+    <ConnectionContext.Provider value={{
+      connectionState,
+      setConnectionState: setConnectionState,
+      handleMsgRcv, handleContractUpdate,setTokenState:reRenderApp
+    }}>
       <ChatContext.Provider value={{ chatState, setChatState }}>
         {children}
       </ChatContext.Provider>

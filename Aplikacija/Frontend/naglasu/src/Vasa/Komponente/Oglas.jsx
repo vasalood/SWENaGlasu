@@ -201,7 +201,7 @@ export default function Oglas() {
     }
     else
     {
-      //navigiranje na chat
+      navigate(`/chat/0/${data.id}/${id}`)
     }
   }
   function handleSlikaLevo() {

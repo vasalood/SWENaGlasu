@@ -4,7 +4,7 @@ import React from "react"
 import DropDownMenu from '../DropDownMenu/DropDownMenu'
 
 import {BsChevronUp,BsChevronDown} from 'react-icons/bs'
-import NavBarContext  from '../../Contexts/NavBarContext'
+import NavBarContext from '../../Contexts/NavBarContext'
 
 export default function Navbar({children})
 {
@@ -59,7 +59,8 @@ export default function Navbar({children})
             menuItems = [
                 <a href="/test">Profil</a>,
                 <a href="/postavioglas">Nov oglas</a>,
-                <a href="/" onClick={handleLogout}>Logout</a>];
+                <a href='/chat/0'>Inbox</a>,
+                <a href="/" onClick={handleLogout}>Logout</a>]
         }
         else
         {
