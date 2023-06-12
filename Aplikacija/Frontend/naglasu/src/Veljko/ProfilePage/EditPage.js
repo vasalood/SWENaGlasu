@@ -77,7 +77,23 @@ const handlerIzmena = ()=>{
     if(odgovorTekst.ok)
     {
       proba =1;
-    setErrorPop({
+      //let updateUser = JSON.parse(localStorage.getItem('userState'));
+      let updatedUserState={};
+        updatedUserState = {
+          name:ImeRef.current.value,
+  surname:PrezimeRef.current.value,
+  username:user.username,
+  address: AdresaRef.current.value,
+  email:user.email,
+  phone:TelefonRef.current.value,
+  uplata:user.uplata,
+  role:user.role,
+  slika:user.slika,
+  id:user.id
+      
+      }
+      localStorage.setItem('userState',JSON.stringify(updatedUserState));
+      setErrorPop({
       title:"Uspešno ste izmenili svoje podatke",
       message:""
      });
@@ -109,9 +125,9 @@ const handlerIzmena = ()=>{
   slika:user.slika,
   id:user.id
   }
-  let jsonStr=JSON.stringify(obj);
-  localStorage.setItem("userState",jsonStr);
-  dispatch(userActions.setValues(JSON.parse(jsonStr)));
+  // let jsonStr=JSON.stringify(obj);
+  // localStorage.setItem("userState",jsonStr);
+  // dispatch(userActions.setValues(JSON.parse(jsonStr)));
 }
 }
 else

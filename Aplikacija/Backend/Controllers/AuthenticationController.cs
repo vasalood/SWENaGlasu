@@ -478,7 +478,9 @@ else
             }
             else
             suspendOnTime=false;
-                   IList<string> rola = await _userManager.GetRolesAsync(korisnik);
+                       IList<string> rola = await _userManager.GetRolesAsync(korisnik);
+
+                string prvaRola = rola.FirstOrDefault();
             AdminVrati model = new(){
                  Ime = korisnik.Ime,
                 Prezime=korisnik.Prezime,
@@ -538,7 +540,25 @@ Korisnik korisnik = await _userManager.FindByNameAsync(userName);
             };
        return Ok(model);
     }
-    
+     [Authorize(Roles ="Admin")]
+    [Route("Vrati korisnika/{username}")]
+    [HttpGet]
+    public async Task<IActionResult>VratiUsera(string username)
+    {
+    Korisnik korisnik = await _userManager.FindByNameAsync(username);
+    if(korisnik!=null)
+    {
+        return Ok(korisnik);
+    }
+    else
+    {
+        return BadRequest("Ne postoji");
+    }
+
+    }
+
+
+
      [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [Route("IzmeniSifru/{userName}/{novaSifra}")]
     [HttpPut]
