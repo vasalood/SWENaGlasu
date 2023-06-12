@@ -6,7 +6,9 @@ using Services.Abs;
 using Utility;
 using Microsoft.AspNetCore.Authorization;
 using Domain.Exceptions;
-
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Models;
 namespace Backend.Controllers;
 
 [ApiController]
@@ -15,8 +17,10 @@ public class OglasController : ControllerBase
 {
 
     private readonly IOglasService _service;
-    public OglasController(IOglasService service)
+    private readonly UserManager<Korisnik> _userManager;
+    public OglasController(IOglasService service,UserManager<Korisnik> userManager)
     {
+        userManager = _userManager;
         _service = service;
     }
 
@@ -83,6 +87,22 @@ public class OglasController : ControllerBase
     {
         try
         {
+            var Identity = (ClaimsIdentity)User?.Identity;
+            var claim =   Identity?.FindFirst(ClaimTypes.Name);
+            var myUsername=claim?.Value;
+            if(myUsername==null)
+                throw new NullKorisnikException("nepostojeci korisnik");
+            Korisnik? korisnik = await _userManager.FindByNameAsync(myUsername);
+            if(korisnik==null)
+                throw new NullKorisnikException(myUsername);
+            if(await _userManager.IsInRoleAsync(korisnik,"User"))
+            {
+                OglasFilteri filterUsername = new OglasFilteri();
+                filterUsername.Username = myUsername;
+                int count = await _service.PrebrojiOglaseZaFiltere(filterUsername);
+                if(count>4)
+                    return BadRequest("Maksimalan broj postavljenih oglasa (5) je dostignut.");
+            }
             await _service.PostaviOglas(forma);
             return Ok("Oglas postavljen.");
         }
