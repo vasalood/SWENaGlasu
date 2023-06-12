@@ -20,7 +20,7 @@ public class OglasController : ControllerBase
     private readonly UserManager<Korisnik> _userManager;
     public OglasController(IOglasService service,UserManager<Korisnik> userManager)
     {
-        userManager = userManager;
+        _userManager = userManager;
         _service = service;
     }
 
