@@ -6,9 +6,9 @@ import NavBarContext from "../../../../Contexts/NavBarContext"
 import FilterWindow from "../FilterWindow/FilterWindow";
 import { Link } from 'react-router-dom'
 import SortWindow from "../SortWindow/SortWindow";
-import NaslovnaContext from "../../../../Contexts/NaslovnaContext";
+import PaginationContext from "../../../../Contexts/PaginationContext";
 
-export default function SearchBar({userId,route})
+export default function SearchBar({userId,route,filters})
 {
 
     const emptykat = {id:'',ime:'Prazno', podkategorije: [
@@ -82,8 +82,8 @@ export default function SearchBar({userId,route})
     const [filterWindowActive, setFilterWindowActive] = React.useState(false)
     const [sortWindowActive,setSortWindowActive]=React.useState(false)
     //const { opacityStyle } = React.useContext(NavBarContext)
-    const {trenutnaStranica, ukupanBr }=React.useContext(NaslovnaContext)
-    const maxStranica = (ukupanBr / sortStanja.brojOglasa) >> 0
+    const {trenutnaStranica, ukupanBr }=React.useContext(PaginationContext)
+    const maxStranica = Math.ceil((ukupanBr / sortStanja.brojOglasa) -1)
 
     function buildSearchUrl(M)
     {
