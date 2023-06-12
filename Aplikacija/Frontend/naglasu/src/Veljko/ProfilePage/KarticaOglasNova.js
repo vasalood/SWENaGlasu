@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PlaceHolder from "../../Uros/Res/Slike/placeholder.jpg";
 const KarticaOglasNova = (props)=>{
+  //console.log(props.oglas.id);
   const fetchZaSlike = 'http://localhost:5105/Oglas/VratiSliku/';
 
   const naslovnaSlika = props.slika.length === 0 ? 

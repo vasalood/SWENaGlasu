@@ -335,7 +335,7 @@ const Neka = (props) =>{
       <h1 style={{ marginBottom: '1rem', fontSize: '2.5rem', fontWeight: 800, lineHeight: 1, color: '#333333' }}>
         Oglasi koje ste postavili su  <mark style={{ padding: '0.25rem 0.5rem', color: '#ffffff', backgroundColor: '#3B82F6', borderRadius: '0.25rem' }}>NaGlasu</mark> 
       </h1>
-          <SearchBar userId={parsed.id} route="test"/>
+          <SearchBar userId={parsed.id} route="/test"/>
       <KarticeZaPrikaz oglasList={props.loaderData.oglasNiz}></KarticeZaPrikaz>
     </div>
     
