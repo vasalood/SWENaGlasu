@@ -181,7 +181,7 @@ private readonly IStripeAppService _stripeService;
                 expiration=jwtToken.ValidTo,
             });
             else{
-                return BadRequest("Please confirm your email");
+                return BadRequest("Molimo vas potvrdite email.");
             }
         }
         else

@@ -286,7 +286,8 @@ const PostaviOglas = () => {
               navigate("/");
             } else {
               setErrorPop({
-                title: "Došlo je do greške prilikom postavljanja oglasa"
+                title: "Maksimalan broj postavljenih oglasa (5) je dostignut.",
+                message:" Da biste nastavili da postavljate oglase postanite naš premium član."
               });
             }
           });
