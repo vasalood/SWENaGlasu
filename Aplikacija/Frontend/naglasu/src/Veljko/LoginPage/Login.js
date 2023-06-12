@@ -154,10 +154,10 @@ const navigate =useNavigate();
              setIsValidForm(true);
              setIsValidForm2(false);
           }
-          else if(odgovorTekst.includes('confirm') || odgovorTekst.includes('suspendovan'))
+          else if(odgovorTekst.includes('potvrdite') || odgovorTekst.includes('suspendovan'))
           {
             setErrorPop({
-              title:"Molimo Vas potvrdite vaš email!"
+              title:odgovorTekst
              
               
              // message:odgovorTekst
