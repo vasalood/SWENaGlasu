@@ -12,8 +12,7 @@ import OceniUgovorDialog from './OceniUgovorDialog';
 
 export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen,ocenjen})
 {
-
-    //console.log(`stats: id: ${id}, prihvacen: ${prihvacen}, odbijen: ${odbijen}`)
+    let token = localStorage.getItem('token');
     const [ugovorState, setUgovorState] = React.useState(
         {
             prihvacen: prihvacen,
@@ -32,7 +31,7 @@ export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen,oc
             const response = await fetch('http://localhost:5105/Ugovor/PrihvatiIliOdbijUgovor/' + id + '/' + sendVal,
                 {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {"Authorization":`Bearer ${token}`, 'Content-Type': 'application/json' }
             })
             if (response.ok)
             {
@@ -55,12 +54,6 @@ export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen,oc
             console.log(e.message)
         }
       
-    }
-    async function oceni()
-    {
-        const ocena = {
-            
-        }
     }
     return (
         <Card sx={{ minWidth: 275 }}>

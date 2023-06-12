@@ -426,7 +426,7 @@ const handlerMoji = () =>{
       <>
       
       <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
-        <Sidebar style={{ height: "100vh", backgroundColor:"#FFFFFF" }}>
+        <Sidebar style={{ height: "100vh", backgroundColor:"#FFFFFF",position:'sticky',top:'85px' }}>
         <Menu>
           <MenuItem
             icon={<MenuOutlinedIcon />}

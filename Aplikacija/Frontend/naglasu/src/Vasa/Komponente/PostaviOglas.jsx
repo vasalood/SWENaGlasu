@@ -62,6 +62,7 @@ const PostaviOglas = () => {
 
   //fetch-om vracamo sve kategorije sa servera
   useEffect(() => {
+  
     fetch("http://localhost:5105/Kategorija/VratiKategorije")
       .then((response) => response.json())
       .then(data => {
@@ -71,7 +72,6 @@ const PostaviOglas = () => {
         console.error("Greška prilikom dobijanja kategorija:", error);
       });
   }, []);
-
   const { navbarSetCollapsable } = useContext(NavBarContext)
     React.useEffect(() => {
         
@@ -263,6 +263,7 @@ const PostaviOglas = () => {
 
     }
     formData.append('Opis', opis);
+    
     const url = `http://localhost:5105/Authentication/UplatiOglas/${kredit}`;
 
     const requestOptions = {
@@ -271,19 +272,39 @@ const PostaviOglas = () => {
         'Authorization': `Bearer ${token}`
       }
     };
-    
+      if(rola =="User")
+      {
+        fetch('http://localhost:5105/Oglas/PostaviOglas', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Authorization': 'Bearer ' + token 
+            }
+          })
+          .then(s => {
+            if (s.ok) {
+              navigate("/");
+            } else {
+              setErrorPop({
+                title: "Došlo je do greške prilikom postavljanja oglasa"
+              });
+            }
+          });
+      }
+      else
+      {
     try {
       const response = await fetch(url, requestOptions);
       console.log(response);
       if (response.ok) {
-        //const data = await response.json();
-        //console.log(data); // Ispisuje rezultat izvršavanja metode
-    
         // Odradi drugi fetch samo ako je status 200
         if (response.status === 200) {
           fetch('http://localhost:5105/Oglas/PostaviOglas', {
             method: 'POST',
-            body: formData
+            body: formData,
+            headers: {
+              'Authorization': 'Bearer ' + token 
+            }
           })
           .then(s => {
             if (s.ok) {
@@ -304,6 +325,7 @@ const PostaviOglas = () => {
     } catch (error) {
       console.error(error); // Ispisuje grešku u konzoli ako dođe do greške
     }
+  }
   };
   //kraj funkcije za prikupljanje podataka iz forme
 const errorHandler =()=>{

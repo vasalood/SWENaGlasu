@@ -64,7 +64,7 @@ public class OglasController : ControllerBase
         }
 
     }
- 
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [HttpPost]
     [Route("PostaviOglas")]
     public async Task<ActionResult> PostaviOglas([FromForm] OglasForm forma)
@@ -104,7 +104,7 @@ public class OglasController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [HttpGet]
     [Route("JelFavorit")]
 
@@ -139,7 +139,7 @@ public class OglasController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [HttpPost]
     [Route("DodajFavorita")]
 
@@ -157,7 +157,7 @@ public class OglasController : ControllerBase
         }
     }
 
-    
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [HttpDelete]
     [Route("SkiniFavorita")]
     public ActionResult SkiniFavorita(int Id)
@@ -214,7 +214,7 @@ public class OglasController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [HttpDelete]
     [Route("ObrisiOglas/{id}")]
     public ActionResult ObrisiOglas(long id)

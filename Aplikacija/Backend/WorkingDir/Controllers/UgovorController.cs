@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Domain.Models;
 using Business.Contexts;
-
+using Microsoft.AspNetCore.Authorization;
 using Services.Abs;
 using Models;
 using Utility;
@@ -110,7 +110,7 @@ public class UgovorController : ControllerBase
             return BadRequest(e.Message);
         }
     } */
-
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [HttpPut]
     [Route("PrihvatiIliOdbijUgovor/{id}/{value}")]
     public ActionResult PrihvatiUgovor(long id,bool value)
@@ -144,7 +144,7 @@ public class UgovorController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [HttpPost]
     [Route("PostaviUgovor")]
     public ActionResult PostaviUgovor(UgovorDto ugovorDto)

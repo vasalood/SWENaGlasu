@@ -515,26 +515,9 @@ else
             return Ok("Uspešno prošla uplata");
        }
        else
-            {
-                if(korisnik.Uplata==0)
-                {
-                var result = await _userManager.RemoveFromRoleAsync(korisnik,"PremiumUser");
-                if(result.Succeeded)
-                {
-                    result=await _userManager.AddToRoleAsync(korisnik,"User");
-                    await _userManager.UpdateAsync(korisnik);
-                    return BadRequest("Nemate dovoljno sredstava, izgubili ste status PremiumUser-a");
-                }
-                else
-                {
-                    return Ok();
-                }
-                }
-                else
-                {
-                    return BadRequest("Nemate dovoljno sredstava");
-                }
-            }
+        {
+                return BadRequest("Nemate dovoljno sredstava na računu");
+        }
     }
     [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [Route("GetUserView/{userName}")]
@@ -576,6 +559,7 @@ Korisnik korisnik = await _userManager.FindByNameAsync(userName);
         else 
                 return BadRequest("Korisnik ne postoji");
     }
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
         [Route("AddCustomer")]
         [HttpPost]
         public async Task<ActionResult<StripeCustomer>> AddStripeCustomer(
@@ -588,6 +572,7 @@ Korisnik korisnik = await _userManager.FindByNameAsync(userName);
 
             return StatusCode(StatusCodes.Status200OK, createdCustomer);
         }
+        [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
         [Route("AddPayment")]
         [HttpPost()]
         public async Task<ActionResult<StripePayment>> AddStripePayment(
@@ -605,11 +590,14 @@ Korisnik korisnik = await _userManager.FindByNameAsync(userName);
         }
         else
         {
+            bool isInRole = await _userManager.IsInRoleAsync(userExist,"User");
+            if(isInRole)
+            {
            var result = await _userManager.RemoveFromRoleAsync(userExist,"User");
                 if(result.Succeeded)
                 {
                     result=await _userManager.AddToRoleAsync(userExist,"PremiumUser");
-                    userExist.Uplata=10000;
+                    userExist.Uplata+=10000;
                     await _userManager.UpdateAsync(userExist);
                     //return Ok("Uspesno promenjena rola");
                 }
@@ -617,6 +605,13 @@ Korisnik korisnik = await _userManager.FindByNameAsync(userName);
                 {
                     return BadRequest("Neuspesna promena role");
                 }
+            }
+            else
+            {
+                    userExist.Uplata+=10000;
+                    await _userManager.UpdateAsync(userExist);
+                return Ok("Vec je premium");
+            }
         }
             return StatusCode(StatusCodes.Status200OK, createdPayment);
         }
