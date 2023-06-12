@@ -95,6 +95,8 @@ public class OglasController : ControllerBase
             Korisnik? korisnik = await _userManager.FindByNameAsync(myUsername);
             if(korisnik==null)
                 throw new NullKorisnikException(myUsername);
+            if(korisnik.Id!=forma.KorisnikId)
+                throw new UnauthorizedAccessException("Nedozvoljen pristup.");
             if(await _userManager.IsInRoleAsync(korisnik,"User"))
             {
                 OglasFilteri filterUsername = new OglasFilteri();
