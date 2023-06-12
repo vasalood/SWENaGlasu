@@ -7,6 +7,8 @@ const PostaviOglas = () => {
   let data=localStorage.getItem('userState');
   let parsedData = JSON.parse(data);
   let id = parsedData.id;
+  let rola = parsedData.role;
+  let token = localStorage.getItem('token');
   const navigate =useNavigate();
   const[errorPop,setErrorPop]=useState();
   //state za cuvanje vrednosti inputa naziv oglasa
@@ -16,7 +18,9 @@ const PostaviOglas = () => {
   //state za cuvanje vrednosti inputa cena
   //cuva string vrednost potrebno parsovati za dobijanje numbera
   const [cena, setCena] = useState("");
-
+//state za cuvanje vrednosti inputa kredita
+  //cuva string vrednost potrebno parsovati za dobijanje numbera
+  const [kredit, setKredit] = useState("0");
   //state za cuvanje vrednosti inputa kolicina
   //cuva string vrednost potrebno parsovati za dobijanje numbera
   const [kolicina, setKolicina] = useState("");
@@ -148,7 +152,7 @@ const PostaviOglas = () => {
     fileInput.click();
   }
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     if(tipOglasa === 'nijeIzabrano') {
 
@@ -233,7 +237,7 @@ const PostaviOglas = () => {
       formData.append('StavkePoljaVrednosti', poljeVrednosti[i]);
     }
 
-    formData.append('Kredit', 0);
+    formData.append('Kredit', kredit);
     formData.append('Smer', 0);
     formData.append('Tip', 0);
     formData.append('Cena', cena);
@@ -259,18 +263,47 @@ const PostaviOglas = () => {
 
     }
     formData.append('Opis', opis);
+    const url = `http://localhost:5105/Authentication/UplatiOglas/${kredit}`;
+
+    const requestOptions = {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    };
     
-    fetch(`http://localhost:5105/Oglas/PostaviOglas`, {
-      method: 'POST',
-      body: formData
-    }).then(s => {
-      if(s.ok) {
-      navigate("/");
-    }else
-      {setErrorPop({
-        title:"Doslo je do greske prilikom postavljanja oglasa"
-      });}
-    })
+    try {
+      const response = await fetch(url, requestOptions);
+      console.log(response);
+      if (response.ok) {
+        //const data = await response.json();
+        //console.log(data); // Ispisuje rezultat izvršavanja metode
+    
+        // Odradi drugi fetch samo ako je status 200
+        if (response.status === 200) {
+          fetch('http://localhost:5105/Oglas/PostaviOglas', {
+            method: 'POST',
+            body: formData
+          })
+          .then(s => {
+            if (s.ok) {
+              navigate("/");
+            } else {
+              setErrorPop({
+                title: "Došlo je do greške prilikom postavljanja oglasa"
+              });
+            }
+          });
+        }
+      } else {
+        const errorResponse = await response.text();
+        setErrorPop({
+          title: errorResponse
+        });
+      }
+    } catch (error) {
+      console.error(error); // Ispisuje grešku u konzoli ako dođe do greške
+    }
   };
   //kraj funkcije za prikupljanje podataka iz forme
 const errorHandler =()=>{
@@ -304,6 +337,17 @@ const errorHandler =()=>{
             required
           />
         </div>
+        {rola!='User'&&<div className="form-group">
+          <label className="labell" htmlFor="kredit">Kredit:</label>
+          <input
+            type="number"
+            id="kredit"
+            className="svi-isti input-textarea"
+            value={kredit}
+            onChange={(e) => setKredit(e.target.value)}
+            required
+          />
+        </div>}
 
         <div className="form-group">
           <label className="labell" htmlFor="kolicina">Količina:</label>

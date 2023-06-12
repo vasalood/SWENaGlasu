@@ -57,7 +57,7 @@ export default function Oglas() {
         navbarSetCollapsable(false)
         return ()=>navbarSetCollapsable(true)
     }, [])
-
+    const[idFavorita,setIdFavorita]=useState(0);
     const [dugmePrati, setDugmePrati] = useState(() => {
       if(id)
       {
@@ -68,6 +68,8 @@ export default function Oglas() {
             const data = await response.json();
             //console.log(data);
             if (data) {
+              setIdFavorita(data);
+              console.log(data);
               setDugmePrati('Oglas praćen');
             } else {
               setDugmePrati('Prati oglas');
@@ -174,6 +176,10 @@ export default function Oglas() {
     }
       else {
         novo = 'Prati oglas';
+        fetch(`http://localhost:5105/Oglas/SkiniFavorita?Id=${idFavorita}`, {
+          method: "DELETE"
+        })
+        
         
       }
       return novo;

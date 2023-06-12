@@ -41,7 +41,7 @@ export default function App() {
       fetchFavorites2(parsed.id, 0, 10,false,true, 'cena', '0');
       setNizUgovora1([]);
     }
-    console.log(nizUgovora1);
+ 
   }, [ugovor]);
   const fetchFavorites2 = (korisnikId, M, N,zaKupca,prihvaceni, orderBy, orderType) => {
     console.log(korisnikId);
@@ -70,7 +70,13 @@ export default function App() {
           .catch((error) => {
             console.log(error);
           });
+          
+
   };
+  console.log("stampamo ugovori 1");
+  console.log(nizUgovora1);
+  console.log("stampamo ugovori 2");
+          console.log(nizUgovora2);
   return (
     <>
      <h1 style={{ marginBottom: '1rem', fontSize: '3rem', fontWeight: '800', color: '#333333', lineHeight: '1' }}>
