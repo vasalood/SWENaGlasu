@@ -100,7 +100,7 @@ export default function App() {
           receiptEmail:data.email,
           description:"Premium Clan",
           currency:"eur",
-          amount:"1000",
+          amount:"10000",
         }
         console.log(paymentData2);
         fetch("http://localhost:5105/Authentication/AddPayment", {
@@ -112,6 +112,13 @@ export default function App() {
       })
       .then(response12 => {
         if (response12.status === 200) {
+          let updateUser = JSON.parse(localStorage.getItem('userState'));
+          const updatedUserState = {
+            ...updateUser,
+            uplata:"10000",
+            role:"PremiumUser"
+          };
+          localStorage.setItem('userState', JSON.stringify(updatedUserState));
           setErrorPop({
             title:"Čestitamo! Plaćanje je uspešno obavljeno, postali ste Premium član!"
           });

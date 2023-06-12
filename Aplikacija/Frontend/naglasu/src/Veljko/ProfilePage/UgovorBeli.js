@@ -11,7 +11,9 @@ import { useEffect,useState } from 'react';
 const UgovorBeli =(props)=>{
   const[imeOglasa,setImeOglasa]=useState('');
   useEffect(() => {
-    fetch(`http://localhost:5105/Oglas/VratiOglas/${props.oglas.id}`)
+    console.log("stampamo ovo");
+    console.log(props.oglas.id);
+    fetch(`http://localhost:5105/Oglas/VratiOglas/${props.oglas.oglasId}`)
       .then(response => {
         if (response.ok) {
           return response.json();
@@ -36,7 +38,7 @@ const UgovorBeli =(props)=>{
         {props.oglas.opis}
       </MDBCardText>
     </MDBCardBody>
-    <MDBCardFooter >Kupac oglasa je: {props.oglas.kupacUsername}</MDBCardFooter>
+    <MDBCardFooter >Prodavac oglasa je: {props.oglas.prodavacUsername}</MDBCardFooter>
     <MDBCardFooter >Cena oglasa: {props.oglas.ukupna_Cena} RSD</MDBCardFooter>
   </MDBCard>)
 }

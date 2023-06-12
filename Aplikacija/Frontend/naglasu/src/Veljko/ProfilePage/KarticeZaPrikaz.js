@@ -5,6 +5,7 @@ import { useSelector,useDispatch } from "react-redux";
 import PlaceHolder from "../../Uros/Res/Slike/placeholder.jpg";
 const KarticeZaPrikaz = ({oglasList}) =>{
     //const [oglasList,setOglasList]= useState([]);
+    console.log(oglasList);
 const dispatch=useDispatch();
 const user = useSelector(state =>({
   name:state.user.uname,
@@ -54,12 +55,14 @@ let data=localStorage.getItem('userState');
             });
         }
   ,[]) */
+  // background-color: #FFFFFF;
+
   return (
 
     <>
     <div className="container grid grid--3-cols margin-right-md oglasiKartica" >
         {oglasList.map((oglas) => (
-          <KarticaOglasNova key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje} />
+          <KarticaOglasNova  key={oglas.id} oglas={oglas} slika={oglas.slikeZaSlanje} />
         ))}
         </div>
       </>

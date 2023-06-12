@@ -60,12 +60,13 @@ const navigate =useNavigate();
   });
   localStorage.setItem('page', JSON.stringify(page));
   useEffect(()=>{
-    if(authCtx.token)
+    if(token)
     {
-    console.log(authCtx.token);
+    //console.log(authCtx.token);
+    console.log(token);
     fetch("http://localhost:5105/Authentication/GetUser",{
       headers:{
-        "Authorization":`Bearer ${authCtx.token}`
+        "Authorization":`Bearer ${token}`
       }
     })
     .then(odgovor => odgovor.json())
@@ -94,7 +95,7 @@ const navigate =useNavigate();
               console.log(error);
             });
         }
-  },[authCtx.token])
+  },[token])
   const handler = (event) => {
     event.preventDefault();
     let test=-1;

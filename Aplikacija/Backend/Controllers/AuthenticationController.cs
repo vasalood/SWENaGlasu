@@ -496,6 +496,45 @@ else
         }
         return Ok(registrovani);
         
+    
+    }
+    [Authorize(Roles ="Admin, Moderator, PremiumUser")]
+    [Route("UplatiOglas/{kredit}")]
+    [HttpPut]
+    public async Task<IActionResult>DekrementirajUplatu(int kredit)
+    {
+         var Identity = (ClaimsIdentity)User.Identity;
+       var claim = Identity.FindFirst(ClaimTypes.Name);
+       var userName=claim.Value;
+
+       Korisnik korisnik = await _userManager.FindByNameAsync(userName);
+       if(korisnik.Uplata>=kredit)
+       {
+            korisnik.Uplata-=kredit;
+            await _userManager.UpdateAsync(korisnik);
+            return Ok("Uspešno prošla uplata");
+       }
+       else
+            {
+                if(korisnik.Uplata==0)
+                {
+                var result = await _userManager.RemoveFromRoleAsync(korisnik,"PremiumUser");
+                if(result.Succeeded)
+                {
+                    result=await _userManager.AddToRoleAsync(korisnik,"User");
+                    await _userManager.UpdateAsync(korisnik);
+                    return BadRequest("Nemate dovoljno sredstava, izgubili ste status PremiumUser-a");
+                }
+                else
+                {
+                    return Ok();
+                }
+                }
+                else
+                {
+                    return BadRequest("Nemate dovoljno sredstava");
+                }
+            }
     }
     [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [Route("GetUserView/{userName}")]
