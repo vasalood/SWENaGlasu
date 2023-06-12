@@ -21,7 +21,7 @@ const EditPage = () =>{
   };
   const authCtx = useContext(AuthContext);
  let token= localStorage.getItem('token');
- console.log(token);
+ //console.log(token);
   const ImeRef = useRef();
   const PrezimeRef=useRef();
   const TelefonRef=useRef();
