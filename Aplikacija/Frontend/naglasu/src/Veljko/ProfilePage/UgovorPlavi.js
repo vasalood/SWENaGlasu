@@ -8,6 +8,7 @@ import {
   MDBCardFooter
 } from 'mdb-react-ui-kit';
 import { useEffect,useState } from 'react';
+import { Link } from 'react-router-dom';
 const UgovorPlavi =(props)=>{
   const[imeOglasa,setImeOglasa]=useState('');
   useEffect(() => {
@@ -38,7 +39,7 @@ const UgovorPlavi =(props)=>{
         {props.oglas.opis}
       </MDBCardText>
     </MDBCardBody>
-    <MDBCardFooter style={{color:'#f8f9fa'}}>Kupac oglasa je: {props.oglas.kupacUsername}</MDBCardFooter>
+    <Link to={`/profil/${props.oglas.kupacUsername}`}>  <MDBCardFooter style={{color:'#f8f9fa'}}>Kupac oglasa je: {props.oglas.kupacUsername} </MDBCardFooter></Link>
     <MDBCardFooter style={{color:'#f8f9fa'}}>Cena oglasa: {props.oglas.ukupna_Cena} RSD</MDBCardFooter>
   </MDBCard>)
 }
