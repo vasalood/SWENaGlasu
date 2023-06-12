@@ -66,7 +66,7 @@ export default function Oglas() {
           const response = await fetch(`http://localhost:5105/Oglas/JelFavorit?oglasId=${data.id}&id=${id}`);
           if (response.ok) {
             const data = await response.json();
-            console.log(data);
+            //console.log(data);
             if (data) {
               setDugmePrati('Oglas praćen');
             } else {
@@ -89,8 +89,8 @@ export default function Oglas() {
     });
   const [slika, setSlika] = useState(0);
   const[prikazDugme,setPrikazDugme]=useState(()=>{
-    console.log(data);
-    console.log(id);
+    //console.log(data);
+    //console.log(id);
     if(id===data.vlasnikId)
       return false;
       else
@@ -164,11 +164,11 @@ export default function Oglas() {
       }).then(response=>{
         if(response.ok)
         {
-         // console.log("Uspesno zapraceno");
+         console.log("Uspesno zapraceno");
         }
         else
         {
-         // console.log("Nije uspesno zapraceno");
+         console.log("Nije uspesno zapraceno");
         }
       })
     }
@@ -236,7 +236,7 @@ export default function Oglas() {
         }
       })
       .then(data => {
-        console.log(data); // Ovde možete manipulisati sa porukom koja je vraćena
+        //console.log(data); // Ovde možete manipulisati sa porukom koja je vraćena
       })
       .catch(error => {
         console.error(error); // Ovde možete obraditi grešku koja se desila
@@ -250,8 +250,8 @@ export default function Oglas() {
     }
     return nizPolja;
   }
-    console.log(data.polja);
-    console.log(data.slikeZaSlanje);
+    //console.log(data.polja);
+    //console.log(data.slikeZaSlanje);
   const fetchZaSlike = 'http://localhost:5105/Oglas/VratiSliku/';
 
   const naslovnaSlika = data.slikeZaSlanje.length === 0 ? 
@@ -261,7 +261,7 @@ export default function Oglas() {
 
                                 const errorHandler = () =>{
                                   setErrorPop(null);
-                                }
+  }
   return (
     <>
       <div className="oglas">
