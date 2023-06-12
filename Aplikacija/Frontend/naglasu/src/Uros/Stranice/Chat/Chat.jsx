@@ -115,23 +115,30 @@ export default function Chat() {
       "procitana": true,
       "ugovor": null,
       "posiljaocId": "abcd" */ //poruka
-    const chatMsgItems = chatState.currentChat.poruke.length !== 0 ?
-        chatState.currentChat.poruke.map((m =>
+
+    const chatMsgItems = chatState.currentChat.poruke.length !== 0 ? 
+       chatState.currentChat.poruke.map((m =>
         {
-            if (m.ugovor)
-                console.log(m.ugovor)
+            /* if (m.ugovor)
+                console.log(m.ugovor) */
+
             const source = m.posiljaocId===userState.id?0:1
             const timestamp = new Date(m.timestamp)
+           
             const content = m.ugovor !== null && m.ugovor !== undefined ? <UgovorStavka
                 opis={m.ugovor.opis} kolicina={m.ugovor.kolicina} smer={source}
-                key={m.ugovor.id} id={m.ugovor.id} prihvacen={m.ugovor.prihvacen} odbijen={m.ugovor.odbijen} /> : m.sadrzaj
+                key={m.ugovor.id}
+                id={m.ugovor.id}
+                prihvacen={m.ugovor.prihvacen}
+                odbijen={m.ugovor.odbijen}
+                ocenjen={m.ugovor.ocenjen} /> : m.sadrzaj
 
             
             return <MsgItem timestamp={timestamp}
                 source={source}
                 content={content}
                 key={m.id} />
-        })) : []
+        })): []
     
     
     async function onSubmit(ugovorId)

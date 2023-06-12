@@ -76,7 +76,7 @@ public class PorukaRepoImpl : IPorukaRepo
         return _context.Chatovi.Where(c => c.Id == chatId)
         .Include(c => c.Stranka)
         .Include(c => c.ZaOglas).ThenInclude(o=>o.Vlasnik)
-        .Include(c => c.Poruke).ThenInclude(p => p.Ugovor)
+        .Include(c => c.Poruke).ThenInclude(p => p.Ugovor).ThenInclude(u=>u.Ocena)
         .Include(c => c.Poruke.OrderByDescending(p=>p.Timestamp)).ThenInclude(p => p.Posiljaoc).First();
     }
 
@@ -85,7 +85,7 @@ public class PorukaRepoImpl : IPorukaRepo
         return _context.Chatovi.Where(c=>c.ZaOglas.Id==oglasId&&c.Stranka.Id==strankaId)
         .Include(c => c.Stranka)
         .Include(c => c.ZaOglas).ThenInclude(o=>o.Vlasnik)
-        .Include(c => c.Poruke).ThenInclude(p => p.Ugovor)
+        .Include(c => c.Poruke).ThenInclude(p => p.Ugovor).ThenInclude(u=>u.Ocena)
         .Include(c => c.Poruke.OrderByDescending(p=>p.Timestamp)).ThenInclude(p => p.Posiljaoc).FirstOrDefault();
     }
 

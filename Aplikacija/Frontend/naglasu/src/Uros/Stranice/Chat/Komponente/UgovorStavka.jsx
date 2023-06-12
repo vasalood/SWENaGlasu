@@ -6,16 +6,25 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import React from 'react'
+import ConnectionContext from '../../../Contexts/ConnectionContext';
+import ChatContext from '../../../Contexts/ChatContext';
+import OceniUgovorDialog from './OceniUgovorDialog';
 
-export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen})
+export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen,ocenjen})
 {
 
+    //console.log(`stats: id: ${id}, prihvacen: ${prihvacen}, odbijen: ${odbijen}`)
     const [ugovorState, setUgovorState] = React.useState(
         {
             prihvacen: prihvacen,
             odbijen:odbijen
         }
     )
+    const [ocenjenState, setOcenjenState] = React.useState(ocenjen)
+    
+    
+    const { connectionState } = React.useContext(ConnectionContext)
+    const {chatState} = React.useContext(ChatContext)
     async function onClickEventHandler(ev)
     {
         const sendVal = ev.target.id === 'prihvati' ? true : false
@@ -28,13 +37,15 @@ export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen})
             if (response.ok)
             {
                 const prop = sendVal ? 'prihvacen' : 'odbijen'
+                
                 setUgovorState(oldValue =>
                 {
                     return {
                         ...oldValue,
                         [prop]:true
                     }
-                    })
+                })
+                connectionState.invoke('ConfirmOrRejectContract',chatState.currentChat.receiverUsername,id,sendVal)
             }
             else
                 throw Error('Doslo je do greske.')
@@ -45,7 +56,12 @@ export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen})
         }
       
     }
-    console.log(  ugovorState.prihvacen  )
+    async function oceni()
+    {
+        const ocena = {
+            
+        }
+    }
     return (
         <Card sx={{ minWidth: 275 }}>
             <CardContent>
@@ -61,12 +77,15 @@ export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen})
                 </Typography>
             </CardContent>
             <CardActions>
-                {smer !== 0?
-                    !ugovorState.prihvacen && !ugovorState.odbijen &&<>
+                {smer !== 0 ?
+                    !ugovorState.prihvacen && !ugovorState.odbijen && <>
                         <Button size="small" id='prihvati' onClick={onClickEventHandler}>Prihvati</Button>
                         <Button size="small" id='odbij' onClick={onClickEventHandler}>Odbij</Button>
-                    </>:
-                    ugovorState.prihvacen&&<Button size='small' id ='oceni'>Oceni</Button>}
+                    </> :
+                    ugovorState.prihvacen && !ocenjenState && <OceniUgovorDialog
+                        setOcenjenState={setOcenjenState}
+                        ugovorId={id } />}
+                    {/* <Button size='small' id ='oceni' onClick={oceni}>Oceni</Button>} */}
                 </CardActions>
     </Card>
     )
