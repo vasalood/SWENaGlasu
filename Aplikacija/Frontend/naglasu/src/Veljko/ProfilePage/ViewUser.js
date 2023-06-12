@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from 'react';
 import ViewOglasi from './ViewOglasi';
 import AuthContext from '../store/auth-context';
- 
+ import defaultImage from './istockphoto-1300845620-612x612.jpg';
 const ViewUser = ()=>{
   const userStorage = [
     { username: 'Jovan Memedovic', name: 'Ime 1', email: 'ime1@example.com', slika:"https://th.bing.com/th/id/R.cd6591d36cec89977d93223cf75c936b?rik=17rUfAXhWxU3bw&pid=ImgRaw&r=0",address:"Ratka Pavlovica", surname:"AA",phone:"0643249836" },
@@ -191,19 +191,17 @@ useEffect(() => {
             <div className="col-lg-4">
               <div className="card mb-4">
                 <div className="card-body text-center">
-                  <img
-                     src={`data:image/jpeg;base64, ${user.slika}`}
-                    alt="avatar"
-                    className="rounded-circle img-fluid"
-                    style={{ width: 150 }}
-                  />
+                <img
+  src={user.slika ? `data:image/jpeg;base64, ${user.slika}` : defaultImage}
+  alt="avatar"
+  className="rounded-circle img-fluid"
+  style={{ width: 150 }}
+/>
                   <h5 className="my-3">{user.username}</h5>
                   <p className="text-muted mb-1">NaGlasu</p>
                   <p className="text-muted mb-4">{user.address}</p>
                   <div className="d-flex justify-content-center mb-2">
-                    <button type="button" className="btn btn-outline-primary ms-1">
-                      Inbox
-                    </button>
+                  
                   </div>
                 </div>
               </div>
