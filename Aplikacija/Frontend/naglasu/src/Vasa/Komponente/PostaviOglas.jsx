@@ -62,6 +62,7 @@ const PostaviOglas = () => {
 
   //fetch-om vracamo sve kategorije sa servera
   useEffect(() => {
+  
     fetch("http://localhost:5105/Kategorija/VratiKategorije")
       .then((response) => response.json())
       .then(data => {
@@ -71,7 +72,6 @@ const PostaviOglas = () => {
         console.error("Greška prilikom dobijanja kategorija:", error);
       });
   }, []);
-
   const { navbarSetCollapsable } = useContext(NavBarContext)
     React.useEffect(() => {
         
@@ -276,7 +276,10 @@ const PostaviOglas = () => {
       {
         fetch('http://localhost:5105/Oglas/PostaviOglas', {
             method: 'POST',
-            body: formData
+            body: formData,
+            headers: {
+              'Authorization': 'Bearer ' + token 
+            }
           })
           .then(s => {
             if (s.ok) {
@@ -298,7 +301,10 @@ const PostaviOglas = () => {
         if (response.status === 200) {
           fetch('http://localhost:5105/Oglas/PostaviOglas', {
             method: 'POST',
-            body: formData
+            body: formData,
+            headers: {
+              'Authorization': 'Bearer ' + token 
+            }
           })
           .then(s => {
             if (s.ok) {

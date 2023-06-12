@@ -559,6 +559,7 @@ Korisnik korisnik = await _userManager.FindByNameAsync(userName);
         else 
                 return BadRequest("Korisnik ne postoji");
     }
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
         [Route("AddCustomer")]
         [HttpPost]
         public async Task<ActionResult<StripeCustomer>> AddStripeCustomer(
@@ -571,6 +572,7 @@ Korisnik korisnik = await _userManager.FindByNameAsync(userName);
 
             return StatusCode(StatusCodes.Status200OK, createdCustomer);
         }
+        [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
         [Route("AddPayment")]
         [HttpPost()]
         public async Task<ActionResult<StripePayment>> AddStripePayment(

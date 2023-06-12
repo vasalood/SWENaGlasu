@@ -9,7 +9,7 @@ import React from 'react'
 
 export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen})
 {
-
+    let token = localStorage.getItem('token');
     const [ugovorState, setUgovorState] = React.useState(
         {
             prihvacen: prihvacen,
@@ -23,7 +23,7 @@ export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen})
             const response = await fetch('http://localhost:5105/Ugovor/PrihvatiIliOdbijUgovor/' + id + '/' + sendVal,
                 {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {"Authorization":`Bearer ${token}`, 'Content-Type': 'application/json' }
             })
             if (response.ok)
             {

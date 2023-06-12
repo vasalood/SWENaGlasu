@@ -10,7 +10,7 @@ import { FaFileContract } from 'react-icons/fa'
 
 export default function AddUgovorDialog({onSubmit,dialogState,setDialogState,oglasId}) {
   const [open, setOpen] = React.useState(false);
-
+  let token = localStorage.getItem('token');
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -38,6 +38,7 @@ export default function AddUgovorDialog({onSubmit,dialogState,setDialogState,ogl
             method: "POST",
             headers:
             {
+              "Authorization":`Bearer ${token}`,
                 "Content-Type":"application/json"
             },
             body: JSON.stringify(

@@ -29,6 +29,7 @@ export default function Oglas() {
   const[NudimTrazim,setNudimTrazim]=useState('');
   const[errorPop,setErrorPop]=useState();
   const navigate =useNavigate();
+  let token = localStorage.getItem('token');
   const [id,setId]=useState(()=>{
     let data2=localStorage.getItem('userState');
     if(data2)
@@ -63,7 +64,13 @@ export default function Oglas() {
       {
       const fetchData = async () => {
         try {
-          const response = await fetch(`http://localhost:5105/Oglas/JelFavorit?oglasId=${data.id}&id=${id}`);
+          const headers = {
+            'Authorization': 'Bearer ' + token 
+          };
+          
+          const response = await fetch(`http://localhost:5105/Oglas/JelFavorit?oglasId=${data.id}&id=${id}`, {
+            headers: headers
+          });
           if (response.ok) {
             const data = await response.json();
             //console.log(data);
@@ -157,7 +164,8 @@ export default function Oglas() {
         fetch("http://localhost:5105/Oglas/DodajFavorita", {
           method: "POST", // HTTP metoda koja se koristi za zahtev
           headers: {
-            "Content-Type": "application/json", // Tip sadržaja koji se šalje
+            "Authorization":`Bearer ${token}`,
+            "Content-Type": "application/json" // Tip sadržaja koji se šalje
           },
           body: JSON.stringify({
             korisnikId:id,
@@ -177,7 +185,11 @@ export default function Oglas() {
       else {
         novo = 'Prati oglas';
         fetch(`http://localhost:5105/Oglas/SkiniFavorita?Id=${idFavorita}`, {
-          method: "DELETE"
+          method: "DELETE", // HTTP metoda koja se koristi za zahtev
+          headers: {
+            "Authorization":`Bearer ${token}`
+            
+          }
         })
         
         
@@ -232,7 +244,11 @@ export default function Oglas() {
       return;
     }
     fetch(`http://localhost:5105/Oglas/ObrisiOglas/${data.id}`, {
-      method: 'DELETE',
+      method: 'DELETE', // HTTP metoda koja se koristi za zahtev
+      headers: {
+        "Authorization":`Bearer ${token}`
+         // Tip sadržaja koji se šalje
+      }
     })
       .then(response => {
         if (response.ok) {

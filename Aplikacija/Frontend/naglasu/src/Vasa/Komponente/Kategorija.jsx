@@ -17,7 +17,7 @@ export default function Kategorija() {
   const [nazivPodkategorije, setNazivPodkategorije] = useState("");
   //state za cuvanje niza svih podkategorija koji se odnose na novu kategoriju
   const [podkategorije, setPodkategorije] = useState([]);
-
+  let token = localStorage.getItem('token');
   function handleDodajKategoriju(e) {
     e.preventDefault();
 
@@ -51,6 +51,7 @@ export default function Kategorija() {
           method: "POST",
           headers:
           {
+             "Authorization":`Bearer ${token}`,
               "Content-Type":"application/json"
           },
           body: JSON.stringify(

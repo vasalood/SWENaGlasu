@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
 using Business.Contexts;
 using Services.Abs;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Controllers{
 
 [ApiController]
@@ -14,7 +14,7 @@ public class KategorijaController : ControllerBase
     {
         _service = service;
     }
-
+    [Authorize(Roles ="Admin")]
     [HttpPost]
     [Route("PostaviKategoriju")]
     public async Task<ActionResult> PostaviKategoriju([FromBody]KategorijaDto kategorija)
@@ -51,7 +51,6 @@ public class KategorijaController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
     [HttpGet]
     [Route("VratiKategorije")]
     public async Task<ActionResult> VratiKategorije()

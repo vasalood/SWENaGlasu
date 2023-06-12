@@ -53,6 +53,7 @@ export default function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    let token2 = localStorage.getItem('token');
     if (
       /^[0-9]{16}$/.test(cardNumber) &&
       /^[a-zA-Z ]{5,15}$/.test(cardHolder.trim()) &&
@@ -82,6 +83,7 @@ export default function App() {
       fetch("http://localhost:5105/Authentication/AddCustomer", {
         method: "POST",
         headers: {
+          "Authorization":`Bearer ${token2}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(customerData),
@@ -108,6 +110,7 @@ export default function App() {
         fetch("http://localhost:5105/Authentication/AddPayment", {
         method: "POST",
         headers: {
+          "Authorization":`Bearer ${token2}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(paymentData2),
@@ -116,15 +119,23 @@ export default function App() {
         if (response12.status === 200) {
           let updateUser = JSON.parse(localStorage.getItem('userState'));
           let fleg = -1;
+          let updatedUserState={};
           if(updateUser.role == "User")
           {
             fleg = 1;
+            updatedUserState = {
+              ...updateUser,
+              uplata:"10000",
+              role:"PremiumUser"
+            };
           }
-          const updatedUserState = {
-            ...updateUser,
-            uplata:"10000",
-            role:"PremiumUser"
-          };
+          else
+          {
+            updatedUserState = {
+              ...updateUser,
+              uplata:"10000"
+            };
+          }
           localStorage.setItem('userState', JSON.stringify(updatedUserState));
           if(fleg == 1)
           {
