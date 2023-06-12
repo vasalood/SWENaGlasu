@@ -52,7 +52,7 @@ export default function SortWindow({active,setActive,stanja,seterStanja})
                     handleOnChange(ev)
                 }
             }>
-                {stanja.orderType === 0 ? <BsSortDown size={30} name='sortBtn' /> : <BsSortUp size={30} name='sortBtn' />}
+                {stanja.orderType === 1 ? <BsSortDown size={30} name='sortBtn' /> : <BsSortUp size={30} name='sortBtn' />}
             </button>
             <FormControl >
                 <InputLabel id="brojOglasa--label">Broj oglasa po stranici</InputLabel>

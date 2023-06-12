@@ -72,7 +72,7 @@ export default function SearchBar({userId,route})
     const [sortStanja, seterSortStanja] = React.useState(
         {
             orderBy: '',
-            orderType: 0,
+            orderType: 1,
             brojOglasa:20
         }
     )

@@ -29,7 +29,7 @@ export async function naslovnaLoader({params})
     const requestUrl = ROOT_API_URL + `Oglas/VratiMtihNOglasa/${params.N != undefined ? params.N : 20}/
     ${params.M != undefined ? params.M : 0}/${params.orderBy != undefined ? params.orderBy : 'kredit'}/
     ${params.orderType != undefined ? params.orderType :
-            0}`
+            1}`
     const filtersArray = params.filters != undefined ? params.filters.split('&') : []
     
     
