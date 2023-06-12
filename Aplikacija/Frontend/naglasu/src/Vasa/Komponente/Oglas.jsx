@@ -285,7 +285,7 @@ export default function Oglas() {
                                   setErrorPop(null);
   }
   const handleKorisnikAzurirajOglas = ()=>{
-    
+    navigate(`/azurirajoglas/${data.id}`);
   }
   return (
     <>

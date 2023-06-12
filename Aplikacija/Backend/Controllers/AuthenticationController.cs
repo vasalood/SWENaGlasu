@@ -367,7 +367,7 @@ else
         var user = await _userManager.FindByNameAsync(userName);
         if(user != null)
         {
-            await _userManager.SetLockoutEndDateAsync(user,DateTimeOffset.UtcNow.AddMonths(1));
+            await _userManager.SetLockoutEndDateAsync(user,DateTimeOffset.UtcNow.AddMinutes(5));
               await _signInManager.SignOutAsync();
             return Ok("Uspesno blokiran korisnik!");
         }
