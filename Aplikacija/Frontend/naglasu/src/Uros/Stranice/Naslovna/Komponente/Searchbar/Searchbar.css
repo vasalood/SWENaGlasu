@@ -21,6 +21,7 @@
     padding-top: 20px;
     padding-bottom:20px;
     background-color: #FFFFFF;
+    z-index:99999;
 }
 
 .searchbar--wrapper
