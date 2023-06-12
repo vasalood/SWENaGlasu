@@ -3,11 +3,13 @@
     position:absolute;
     top:92px;
     z-index: -100;
+   
 }
 
 #filterWindow--inner
 {
     max-width: 1000px;
+    background-color: white;
 }
 
 .filterWindow--select

@@ -10,6 +10,7 @@ import { FaFileContract } from 'react-icons/fa'
 import { MenuItem, Select,FormControl,InputLabel } from '@mui/material';
 
 export default function OceniUgovorDialog({ugovorId,setOcenjenState}) {
+  let token = localStorage.getItem('token');
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -39,6 +40,7 @@ export default function OceniUgovorDialog({ugovorId,setOcenjenState}) {
             method: "POST",
             headers:
             {
+              "Authorization":`Bearer ${token}`,
                 "Content-Type":"application/json"
             },
             body: JSON.stringify(
