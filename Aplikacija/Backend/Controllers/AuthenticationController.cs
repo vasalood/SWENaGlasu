@@ -175,14 +175,14 @@ private readonly IStripeAppService _stripeService;
                 authClaims.Add(new Claim(ClaimTypes.Role,role));
             }
             var jwtToken= GetToken(authClaims);
-           // if(user.EmailConfirmed)
+            if(user.EmailConfirmed)
             return Ok(new{
                 token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
                 expiration=jwtToken.ValidTo,
             });
-           // else{
-            //    return BadRequest("Please confirm your email");
-           // }
+            else{
+                return BadRequest("Please confirm your email");
+            }
         }
         else
         return BadRequest("Neispravan password");

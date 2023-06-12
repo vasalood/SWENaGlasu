@@ -8,9 +8,11 @@ import NavBarContext from '../../Contexts/NavBarContext'
 import { Outlet } from "react-router"
 import { Link } from "react-router-dom"
 import ConnectionContext from "../../Contexts/ConnectionContext"
-
+import { connect } from "formik"
+import { useNavigate } from "react-router-dom"
 export default function Navbar({children})
 {
+    const navigate = useNavigate();
         let token = localStorage.getItem('token');
     const color_secondary = '#ff3333';
     const [isCollapsable, setCollapsable] = React.useState(true)
@@ -58,12 +60,19 @@ export default function Navbar({children})
     )
     const {connectionState,setConnectionState} = React.useContext(ConnectionContext)
     const handleLogout = () =>{
-        localStorage.removeItem('token');
-        localStorage.removeItem('page');
-        localStorage.removeItem('userState');
-        if(connectionState!=null)
-            connectionState.close()
-        setConnectionState(null)
+       
+         localStorage.removeItem('token');
+         localStorage.removeItem('page');
+         localStorage.removeItem('userState');
+        if (connectionState != null && typeof connectionState.close === 'function') {
+            connectionState.close();
+          }
+          else
+          {
+             //window.location.reload();
+          }
+          setConnectionState(null);
+          window.location.replace("http://localhost:3000/");
     }
     let menuItems=[];
         if(token)

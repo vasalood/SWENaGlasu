@@ -4,6 +4,7 @@ import NavBarContext from "../../Uros/Contexts/NavBarContext";
 import PopUpModal from '../../Veljko/LoginPage/PopUpModal';
 import { useNavigate } from "react-router-dom";
 import { useLoaderData } from "react-router";
+import './AzurirajOglas.css';
 export async function AzurirajOglasLoader({params}) {
     if(params.oglasId == undefined) throw Error('GRESKA');
     const response = await fetch(`http://localhost:5105/Oglas/VratiOglas/${params.oglasId}`);
@@ -212,7 +213,7 @@ const errorHandler =()=>{
 }
 
   return (
-    <div className="postavi-oglas-container">
+    <div className="postavi-oglas-container abrakadabra">
        {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
       <form id="id-postavi-oglas-form" onSubmit={handleFormSubmit}>
         <div className="form-group">
