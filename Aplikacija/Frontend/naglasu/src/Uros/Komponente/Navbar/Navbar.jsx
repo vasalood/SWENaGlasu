@@ -5,6 +5,8 @@ import DropDownMenu from '../DropDownMenu/DropDownMenu'
 
 import {BsChevronUp,BsChevronDown} from 'react-icons/bs'
 import NavBarContext from '../../Contexts/NavBarContext'
+import { Outlet } from "react-router"
+import { Link } from "react-router-dom"
 
 export default function Navbar({children})
 {
@@ -15,11 +17,16 @@ export default function Navbar({children})
     const [opacityStyle, setOpacityStyle] = React.useState({
         opacity: "0"
     })
+    function isEnabledForOpacity()
+    {
+        return (Number.parseFloat(opacityStyle.opacity) >= 1.0)
+    }
     const [isEnabled,setEnabled] = React.useState(true)
     function opacityOnScroll()
     {
         const y = window.scrollY
         const newOpacity = Math.max((y - 200) / 300, 0)
+        //console.log(isCollapsable)
         if (newOpacity < 1.0&&isCollapsable)
         {
             setDropdownSelected(false)
@@ -57,16 +64,16 @@ export default function Navbar({children})
         if(token)
         {
             menuItems = [
-                <a href="/test">Profil</a>,
-                <a href="/postavioglas">Nov oglas</a>,
-                <a href='/chat/0'>Inbox</a>,
-                <a href="/" onClick={handleLogout}>Logout</a>]
+                <Link to="/test">Profil</Link>,
+                <Link to="/postavioglas">Nov oglas</Link>,
+                <Link to='/chat/0'>Inbox</Link>,
+                <Link to="/" onClick={handleLogout}>Logout</Link>]
         }
         else
         {
             menuItems = [
-                <a href="/login">Login</a>,
-                <a href="/signup">Sign up</a>
+                <Link to="/login">Login</Link>,
+                <Link to="/signup">Sign up</Link>
             ]
         }
 
@@ -89,9 +96,10 @@ export default function Navbar({children})
                     className="mnavbar--dropdown"
                     isSelected={isDropdownSelected}
                     toggleSelected={setDropdownSelected}
-                    buttonDisabled={Number.parseFloat(opacityStyle.opacity) < 1.0}></DropDownMenu>
+                    buttonDisabled={isCollapsable?!isEnabledForOpacity():false}></DropDownMenu>
             </nav>}
-            {children}
+            {/*  {children} */}
+            <Outlet/>
         </NavBarContext.Provider>
         
     )

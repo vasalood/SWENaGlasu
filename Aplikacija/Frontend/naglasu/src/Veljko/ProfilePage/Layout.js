@@ -33,7 +33,7 @@ import TabelaModerator from './TabelaModerator';
 import App3 from './UgovoriBootStrap';
 import Favoriti from "./Favoriti";
 import { naslovnaLoader as oglasiLoader } from "../../Uros/Stranice/Naslovna/Naslovna";
-
+import NavBarContext  from "../../Uros/Contexts/NavBarContext";
 export function layoutLoader({ params })
 {
   const userState = localStorage.getItem('userState')
@@ -414,6 +414,12 @@ const handlerMoji = () =>{
   //console.log(loaderData)
 
   const { collapseSidebar } = useProSidebar();
+  const { navbarSetCollapsable } = useContext(NavBarContext)
+  useEffect(() =>
+  {
+    navbarSetCollapsable(false)
+
+  },[])
     if(savedUserState)
     {  
   return (

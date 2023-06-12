@@ -47,61 +47,68 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const router = createBrowserRouter(
   [
     {
-      path: "/:N?/:M?/:orderBy?/:orderType?/:filters?",
-      element: <Naslovna />,
-      loader:naslovnaLoader
-    },
-    {
-      path: '/chat/:chatId/:oglasId?/:strankaId?',
-      element: <Chat />,
-      loader:chatLoader
-    },
-    {
-      path: "login",
-      element: <Login/>
-    },
-    {
-      path: "signup",
-      element: <SignUp />
-    },
-    {
-      path: 'test/:N?/:M?/:orderBy?/:orderType?/:filters?',
-      element: <Layout />,
-      loader:layoutLoader
-    },
-    {
-      path:'forgot',
-      element:<ForgotPasswordPage></ForgotPasswordPage>
-    },
-    {
-      path:'email',
-      element:<EmailSentForgot></EmailSentForgot>
-    },
-    {
-      path:'neka',
-      element:<App3></App3>
-    },
-    {
-      path: '/profil/:username',
-      element:<ViewUser/>
-    },
-    {
-
-      path:'oglas/:oglasId',
-
-      element:<Oglas></Oglas>,
-
-      loader: OglasLoader
-
-    },
-
-    {
-
-      path:'postavioglas',
-
-      element:<PostaviOglas></PostaviOglas>
-
+      path: '/',
+      element: <Navbar />,
+      children: [
+        {
+          path: "/:N?/:M?/:orderBy?/:orderType?/:filters?",
+          element: <Naslovna />,
+          loader:naslovnaLoader
+        },
+        {
+          path: '/chat/:chatId/:oglasId?/:strankaId?',
+          element: <Chat />,
+          loader:chatLoader
+        },
+        {
+          path: "login",
+          element: <Login/>
+        },
+        {
+          path: "signup",
+          element: <SignUp />
+        },
+        {
+          path: 'test/:N?/:M?/:orderBy?/:orderType?/:filters?',
+          element: <Layout />,
+          loader:layoutLoader
+        },
+        {
+          path:'forgot',
+          element:<ForgotPasswordPage></ForgotPasswordPage>
+        },
+        {
+          path:'email',
+          element:<EmailSentForgot></EmailSentForgot>
+        },
+        {
+          path:'neka',
+          element:<App3></App3>
+        },
+        {
+          path: '/profil/:username',
+          element:<ViewUser/>
+        },
+        {
+    
+          path:'oglas/:oglasId',
+    
+          element:<Oglas></Oglas>,
+    
+          loader: OglasLoader
+    
+        },
+    
+        {
+    
+          path:'postavioglas',
+    
+          element:<PostaviOglas></PostaviOglas>
+    
+        }
+      ]
     }
+    
   ]
 
    )
@@ -111,11 +118,11 @@ root.render(
   <AuthContextProvider>
       <ProSidebarProvider>
         <App>
-        <Navbar>
+        {/* <Navbar> */}
           <RouterProvider router={router}>
 
           </RouterProvider>
-          </Navbar>
+          {/* </Navbar> */}
       </App>
         
     
