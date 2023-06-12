@@ -61,17 +61,18 @@ export default function Navbar({children})
     const {connectionState,setConnectionState} = React.useContext(ConnectionContext)
     const handleLogout = () =>{
        
-        localStorage.removeItem('token');
-        localStorage.removeItem('page');
-        localStorage.removeItem('userState');
+         localStorage.removeItem('token');
+         localStorage.removeItem('page');
+         localStorage.removeItem('userState');
         if (connectionState != null && typeof connectionState.close === 'function') {
             connectionState.close();
           }
           else
           {
-            window.location.reload();
+             //window.location.reload();
           }
           setConnectionState(null);
+          window.location.replace("http://localhost:3000/");
     }
     let menuItems=[];
         if(token)

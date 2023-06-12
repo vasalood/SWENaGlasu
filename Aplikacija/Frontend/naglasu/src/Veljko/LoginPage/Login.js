@@ -157,7 +157,7 @@ const navigate =useNavigate();
           else if(odgovorTekst.includes('confirm') || odgovorTekst.includes('suspendovan'))
           {
             setErrorPop({
-              title:odgovorTekst
+              title:"Molimo Vas potvrdite vaš email!"
              
               
              // message:odgovorTekst

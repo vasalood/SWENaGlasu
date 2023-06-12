@@ -63,6 +63,7 @@ const handlerIzmena = ()=>{
   const isTelefonValid = /^\d+$/.test(telefon) && telefon.length>7;
   if(isImeValid && isPrezimeValid && isAdresaValid && isTelefonValid)
   {
+    console.log("PROMENAAA");
   fetch("http://localhost:5105/Authentication/UpdateUser/"+ user.username + "/" + ImeRef.current.value + "/" + PrezimeRef.current.value + "/" + AdresaRef.current.value + "/" + TelefonRef.current.value, {
     method: "PUT", // HTTP metoda koja se koristi za zahtev
     headers: {
