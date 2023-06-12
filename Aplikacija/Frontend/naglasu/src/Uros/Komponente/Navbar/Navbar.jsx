@@ -20,7 +20,7 @@ export default function Navbar({children})
     })
     function isEnabledForOpacity()
     {
-        return (Number.parseFloat(opacityStyle.opacity) >= 1.0)
+        return (Number.parseFloat(opacityStyle.opacity) >= 0.9)
     }
     const [isEnabled,setEnabled] = React.useState(true)
     function opacityOnScroll()
@@ -28,7 +28,7 @@ export default function Navbar({children})
         const y = window.scrollY
         const newOpacity = Math.max((y - 200) / 300, 0)
         //console.log(isCollapsable)
-        if (newOpacity < 1.0&&isCollapsable)
+        if (newOpacity < 0.9&&isCollapsable)
         {
             setDropdownSelected(false)
         }
@@ -61,7 +61,8 @@ export default function Navbar({children})
         localStorage.removeItem('token');
         localStorage.removeItem('page');
         localStorage.removeItem('userState');
-        connectionState.close()
+        if(connectionState!=null)
+            connectionState.close()
         setConnectionState(null)
     }
     let menuItems=[];
@@ -92,7 +93,7 @@ export default function Navbar({children})
             }
         }>
             {isEnabled && <nav className="mnavbar" style={isCollapsable ? opacityStyle : { opacity: '1' }}>
-               <a href='/'> <img className="mnavbar--banner" src={BannerLogo}></img></a>
+               <Link to='/'> <img className="mnavbar--banner" src={BannerLogo}></img></Link>
                 <DropDownMenu
                     ButtonIconOn={<BsChevronUp size={35} style={{color:"#3B82F6"}} />}
                     ButtonIconOff={<BsChevronDown size={35} style={{color:"#3B82F6"}} />}
