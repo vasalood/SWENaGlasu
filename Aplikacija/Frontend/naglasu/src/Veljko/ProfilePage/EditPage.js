@@ -190,11 +190,12 @@ return(<div className="container rounded bg-white mt-5 mb-5" style={{ width: '10
             </div>
         </div>
         <div className="col-md-4">
-            <div className="p-3 py-5">{user.role === "User" && (
-  <div className="d-flex justify-content-between align-items-center experience">
-    <Link to="/neka">Postani premium</Link>
-  </div>
-)}
+        <div className="p-3 py-5">
+  {(user.role === "User" || user.role === "PremiumUser") && (
+    <div className="d-flex justify-content-between align-items-center experience">
+      <Link to="/neka">Postani premium</Link>
+    </div>
+  )}
 <br></br>
                 
                 <div className="col-md-12"><label className="labels">Nova Sifra</label><input type="text" className="form-control" placeholder="nova sifra"  ref={sifraRef}/></div> <br></br>

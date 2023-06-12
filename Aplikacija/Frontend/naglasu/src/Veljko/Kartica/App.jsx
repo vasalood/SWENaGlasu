@@ -5,7 +5,9 @@ import { useState } from "react";
 import { CgEditFlipH } from "react-icons/cg";
 import { useDispatch,useSelector } from "react-redux";
 import { userActions } from "../store/user";
+import { useNavigate } from "react-router-dom";
 export default function App() {
+  const navigate =useNavigate();
   const dispatch=useDispatch();
   const user = useSelector(state =>({
     name:state.user.uname,
@@ -33,7 +35,7 @@ export default function App() {
   for (let i = 1; i < 13; i++) {
     months.push(i);
   }
-  for (let i = new Date().getFullYear(); i < 2030; i++) {
+  for (let i = new Date().getFullYear()+1; i < 2030; i++) {
     year.push(i);
   }
   const [error, setError] = useState("");
@@ -42,7 +44,7 @@ export default function App() {
   const [cvv, setCvv] = useState();
   const [cardNumber, setCardNumber] = useState("");
   const [cardHolder, setCardHolder] = useState("");
-  const [expDate, setExpDate] = useState({ month: "10", year: 23 });
+  const [expDate, setExpDate] = useState({ month: "10", year: 24 });
   const type = "visa"; /* or Discover,MasterCard HBK's Custom feature */
   // setErrorPop({
   //   title:"Please enter valid username"
@@ -113,16 +115,34 @@ export default function App() {
       .then(response12 => {
         if (response12.status === 200) {
           let updateUser = JSON.parse(localStorage.getItem('userState'));
+          let fleg = -1;
+          if(updateUser.role == "User")
+          {
+            fleg = 1;
+          }
           const updatedUserState = {
             ...updateUser,
             uplata:"10000",
             role:"PremiumUser"
           };
           localStorage.setItem('userState', JSON.stringify(updatedUserState));
+          if(fleg == 1)
+          {
           setErrorPop({
-            title:"Čestitamo! Plaćanje je uspešno obavljeno, postali ste Premium član!"
+            title:"Čestitamo! Plaćanje je uspešno obavljeno, postali ste Premium član! Molimo Vas prijavite se ponovo."
           });
-        } else {
+            localStorage.removeItem('page');
+            localStorage.removeItem('userState');
+            localStorage.removeItem('token');
+        }
+          else
+          {
+            setErrorPop({
+              title:"Uspešno ste dopunili Vaša sredstva!"
+            });
+          }
+        }  
+         else {
           return response12.text();
         }
       }).then(data2=>{
@@ -142,7 +162,7 @@ export default function App() {
       // }, 5000);
       }
     } else {
-      setError("some of your information are invalid! please restart");
+      setError("neke od informacija su nevalidne");
       setTimeout(() => {
         setError("");
         setSuccess(false);
@@ -167,7 +187,7 @@ export default function App() {
         setCardHolder(value);
       } else {
         setError(
-          "Names must contain letters from A-Z only and less than 15 characters"
+          "Ime mora da sadrži samo slova i da ima manje od 15 karaktera"
         );
         setTimeout(() => {
           setError("");
@@ -180,7 +200,7 @@ export default function App() {
       } else {
         if (!isNaN(value)) setCvv(value.substring(0, 3));
         setError(
-          "CVV must contain numbers only and should be 3 characters only"
+          "CVV mora da sadrži samo 3 cifre!"
         );
         setTimeout(() => {
           setError("");
@@ -202,13 +222,18 @@ export default function App() {
     if (gap < 1 && expDate.month <= new Date().getMonth() + 1) {
       return "Expired";
     } else if (gap <= 1) {
-      return "expires soon";
+      return "istice uskoro";
     } else {
       return null;
     }
   };
   const errorHandler = () =>{
+    let token = localStorage.getItem('token');
     setErrorPop(null);
+    if(!token)
+    {
+      navigate('/login');
+    }
   }
   let token = localStorage.getItem('token');
   return (
@@ -267,7 +292,7 @@ export default function App() {
               name="name"
               placeholder="Card Name"
               pattern="^[a-zA-Z ]{5,15}$"
-              title="Names must contain letters from A-Z only and less than 15 characters"
+              title="Ime mora da sadrži samo slova i ne sme da ima više od 15 karaktera."
               required
               onChange={(e) => handleInputChange(e)}
               onFocus={(e) => handleInputFocus(e)}
@@ -339,7 +364,7 @@ export default function App() {
             </div>
           </div>
 
-          <button className="buttonn"type="submit">Submit</button>
+          <button className="buttonn"type="submit">Uplati</button>
         </div>
       </form>):<></>}
     </div>
