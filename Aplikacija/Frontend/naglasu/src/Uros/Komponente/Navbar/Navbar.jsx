@@ -7,6 +7,7 @@ import {BsChevronUp,BsChevronDown} from 'react-icons/bs'
 import NavBarContext from '../../Contexts/NavBarContext'
 import { Outlet } from "react-router"
 import { Link } from "react-router-dom"
+import ConnectionContext from "../../Contexts/ConnectionContext"
 
 export default function Navbar({children})
 {
@@ -55,10 +56,13 @@ export default function Navbar({children})
             return ()=>window.removeEventListener("scroll",opacityOnScroll)
         },[]
     )
+    const {connectionState,setConnectionState} = React.useContext(ConnectionContext)
     const handleLogout = () =>{
         localStorage.removeItem('token');
         localStorage.removeItem('page');
         localStorage.removeItem('userState');
+        connectionState.close()
+        setConnectionState(null)
     }
     let menuItems=[];
         if(token)

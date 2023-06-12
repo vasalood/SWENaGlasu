@@ -17,12 +17,12 @@ const changeWindowWidth = 'change-window-width'
 const actionChangeWindowWidth = { type: changeWindowWidth }
 const ROOT_API_URL = "http://localhost:5105/"
 
-function reducer(state,action)
+/* function reducer(state,action)
 {
         
     if (action.type === changeWindowWidth)
         return { ...state, width: `${window.innerWidth - (window.innerWidth%440)}px` } //440 = sirina i margine zajedno
-}
+} */
 
 export async function naslovnaLoader({params})
 {
@@ -94,18 +94,18 @@ export default function Naslovna()
     const {connectionState,setConnectionState,handleMsgRcv,handleContractUpdate}=React.useContext(ConnectionContext)
 
     const stavkaWidth=window.innerWidth>450?440:320
-    const [mainContainerStyle, dispatch] = useReducer(reducer, {
+/*     const [mainContainerStyle, dispatch] = useReducer(reducer, {
         width: `${window.innerWidth - (window.innerWidth % stavkaWidth)}px`
-    })
+    }) */
 
-    useEffect(() =>
+    /* useEffect(() =>
     {
         function resizeHandler(event) {
             dispatch(actionChangeWindowWidth)
         } 
         window.addEventListener("resize", resizeHandler)
         return ()=>window.removeEventListener("resize",resizeHandler)
-    }, [])
+    }, []) */
     
     const { oglasNiz, trenutnaStranica,ukupanBr } = useLoaderData()
 
@@ -125,11 +125,14 @@ export default function Naslovna()
     const fromLocUkupanBr = useLocation().state?.ukupanBr
     useEffect(() =>
   {
-    const token = localStorage.getItem('token')
-    if (token != null)
+    const userState= localStorage.getItem('userState')
+    if (userState != null)
     {
-      BuildChatHubConnection(setConnectionState, connectionState, handleMsgRcv, handleContractUpdate)
-      //console.log('connected with token: '+token)
+        if (connectionState == null || connectionState.disconnected)
+        {
+            BuildChatHubConnection(setConnectionState, connectionState, handleMsgRcv, handleContractUpdate)
+            console.log('connected user: '+userState)
+        }
     }
 
   },[])
@@ -137,7 +140,7 @@ export default function Naslovna()
     return (
         
         <div className="naslovna">
-            <Link to='/chat/0/40013/8e8a68cb-8f41-47a7-ab69-7467236bc88e'>OVDE</Link>
+            {/* <Link to='/chat/0/40013/8e8a68cb-8f41-47a7-ab69-7467236bc88e'>OVDE</Link> */}
             <NaslovnaContext.Provider value= 
             {
                 {

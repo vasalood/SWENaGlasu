@@ -21,7 +21,8 @@ export async function handleMessageTransaction(setChatState, message,forRecv)
       newInboxItems.unshift(newInboxItem) 
       if (oldValue.currentChat.id === message.chatId)
       {
-
+        console.log('how many times')
+        console.trace()
         const newPoruke = oldValue.currentChat.poruke
         newPoruke.unshift(message)
         return {
@@ -43,7 +44,6 @@ export async function handleMessageTransaction(setChatState, message,forRecv)
 }
 
 function App({ children }) {
-  const [tokenState,setTokenState]=React.useState('')
   const [chatState, setChatState] = React.useState(
     {
       currentChat:
@@ -65,7 +65,39 @@ function App({ children }) {
 
   function handleContractUpdate(id, value)
   {
-      chatState.poruke.filter(m=>m.ugovor!=undefined&&m.ugovor.id===id)
+    //console.log('here')
+      setChatState(oldValue =>
+      {
+        const messageOfInterest = oldValue.currentChat.poruke.filter(p => p.ugovor != undefined && p.ugovor.id === id)[0]
+        if (messageOfInterest != undefined)
+        {
+          const newMessage = { ...messageOfInterest, ugovor: { ...messageOfInterest.ugovor } }
+          if (value)
+          {
+            newMessage.ugovor['prihvacen'] = true
+            newMessage.ugovor['odbijen']=false
+          }
+          else
+          {
+            newMessage.ugovor['odbijen'] = true
+            newMessage.ugovor['prihvacen']=false
+          }
+          return {
+            ...oldValue,
+            currentChat:{
+              ...oldValue.currentChat,
+              poruke: oldValue.currentChat.poruke.map(p =>
+              {
+                if (p.ugovor == null || p.ugovor.id !== id)
+                  return p
+                else
+                  return newMessage
+                })
+            }
+          }
+        }
+        return oldValue
+      })
   }
 
   const [connectionState, setConnectionState] = React.useState(null)
@@ -73,22 +105,20 @@ function App({ children }) {
   React.useEffect(() =>
   {   
     const userState = localStorage.getItem('userState')
-    if (connectionState === null && userState!=undefined)
+    if ((connectionState == null||connectionState.disconnected) && userState!=undefined)
     {
-      //console.log('connected with token: '+token)
+      console.log('connected user: ' +userState)
       BuildChatHubConnection(setConnectionState,connectionState,handleMsgRcv,handleContractUpdate)
     }
           
 
   }, [connectionState])
-  function reRenderApp() {
-    window.location.reload();
-  }
+
   return (
     <ConnectionContext.Provider value={{
       connectionState,
       setConnectionState: setConnectionState,
-      handleMsgRcv, handleContractUpdate,setTokenState:reRenderApp
+      handleMsgRcv, handleContractUpdate
     }}>
       <ChatContext.Provider value={{ chatState, setChatState }}>
         {children}
