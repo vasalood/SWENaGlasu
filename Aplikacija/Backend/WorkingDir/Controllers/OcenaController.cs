@@ -5,7 +5,7 @@ using Business.Contexts;
 
 using Services.Abs;
 using Models;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Controllers;
 
 [ApiController]
@@ -17,6 +17,7 @@ public class OcenaController : ControllerBase
     {
         _service = service;
     }
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
 
     [HttpPost]
     [Route("OceniOglas")]

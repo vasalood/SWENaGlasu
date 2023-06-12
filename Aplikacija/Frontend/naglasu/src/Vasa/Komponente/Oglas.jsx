@@ -284,6 +284,9 @@ export default function Oglas() {
                                 const errorHandler = () =>{
                                   setErrorPop(null);
   }
+  const handleKorisnikAzurirajOglas = ()=>{
+    
+  }
   return (
     <>
       <div className="oglas">
@@ -340,9 +343,12 @@ export default function Oglas() {
                <button onClick={handleKorisnikPrikaz} className="btn btn-primary button-prvi-tip">{data.vlasnikUsername}</button>
             </div>
 
-            <div className="oglas-informacije-red">
+           { prikazDugme &&<div className="oglas-informacije-red">
               <button onClick={handleKorisnikPoruka} className="btn btn-primary button-drugi-tip">Poruka</button>
-            </div>
+            </div>}
+            { !prikazDugme &&<div className="oglas-informacije-red">
+              <button onClick={handleKorisnikAzurirajOglas} className="btn btn-primary button-drugi-tip">Azuriraj oglas</button>
+            </div>}
             
             <div className="oglas-informacije-red">
               <label>Lokacija:</label>
