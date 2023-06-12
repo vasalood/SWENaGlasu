@@ -48,7 +48,19 @@ public class OglasController : ControllerBase
 
     }
 
-
+    [HttpPost]
+    [Route("PrebrojiOglaseZaFiltere")]
+    public async Task<ActionResult> PrebrojiOglaseZaFiltere(OglasFilteri? filters)
+    {
+        try
+        {
+            return Ok(await _service.PrebrojiOglaseZaFiltere(filters));
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 
     [Route("VratiSliku/{naziv}")]
     [HttpGet]
@@ -120,7 +132,7 @@ public class OglasController : ControllerBase
         }
     }
 
-    //[Authorize(Roles ="Korisnik")]
+    [Authorize(Roles ="Admin, Moderator, PremiumUser, User")]
     [HttpPost]
     [Route("AzurirajOglas")]
     public ActionResult AzurirajOglas([FromForm]OglasForm form,[FromQuery] long oglasId)

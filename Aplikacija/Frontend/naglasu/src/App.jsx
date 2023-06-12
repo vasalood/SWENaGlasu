@@ -21,8 +21,6 @@ export async function handleMessageTransaction(setChatState, message,forRecv)
       newInboxItems.unshift(newInboxItem) 
       if (oldValue.currentChat.id === message.chatId)
       {
-        console.log('how many times')
-        console.trace()
         const newPoruke = oldValue.currentChat.poruke
         newPoruke.unshift(message)
         return {

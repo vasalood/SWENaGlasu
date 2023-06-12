@@ -6,7 +6,7 @@ import React from 'react'
 import "./Naslovna.css"
 import { useLoaderData } from "react-router";
 import NavBarContext from "../../Contexts/NavBarContext";
-import NaslovnaContext from "../../Contexts/NaslovnaContext";
+import PaginationContext from "../../Contexts/PaginationContext";
 import { useLocation } from 'react-router-dom'
 import * as SignalR from '@microsoft/signalr'
 import ConnectionContext from "../../Contexts/ConnectionContext";
@@ -17,16 +17,10 @@ const changeWindowWidth = 'change-window-width'
 const actionChangeWindowWidth = { type: changeWindowWidth }
 const ROOT_API_URL = "http://localhost:5105/"
 
-/* function reducer(state,action)
-{
-        
-    if (action.type === changeWindowWidth)
-        return { ...state, width: `${window.innerWidth - (window.innerWidth%440)}px` } //440 = sirina i margine zajedno
-} */
 
 export async function naslovnaLoader({params})
 {
-    const requestUrl = ROOT_API_URL + `Oglas/VratiMtihNOglasa/${params.N != undefined ? params.N : 20}/
+    const requestUrl = ROOT_API_URL + `Oglas/VratiMtihNOglasa/${params.N != undefined ? params.N : 12}/
     ${params.M != undefined ? params.M : 0}/${params.orderBy != undefined ? params.orderBy : 'kredit'}/
     ${params.orderType != undefined ? params.orderType :
             1}`
@@ -54,7 +48,7 @@ export async function naslovnaLoader({params})
             filters[kvTmp[0]] =kvTmp[1]
             
         })
-        console.log(filters)
+        //console.log(filters)
         
     }
     const response1 =
@@ -77,7 +71,9 @@ export async function naslovnaLoader({params})
         return {
             oglasNiz: oglasi,
             ukupanBr: ukupanBr,
-            trenutnaStranica: params.M!==undefined?Number.parseInt(params.M):0
+            trenutnaStranica: params.M !== undefined ? Number.parseInt(params.M) : 0,
+            filters:(M)=>`${params.N != undefined ? params.N : 12}/${M}/${params.orderBy != undefined ? params.orderBy : 'kredit'}/`+
+            `${params.orderType != undefined ? params.orderType :1}${params.filters!=undefined?('/'+params.filters):''}`
         }
     }
     else
@@ -91,29 +87,11 @@ export async function naslovnaLoader({params})
 
 export default function Naslovna()
 {
-    const {connectionState,setConnectionState,handleMsgRcv,handleContractUpdate}=React.useContext(ConnectionContext)
+    const { connectionState, setConnectionState, handleMsgRcv, handleContractUpdate } = React.useContext(ConnectionContext)
+    const { oglasNiz, trenutnaStranica,ukupanBr,filters } = useLoaderData()
 
-    const stavkaWidth=window.innerWidth>450?440:320
-/*     const [mainContainerStyle, dispatch] = useReducer(reducer, {
-        width: `${window.innerWidth - (window.innerWidth % stavkaWidth)}px`
-    }) */
-
-    /* useEffect(() =>
-    {
-        function resizeHandler(event) {
-            dispatch(actionChangeWindowWidth)
-        } 
-        window.addEventListener("resize", resizeHandler)
-        return ()=>window.removeEventListener("resize",resizeHandler)
-    }, []) */
+    const [ukupanBrState,setUkupanBrState] = React.useState(ukupanBr)
     
-    const { oglasNiz, trenutnaStranica,ukupanBr } = useLoaderData()
-
-    // const oglasiStavke = oglasNiz.map((o,index) =>
-    // {
-    //     return <OglasStavka oglas={o} key={index} />
-    // })
-
     const { navbarSetCollapsable } = React.useContext(NavBarContext)
     React.useEffect(() => {
         
@@ -123,6 +101,43 @@ export default function Naslovna()
     
    
     const fromLocUkupanBr = useLocation().state?.ukupanBr
+    React.useEffect(() =>
+    {
+        async function temp()
+        {
+            console.log(fromLocUkupanBr)
+            if (ukupanBr == undefined && fromLocUkupanBr != null)
+            {
+                setUkupanBrState(fromLocUkupanBr)
+            }
+            else if (fromLocUkupanBr == null && ukupanBr == undefined)
+            {
+                const res = await fetch('http://localhost:5105/Oglas/PrebrojiOglaseZaFiltere',         {
+                    method: "POST",
+                    headers:
+                    {
+                        "Content-Type":"application/json"
+                    },
+                    body: JSON.stringify(
+                        filters
+                    )
+                }) 
+                const result = await res.text()
+                if (!res.ok)
+                {
+                    console.log(result)
+                    return
+                }
+                else
+                {
+                    setUkupanBrState(Number.parseInt(result))
+                    
+                }
+            }
+        }
+        temp()
+       
+    },[])
     useEffect(() =>
   {
     const userState= localStorage.getItem('userState')
@@ -131,7 +146,7 @@ export default function Naslovna()
         if (connectionState == null || connectionState.disconnected)
         {
             BuildChatHubConnection(setConnectionState, connectionState, handleMsgRcv, handleContractUpdate)
-            console.log('connected user: '+userState)
+            //console.log('connected user: '+userState)
         }
     }
 
@@ -140,16 +155,16 @@ export default function Naslovna()
     return (
         
         <div className="naslovna">
-            {/* <Link to='/chat/0/40013/8e8a68cb-8f41-47a7-ab69-7467236bc88e'>OVDE</Link> */}
-            <NaslovnaContext.Provider value= 
+            <PaginationContext.Provider value= 
             {
                 {
                     trenutnaStranica: trenutnaStranica,
-                    ukupanBr: ukupanBr !== undefined ? ukupanBr : fromLocUkupanBr,
+                    ukupanBr: ukupanBrState,
+                    currentFilters:{filters}
                 }
             }>
                 <Header/>
-                <SearchBar />
+                <SearchBar currentFilters={filters} />
                 <>
     <div className="container grid grid--3-cols margin-right-md oglasiKartica" >
         {oglasNiz.map((oglas) => (
@@ -157,7 +172,7 @@ export default function Naslovna()
         ))}
         </div>
       </>
-            </NaslovnaContext.Provider>
+            </PaginationContext.Provider>
         </div>
     )
 }
