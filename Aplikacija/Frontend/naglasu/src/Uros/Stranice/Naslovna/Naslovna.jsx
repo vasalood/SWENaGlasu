@@ -67,13 +67,14 @@ export async function naslovnaLoader({params})
     {
             const response1JSON = await response1.json()
             const oglasi = response1JSON.lista
-            const ukupanBr = response1JSON.ukupanBr
+        const ukupanBr = response1JSON.ukupanBr
         return {
             oglasNiz: oglasi,
             ukupanBr: ukupanBr,
             trenutnaStranica: params.M !== undefined ? Number.parseInt(params.M) : 0,
             filters:(M)=>`${params.N != undefined ? params.N : 12}/${M}/${params.orderBy != undefined ? params.orderBy : 'kredit'}/`+
-            `${params.orderType != undefined ? params.orderType :1}${params.filters!=undefined?('/'+params.filters):''}`
+                `${params.orderType != undefined ? params.orderType : 1}${params.filters != undefined ? ('/' + params.filters) : ''}`,
+            brojOglasa:params.N!=undefined?Number.parseInt(params.N):12
         }
     }
     else
@@ -88,8 +89,12 @@ export async function naslovnaLoader({params})
 export default function Naslovna()
 {
     const { connectionState, setConnectionState, handleMsgRcv, handleContractUpdate } = React.useContext(ConnectionContext)
-    const { oglasNiz, trenutnaStranica,ukupanBr,filters } = useLoaderData()
-
+    const { oglasNiz, trenutnaStranica,ukupanBr,filters,brojOglasa } = useLoaderData()
+    if (ukupanBr != undefined)
+    {
+        localStorage.setItem('naslovnaUkupanBr',ukupanBr)
+    }
+        
     const [ukupanBrState,setUkupanBrState] = React.useState(ukupanBr)
     
     const { navbarSetCollapsable } = React.useContext(NavBarContext)
@@ -100,44 +105,49 @@ export default function Naslovna()
     }, [])
     
    
-    const fromLocUkupanBr = useLocation().state?.ukupanBr
     React.useEffect(() =>
     {
         async function temp()
         {
-            console.log(fromLocUkupanBr)
-            if (ukupanBr == undefined && fromLocUkupanBr != null)
+                
+            if (ukupanBr == undefined)
             {
-                setUkupanBrState(fromLocUkupanBr)
-            }
-            else if (fromLocUkupanBr == null && ukupanBr == undefined)
-            {
-                const res = await fetch('http://localhost:5105/Oglas/PrebrojiOglaseZaFiltere',         {
-                    method: "POST",
-                    headers:
-                    {
-                        "Content-Type":"application/json"
-                    },
-                    body: JSON.stringify(
-                        filters
-                    )
-                }) 
-                const result = await res.text()
-                if (!res.ok)
-                {
-                    console.log(result)
-                    return
-                }
+                const localStorageUkupanBr = localStorage.getItem('naslovnaUkupanBr')
+                if (localStorageUkupanBr != undefined)
+                    setUkupanBrState(localStorageUkupanBr)
                 else
                 {
-                    setUkupanBrState(Number.parseInt(result))
-                    
+                    const res = await fetch('http://localhost:5105/Oglas/PrebrojiOglaseZaFiltere',         {
+                            method: "POST",
+                            headers:
+                            {
+                                "Content-Type":"application/json"
+                            },
+                            body: JSON.stringify(
+                                filters
+                            )
+                        }) 
+                        const result = await res.text()
+                        if (!res.ok)
+                        {
+                            console.log(result)
+                            return
+                        }
+                        else
+                        {
+                            const newUkupanBr = Number.parseInt(result)
+                            localStorage.setItem('naslovnaUkupanBr',newUkupanBr)
+                            setUkupanBrState(newUkupanBr)
+                        }
+                    }
                 }
-            }
+            else
+                setUkupanBrState(ukupanBr)
         }
+        
         temp()
-       
-    },[])
+    },[ukupanBr])
+ 
     useEffect(() =>
   {
     const userState= localStorage.getItem('userState')
@@ -160,11 +170,12 @@ export default function Naslovna()
                 {
                     trenutnaStranica: trenutnaStranica,
                     ukupanBr: ukupanBrState,
-                    currentFilters:{filters}
+                    currentFilters:filters,
+                    brojOglasa:brojOglasa
                 }
             }>
                 <Header/>
-                <SearchBar currentFilters={filters} />
+                <SearchBar />
                 <>
     <div className="container grid grid--3-cols margin-right-md oglasiKartica" >
         {oglasNiz.map((oglas) => (

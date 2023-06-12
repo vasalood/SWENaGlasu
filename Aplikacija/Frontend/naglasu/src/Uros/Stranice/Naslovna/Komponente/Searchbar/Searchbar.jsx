@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import SortWindow from "../SortWindow/SortWindow";
 import PaginationContext from "../../../../Contexts/PaginationContext";
 
-export default function SearchBar({userId,route,currentFilters})
+export default function SearchBar({userId,route})
 {
 
     const emptykat = {id:'',ime:'Prazno', podkategorije: [
@@ -82,8 +82,8 @@ export default function SearchBar({userId,route,currentFilters})
     const [filterWindowActive, setFilterWindowActive] = React.useState(false)
     const [sortWindowActive,setSortWindowActive]=React.useState(false)
     //const { opacityStyle } = React.useContext(NavBarContext)
-    const {trenutnaStranica, ukupanBr }=React.useContext(PaginationContext)
-    const maxStranica = Math.ceil((ukupanBr / sortStanja.brojOglasa) -1)
+    const {trenutnaStranica, ukupanBr,currentFilters,brojOglasa }=React.useContext(PaginationContext)
+    const maxStranica = Math.ceil((ukupanBr / brojOglasa) -1)
     console.log(maxStranica)
     function buildSearchUrl(M)
     {
@@ -96,7 +96,7 @@ export default function SearchBar({userId,route,currentFilters})
     return (
         <div className='searchbar--container' /* style={opacityStyle} */>
             {trenutnaStranica !== 0?
-                <Link to={`${actualRoute}/${currentFilters(trenutnaStranica-1)}`} state={{ ukupanBr: ukupanBr }}>
+                <Link to={`${actualRoute}/${currentFilters(trenutnaStranica-1)}`} >
                     <button className="searchbar--nav_btn searchbar--prev_btn">
                         <BsChevronLeft  size={35}  style={{color:'#3B82F6', fontWeight:'bold',navButtonStyle}} />
                     </button>
@@ -133,7 +133,7 @@ export default function SearchBar({userId,route,currentFilters})
            
             </div>  
             {trenutnaStranica !== maxStranica?
-                <Link to={`${actualRoute}/${currentFilters(trenutnaStranica+1)}`} state={{ukupanBr:ukupanBr}}>
+                <Link to={`${actualRoute}/${currentFilters(trenutnaStranica+1)}`} >
                     <button className="searchbar--nav_btn searchbar--next_btn" style={navButtonStyle}>
                         <BsChevronRight style={{color:'#3B82F6', fontWeight:'bold'}} size={35} />
                     </button>

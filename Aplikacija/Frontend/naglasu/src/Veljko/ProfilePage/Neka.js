@@ -26,6 +26,7 @@ import SearchBar from "../../Uros/Stranice/Naslovna/Komponente/Searchbar/Searchb
 import defaultImage from './istockphoto-1300845620-612x612.jpg';
 import KarticeZaPrikaz from "./KarticeZaPrikaz";
 import { Link } from "react-router-dom";
+import PaginationContext from "../../Uros/Contexts/PaginationContext";
 
 const Neka = (props) =>{
   const { navbarSetCollapsable } = React.useContext(NavBarContext)
@@ -54,11 +55,59 @@ const Neka = (props) =>{
   const handlerStranica = () =>{
     props.handlerIzmena();
   }
+  const { oglasNiz, trenutnaStranica,ukupanBr,filters,brojOglasa } = props.loaderData
+  if (ukupanBr != undefined)
+  {
+      localStorage.setItem('naslovnaUkupanBr',ukupanBr)
+  }
+  const [ukupanBrState, setUkupanBrState] = React.useState(ukupanBr)
+  React.useEffect(() =>
+    {
+        async function temp()
+        {
+                
+            if (ukupanBr == undefined)
+            {
+                const localStorageUkupanBr = localStorage.getItem('naslovnaUkupanBr')
+                if (localStorageUkupanBr != undefined)
+                    setUkupanBrState(localStorageUkupanBr)
+                else
+                {
+                    const res = await fetch('http://localhost:5105/Oglas/PrebrojiOglaseZaFiltere',         {
+                            method: "POST",
+                            headers:
+                            {
+                                "Content-Type":"application/json"
+                            },
+                            body: JSON.stringify(
+                                filters
+                            )
+                        }) 
+                        const result = await res.text()
+                        if (!res.ok)
+                        {
+                            console.log(result)
+                            return
+                        }
+                        else
+                        {
+                            const newUkupanBr = Number.parseInt(result)
+                            localStorage.setItem('naslovnaUkupanBr',newUkupanBr)
+                            setUkupanBrState(newUkupanBr)
+                        }
+                    }
+                }
+            else
+                setUkupanBrState(ukupanBr)
+        }
+        
+        temp()
+    },[ukupanBr])
     return(
     
     <section style={{ backgroundColor: "#efefef" }}>
     <div className="container py-5">
-     
+    
       <div className="row">
         <div className="col-lg-4">
           <div className="card mb-4">
@@ -334,9 +383,18 @@ const Neka = (props) =>{
       
       <h1 style={{ marginBottom: '1rem', fontSize: '2.5rem', fontWeight: 800, lineHeight: 1, color: '#333333' }}>
         Oglasi koje ste postavili su  <mark style={{ padding: '0.25rem 0.5rem', color: '#ffffff', backgroundColor: '#3B82F6', borderRadius: '0.25rem' }}>NaGlasu</mark> 
-      </h1>
+          </h1>
+          <PaginationContext.Provider value={
+            {
+              trenutnaStranica: trenutnaStranica,
+              ukupanBr: ukupanBrState,
+              currentFilters:filters,
+              brojOglasa:brojOglasa
+          }
+          }>
           <SearchBar userId={parsed.id} route="/test"/>
-      <KarticeZaPrikaz oglasList={props.loaderData.oglasNiz}></KarticeZaPrikaz>
+          <KarticeZaPrikaz oglasList={oglasNiz}></KarticeZaPrikaz>
+          </PaginationContext.Provider>
     </div>
     
 </section>
