@@ -8,7 +8,6 @@ import NavBarContext from '../../Contexts/NavBarContext'
 import { Outlet } from "react-router"
 import { Link } from "react-router-dom"
 import ConnectionContext from "../../Contexts/ConnectionContext"
-import { connect } from "formik"
 import { useNavigate } from "react-router-dom"
 export default function Navbar({children})
 {

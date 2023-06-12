@@ -4,7 +4,15 @@ import classes from './Email.module.css';
 import PopUpModal from './PopUpModal';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-const EmailSentForgot = () =>{
+import NavBarContext from "../../Uros/Contexts/NavBarContext";
+const EmailSentForgot = () => {
+  const { navbarSetCollapsable } = React.useContext(NavBarContext)
+  React.useEffect(() => {
+      
+      navbarSetCollapsable(false)
+      return ()=>navbarSetCollapsable(false)
+  }, [])
+  
   let token = localStorage.getItem('token');
   const validateEmail = (email) => {
     // Provera da li email adresa sadrži simbol "@" i tačku "."

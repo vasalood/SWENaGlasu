@@ -25,7 +25,7 @@
   width: 380px;
   height: 430px;
   overflow-y: auto;
-  background: #1c1c1c;
+  background: var(--color_secondary);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -73,7 +73,7 @@
 .box form{
   position: absolute;
   inset: 4px;
-  background: #222;
+  background: white;
   padding: 50px 40px;
   border-radius: 8px;
   z-index: 2;
@@ -82,7 +82,7 @@
 }
 .box form h2
 {
-  color: #fff;
+  color: var(--color_secondary);
   font-weight: 500;
   text-align: center;
   letter-spacing: 0.1em;
@@ -92,6 +92,7 @@
   position: relative;
   width: 300px;
   margin-top: 35px;
+  background-color: white;
 }
 .box form .inputBox input
 {
@@ -106,6 +107,7 @@
   letter-spacing: 0.05em;
   transition: 0.5s;
   z-index:10;
+  border: 1px solid var(--color_secondary);
 }
 .box form .inputBox span
 {
@@ -157,17 +159,17 @@
   color:#8f8f8f;
   text-decoration: none;
 }
-.box form .links a:hover,
-.box form .links a:nth-child(2)
+.box form .links a:hover
 {
-  color:#fff;
+  color:var(--color_secondary);
 }
 .box form input[type="submit"]
 {
   border:none;
   outline:none;
   padding: 9px 25px;
-  background: #fff;
+  background: var(--color_secondary);
+  color:white;
   cursor: pointer;
   font-size: 0.9em;
   border-radius: 4px;

@@ -1,7 +1,15 @@
 import React from "react";
 import classes from './SignUp.module.css';
 import { Link } from "react-router-dom";
-const ForgotPassword = ()=>{
+import NavBarContext from "../../Uros/Contexts/NavBarContext";
+const ForgotPassword = () => {
+  
+  const { navbarSetCollapsable } = React.useContext(NavBarContext)
+  React.useEffect(() => {
+      
+      navbarSetCollapsable(false)
+      return ()=>navbarSetCollapsable(false)
+  }, [])
     return( <div className={classes.klasa}>
     <div className={classes.box}>
     <form>

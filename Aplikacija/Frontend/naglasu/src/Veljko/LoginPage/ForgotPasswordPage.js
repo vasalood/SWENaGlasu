@@ -2,8 +2,16 @@ import React, { useRef, useState} from 'react';
 import { Link } from 'react-router-dom';
 import classes from './Email.module.css';
 import PopUpModal from './PopUpModal';
+import NavBarContext from "../../Uros/Contexts/NavBarContext";
 
-const ForgotPassword = (props) =>{
+const ForgotPassword = (props) => {
+  const { navbarSetCollapsable } = React.useContext(NavBarContext)
+  React.useEffect(() => {
+      
+      navbarSetCollapsable(false)
+      return ()=>navbarSetCollapsable(false)
+  }, [])
+  
  let token2 = localStorage.getItem('token');
   const [errorPop,setErrorPop]=useState();
     const emailRef=useRef();

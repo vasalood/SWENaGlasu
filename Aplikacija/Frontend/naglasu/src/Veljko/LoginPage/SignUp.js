@@ -5,7 +5,18 @@ import ErrorModal from "./ErrorModal";
 import { Link } from "react-router-dom";
 import PopUpModal from './PopUpModal';
 import { useNavigate } from "react-router-dom";
-const SignUp = props =>{
+import NavBarContext from "../../Uros/Contexts/NavBarContext";
+
+const SignUp = props => {
+  
+    
+  const { navbarSetCollapsable } = React.useContext(NavBarContext)
+  React.useEffect(() => {
+      
+      navbarSetCollapsable(false)
+      return ()=>navbarSetCollapsable(false)
+  }, [])
+
   let token = localStorage.getItem('token');
   const navigate =useNavigate();
     const usernameInputRef = useRef();
@@ -20,7 +31,8 @@ const SignUp = props =>{
     const [currValue,setCurrValue]=useState(false);
     const [errorPop,setErrorPop]=useState();
     let letka = -1;
-    const handlerSlike = () =>{
+  const handlerSlike = () => {
+    
 
       const formDataSlika=new FormData();
       formDataSlika.append('slika', confInputSlika.current.files[0]);
@@ -230,7 +242,6 @@ const SignUp = props =>{
           </div>
           <div className = {classes.links}>
           <input type="file" required="required" ref={confInputSlika}></input>
-            <span>Slika</span>
             <i></i>
             <Link to="/email" >Forgot Password</Link>
             <Link to="/login" >Login</Link>
