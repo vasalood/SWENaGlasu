@@ -83,7 +83,7 @@ export default function SearchBar({userId,route})
     const [sortWindowActive,setSortWindowActive]=React.useState(false)
     //const { opacityStyle } = React.useContext(NavBarContext)
     const {trenutnaStranica, ukupanBr,currentFilters,brojOglasa }=React.useContext(PaginationContext)
-    const maxStranica = Math.ceil((ukupanBr / brojOglasa) -1)
+    const maxStranica = Math.ceil((ukupanBr / brojOglasa) - 1)
     console.log(maxStranica)
     function buildSearchUrl(M)
     {
@@ -132,7 +132,7 @@ export default function SearchBar({userId,route})
                 </Link>
            
             </div>  
-            {trenutnaStranica !== maxStranica?
+            {trenutnaStranica <maxStranica?
                 <Link to={`${actualRoute}/${currentFilters(trenutnaStranica+1)}`} >
                     <button className="searchbar--nav_btn searchbar--next_btn" style={navButtonStyle}>
                         <BsChevronRight style={{color:'#3B82F6', fontWeight:'bold'}} size={35} />
