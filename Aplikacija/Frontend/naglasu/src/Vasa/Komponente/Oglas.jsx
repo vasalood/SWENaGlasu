@@ -263,7 +263,7 @@ export default function Oglas() {
       .catch(error => {
         console.error(error); // Ovde možete obraditi grešku koja se desila
       });
-      navigate('/');
+      window.location.replace('/');
   }
   function popuniPolja(){
     let nizPolja = [];
