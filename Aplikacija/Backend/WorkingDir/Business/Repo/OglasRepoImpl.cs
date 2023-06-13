@@ -96,7 +96,7 @@ namespace Business.Repo
 
         public async Task<int> PrebrojiOglaseZaFiltere(OglasFilteri? filters)
         {
-            Expression<Func<Oglas, bool>> predicate = (o) => true;
+            Expression<Func<Oglas, bool>> predicate = (o) => o.Obrisan!=true;
             if(filters!=null)
                 predicate = filters.Map();
             return await _context.Oglasi.Where(predicate).CountAsync();
@@ -104,7 +104,7 @@ namespace Business.Repo
 
         public async Task<List<Oglas>> VratiMtihNOglasa(int N, int M, OglasFilteri? filteri,Order order)
         {
-            Expression<Func<Oglas, bool>> predicate = (o) => true;
+            Expression<Func<Oglas, bool>> predicate = (o) => o.Obrisan!=true;
             if(filteri!=null)
                 predicate = filteri.Map();
             var tmp = ((IOrderedQueryable<Oglas>)(
@@ -133,7 +133,7 @@ namespace Business.Repo
 
         public Oglas? VratiOglas(long oglasId,params Expression<Func<Oglas,object>>[]? lambdas)
         {
-            IQueryable<Oglas> query =_context.Oglasi.Where(o => o.Id == oglasId);
+            IQueryable<Oglas> query =_context.Oglasi.Where(o => o.Id == oglasId&&o.Obrisan!=true);
             if(lambdas!=null)
             {
                 foreach(var l in lambdas)
@@ -163,9 +163,15 @@ namespace Business.Repo
             _context.SaveChanges();
         }
 
-        public void ObrisiOglas(Oglas oglas)
+        public void ObrisiOglasHard(Oglas oglas)
         {
             _context.Oglasi.Remove(oglas);
+            _context.SaveChanges();
+        }
+
+        public void ObrisiOglas(Oglas oglas)
+        {
+            oglas.Obrisan = true;
             _context.SaveChanges();
         }
 
@@ -201,8 +207,9 @@ namespace Business.Repo
 
         public async Task<List<Oglas>> VratiFavorite(string userId,int M, int N,Order order)
         {
-            var baseQuery = _context.Favoriti.Where(fs => fs.Korisnik.Id == userId)
+            var baseQuery = _context.Favoriti.Where(fs => fs.Korisnik.Id == userId&&fs.Oglas.Obrisan!=true)
             .Include(fs => fs.Oglas).ThenInclude(o=>o.Podkategorija);
+            
             var orderedQuery =(IOrderedQueryable<FavoritSpoj>) (order.Type == OrderType.Ascending ? 
             (Queryable.OrderBy(baseQuery,_orderByMapperFavoriti[order.By])):
             (Queryable.OrderByDescending(baseQuery,_orderByMapperFavoriti[order.By])));
@@ -222,7 +229,7 @@ namespace Business.Repo
 
         public int PrebrojiFavorite(string userId)
         {
-            return _context.Favoriti.Where(fs => fs.Korisnik.Id == userId).Count();
+            return _context.Favoriti.Where(fs => fs.Korisnik.Id == userId&&fs.Oglas.Obrisan!=true).Count();
         }
 
         public byte[] VratiSliku(string naziv)

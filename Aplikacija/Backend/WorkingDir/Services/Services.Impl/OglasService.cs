@@ -47,7 +47,7 @@ namespace Services.Impl
             _repo.AzurirajOglas(oglas);
         }
 
-        public async Task PostaviOglas(OglasForm form)
+        public async Task<long> PostaviOglas(OglasForm form)
         {
             
             Oglas oglas = new Oglas(form);
@@ -63,7 +63,9 @@ namespace Services.Impl
             //podkategorija.KategorijaNaziv = kategorija.Ime;
             oglas.Podkategorija = podkategorija;
             oglas.Slike = form.PrimljeneSlike != null ? await _repo.PostaviSlike(form.PrimljeneSlike) : null;
+            oglas.Obrisan = false;
             await _repo.SacuvajOglas(oglas);
+            return oglas.Id;
         }
 
         public async Task<int> PrebrojiOglaseZaFiltere(OglasFilteri? filters)
@@ -168,7 +170,7 @@ namespace Services.Impl
         public void ObrisiOglas(long id)
         {
             var o = _repo.VratiOglas(id,null);
-            if(o == null )
+            if(o == null ||o.Obrisan==true)
                 throw new NullOglasException(id);
             else
                 _repo.ObrisiOglas(o);

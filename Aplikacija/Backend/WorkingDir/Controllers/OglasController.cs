@@ -105,8 +105,7 @@ public class OglasController : ControllerBase
                 if(count>4)
                     return BadRequest("Maksimalan broj postavljenih oglasa (5) je dostignut.");
             }
-            await _service.PostaviOglas(forma);
-            return Ok("Oglas postavljen.");
+            return Ok(await _service.PostaviOglas(forma));
         }
         catch (Exception e)
         {

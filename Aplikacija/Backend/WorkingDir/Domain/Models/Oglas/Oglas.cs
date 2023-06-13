@@ -69,6 +69,8 @@ namespace Domain.Models
         public Stanje? Stanje { get; set; }
 
         public String Opis{ get; set; }
+
+        public bool Obrisan { get; set; }
         public Oglas()
         {
 
@@ -133,6 +135,7 @@ namespace Domain.Models
             Lokacija = forma.Lokacija;
             Stanje = forma.Stanje;
             Opis = forma.Opis;
+            Obrisan = false;
         }
 
     }

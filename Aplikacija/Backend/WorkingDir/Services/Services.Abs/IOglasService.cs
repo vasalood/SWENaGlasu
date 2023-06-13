@@ -13,7 +13,7 @@ namespace Services.Abs
         public Task<ZipFile> VratiNaslovneSlikeZIP(long[] oglasIds);
 
         public byte[] VratiSliku(string path);
-        public Task PostaviOglas(OglasForm form);
+        public Task<long> PostaviOglas(OglasForm form);
         public Task<int> PrebrojiOglaseZaFiltere(OglasFilteri? filteri);
         public void AzurirajOglas(Oglas oglas,OglasForm form);
         public Task<List<Slika>> VratiSlike(long oglasId);
