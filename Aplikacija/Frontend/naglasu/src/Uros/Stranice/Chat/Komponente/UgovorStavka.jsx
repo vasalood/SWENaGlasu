@@ -10,7 +10,9 @@ import ConnectionContext from '../../../Contexts/ConnectionContext';
 import ChatContext from '../../../Contexts/ChatContext';
 import OceniUgovorDialog from './OceniUgovorDialog';
 
-export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen,ocenjen})
+
+
+export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen,ocenjen,setErrorPop})
 {
     let token = localStorage.getItem('token');
     const [ugovorState, setUgovorState] = React.useState(
@@ -20,7 +22,6 @@ export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen,oc
         }
     )
     const [ocenjenState, setOcenjenState] = React.useState(ocenjen)
-    
     
     const { connectionState } = React.useContext(ConnectionContext)
     const {chatState} = React.useContext(ChatContext)
@@ -51,7 +52,10 @@ export default function UgovorStavka({opis,kolicina,smer,id,prihvacen,odbijen,oc
         }
         catch (e)
         {
-            console.log(e.message)
+            setErrorPop({
+                title: 'Došlo je do greške!'
+            })
+            
         }
       
     }

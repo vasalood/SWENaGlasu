@@ -283,7 +283,13 @@ const PostaviOglas = () => {
           })
           .then(s => {
             if (s.ok) {
-              navigate("/");
+              s.text().then(result =>
+                {
+/*                   setErrorPop({
+                    title:'Oglas je postavljen.'
+                  }) */
+                  navigate('/oglas/'+result)
+                  })
             } else {
               setErrorPop({
                 title: "Maksimalan broj postavljenih oglasa (5) je dostignut.",
@@ -296,7 +302,7 @@ const PostaviOglas = () => {
       {
     try {
       const response = await fetch(url, requestOptions);
-      console.log(response);
+      //console.log(response);
       if (response.ok) {
         // Odradi drugi fetch samo ako je status 200
         if (response.status === 200) {
@@ -309,7 +315,14 @@ const PostaviOglas = () => {
           })
           .then(s => {
             if (s.ok) {
-              navigate("/");
+              s.text().then(result =>
+              {
+/*                 setErrorPop({
+                  title:'Oglas je postavljen.'
+                }) */
+                navigate('/oglas/'+result)
+                })
+              //navigate("/");
             } else {
               setErrorPop({
                 title: "Došlo je do greške prilikom postavljanja oglasa"

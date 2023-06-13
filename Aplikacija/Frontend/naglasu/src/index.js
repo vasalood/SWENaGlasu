@@ -43,6 +43,7 @@ import ViewUser from './Veljko/ProfilePage/ViewUser';
 import RecipeReviewCard from './Veljko/ProfilePage/KarticaNekaMui';
 import KarticaOglasNova from './Veljko/ProfilePage/KarticaOglasNova';
 import AzurirajOglas from './Vasa/Komponente/AzurirajOglas';
+import ErrorPage from './ErrorPage';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 
@@ -51,6 +52,7 @@ const router = createBrowserRouter(
     {
       path: '/',
       element: <Navbar />,
+      errorElement:<ErrorPage/>,
       children: [
         {
           path: "/:N?/:M?/:orderBy?/:orderType?/:filters?",

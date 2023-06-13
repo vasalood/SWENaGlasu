@@ -3,7 +3,8 @@ import { BsSend } from 'react-icons/bs'
 import { FaFileContract } from 'react-icons/fa' 
 import Button from '@mui/material/Button';
 import AddUgovorDialog from './AddUgovorDialog';
-export default function MessageInputBox({className,inputState,setInputState,onSubmit,dialogState,setDialogState,oglasId,isVlasnik})
+export default function MessageInputBox({ className, inputState, setInputState, onSubmit, dialogState, setDialogState, oglasId, isVlasnik
+,setErrorPop})
 {
     const inputRef = React.useRef(null)
     function enterHandler(ev)
@@ -35,7 +36,8 @@ export default function MessageInputBox({className,inputState,setInputState,onSu
                         onSubmit={onSubmit}
                         dialogState={dialogState}
                         setDialogState={setDialogState}
-                        oglasId={oglasId} />}
+                        oglasId={oglasId}
+                    setErrorPop={setErrorPop}/>}
                 <Button className='border-0 bg-white' style={{ outline: 'none !important', boxShadow: 'none !important' }}
                     onClick={ev => onSubmit()}
                  >

@@ -8,7 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { FaFileContract } from 'react-icons/fa' 
 
-export default function AddUgovorDialog({onSubmit,dialogState,setDialogState,oglasId}) {
+export default function AddUgovorDialog({onSubmit,dialogState,setDialogState,oglasId,setErrorPop}) {
   const [open, setOpen] = React.useState(false);
   let token = localStorage.getItem('token');
   const handleClickOpen = () => {
@@ -19,6 +19,7 @@ export default function AddUgovorDialog({onSubmit,dialogState,setDialogState,ogl
       setOpen(false);
       if (ev.target.id !== 'cancel')
       {
+        try {
           const mId = JSON.parse(localStorage.getItem('userState')).id
           const ugovor=
           {
@@ -30,7 +31,7 @@ export default function AddUgovorDialog({onSubmit,dialogState,setDialogState,ogl
               opis: dialogState.opis,
               kolicina:Number.parseInt(dialogState.kolicina)
           }
-          console.log(ugovor)
+          //console.log(ugovor)
           if (ugovor.kolicina <= 0)
               throw Error('Kolicina mora da bude veca od nule.');
           const ugovorRes = await fetch('http://localhost:5105/Ugovor/PostaviUgovor',
@@ -57,6 +58,14 @@ export default function AddUgovorDialog({onSubmit,dialogState,setDialogState,ogl
           })
         
           onSubmit(ugovor.id)
+        }
+        catch (e)
+        {
+          setErrorPop({
+            title: 'Došlo je do greške!'
+        })
+        }
+      
         }
     };
     

@@ -7,10 +7,10 @@ import UgovorStavka from "./Komponente/UgovorStavka"
 import ConnectionContext from "../../Contexts/ConnectionContext"
 import BuildChatHubConnection from "../../Utils/ChatHubConnectionBuilder"
 import ChatContext from "../../Contexts/ChatContext"
-import { useLoaderData } from "react-router"
+import { useLoaderData, useNavigate } from "react-router"
 import { current } from "@reduxjs/toolkit"
 import { handleMessageTransaction } from "../../../App"
-
+import PopUpModal from '../../../Veljko/LoginPage/PopUpModal'
 
 export async function chatLoader({ params })
 {
@@ -56,23 +56,33 @@ export async function chatLoader({ params })
                 id:0,poruke:[],zaOglasNaziv:'',zaOglasId:0,receiverUsername:''
             }
 
-        console.log(returnValue)
+        //console.log(returnValue)
         return returnValue
     }
     else
     {
         responseInbox.text().then(text=>console.log('Error is '+text))
-        throw Error('Bad Request!')
+        return {error:'Bad request!'}
     }
 }
 export default function Chat() {
     
-    const [inputState,setInputState]=React.useState('')
+    const navigate = useNavigate()
+    const [errorPop, setErrorPop] = React.useState();
+    const [inputState, setInputState] = React.useState('')
     
     const { navbarSetCollapsable, navbarSetEnabled } = React.useContext(NavBarContext)
     const { chatState, setChatState } = React.useContext(ChatContext)
     
     const loaderData = useLoaderData()
+    if (loaderData.error != undefined)
+    {
+       
+        setErrorPop({
+            title: 'Došlo je do greške!',
+            message:'Desila se greška pri učitavanju četa.'
+        })
+        }
     const userState = JSON.parse(localStorage.getItem('userState'))
 
     const [ugovorDialogState, setUgovorDialogState] = React.useState(
@@ -131,7 +141,8 @@ export default function Chat() {
                 id={m.ugovor.id}
                 prihvacen={m.ugovor.prihvacen}
                 odbijen={m.ugovor.odbijen}
-                ocenjen={m.ugovor.ocenjen} /> : m.sadrzaj
+                ocenjen={m.ugovor.ocenjen}
+                setErrorPop={setErrorPop}/> : m.sadrzaj
 
             
             return <MsgItem timestamp={timestamp}
@@ -199,7 +210,20 @@ export default function Chat() {
 
         }
     }
-    return (<div className='w-100 d-flex flex-row hover-overlay overflow-hidden bg-white' style={{height:'calc(100vh - 85.6px)'}}>
+    const errorHandler = () => {
+        const message =errorPop.message
+        setErrorPop(null);
+        if(message!=undefined)
+            navigate('/')
+    }
+    
+    return (<div className='w-100 d-flex flex-row hover-overlay overflow-hidden bg-white' style={{ height: 'calc(100vh - 85.6px)' }}>
+        {errorPop!=undefined && (
+            <PopUpModal
+                title={errorPop.title}
+                message={errorPop.message}
+                onConfirm={errorHandler}
+            />)}
         <div className='d-flex flex-column w-25 mh-100 border-right border-left border-secondary overflow-auto'
 >
             {chatHistoryItems
@@ -223,7 +247,8 @@ export default function Chat() {
                 dialogState={ugovorDialogState}
                 setDialogState={setUgovorDialogState}
                 oglasId={chatState.currentChat.zaOglasId}
-                isVlasnik={chatState.currentChat.zaOglasVlasnikId===userState.id } />
+                isVlasnik={chatState.currentChat.zaOglasVlasnikId === userState.id}
+            setErrorPop={setErrorPop}/>
         </div>
     </div>)
 }

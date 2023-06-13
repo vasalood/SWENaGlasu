@@ -347,7 +347,7 @@ export default function Oglas() {
               <button onClick={handleKorisnikPoruka} className="btn btn-primary button-drugi-tip">Poruka</button>
             </div>}
             { !prikazDugme &&<div className="oglas-informacije-red">
-              <button onClick={handleKorisnikAzurirajOglas} className="btn btn-primary button-drugi-tip">Azuriraj oglas</button>
+              <button onClick={handleKorisnikAzurirajOglas} className="btn btn-primary button-drugi-tip">Ažuriraj oglas</button>
             </div>}
             
             <div className="oglas-informacije-red">
