@@ -30,6 +30,7 @@ namespace Services.Impl
             oglas.Kolicina = form.Kolicina??oglas.Kolicina;
             oglas.Kredit = form.Kredit??oglas.Kredit;
             oglas.Opis = form.Opis??oglas.Opis;
+            oglas.Lokacija = form.Lokacija ?? oglas.Lokacija;
             if(form.StavkePoljaImena!=null&&form.StavkePoljaVrednosti!=null)
             {
                 oglas.Polja = new Dictionary<string, string>();

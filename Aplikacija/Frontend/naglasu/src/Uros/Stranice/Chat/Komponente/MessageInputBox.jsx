@@ -26,7 +26,7 @@ export default function MessageInputBox({className,inputState,setInputState,onSu
     className:''}>{/*container */}
             <div className='p-1 w-100 d-flex flex-row justify-content-center border bg-white align-items-center'
                 style={{ height: '46px', borderRadius: '15px' }}>{/**wrapper */}
-                <input ref={inputRef} className='w-100 border-0' style={{ fontSize: 'large', height: '30px', outline: 'none' }}
+                <input ref={inputRef} className='w-100 border-0 px-2' style={{ fontSize: 'large', height: '30px', outline: 'none' }}
                 value={inputState} onChange={(ev)=>setInputState(ev.target.value)}>
                 
                 </input>

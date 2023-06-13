@@ -3,10 +3,12 @@ import "./Searchbar.css"
 import React from 'react'
 import { BsSearch,BsFilter,BsChevronRight,BsChevronLeft,BsSortDownAlt} from 'react-icons/bs'
 import NavBarContext from "../../../../Contexts/NavBarContext"
-import FilterWindow from "../FilterWindow/FilterWindow";
+import FilterWindow, { FilterDialog } from "../FilterWindow/FilterWindow";
 import { Link } from 'react-router-dom'
 import SortWindow from "../SortWindow/SortWindow";
+import { SortDialog } from '../SortWindow/SortWindow'
 import PaginationContext from "../../../../Contexts/PaginationContext";
+import Button from '@mui/material/Button'
 
 export default function SearchBar({userId,route})
 {
@@ -114,21 +116,24 @@ export default function SearchBar({userId,route})
                         })
                     }}
                     value={filterStanja.ime}></input>
-                <button className='searchBar--sort_btn'>
+                <SortDialog stanja={sortStanja} seterStanja={seterSortStanja}/>
+{/*                 <button className='searchBar--sort_btn'>
                     <BsSortDownAlt size={30} onClick={(ev) => setSortWindowActive(
                         oldValue => !oldValue
                     )} />
-                </button>
-                <button className='searchbar--filter_btn' onClick={(ev) => {
+                </button> */}
+               {/*  <button className='searchbar--filter_btn' onClick={(ev) => {
                     setFilterWindowActive(oldValue => !oldValue)
                 }
                 }>
                     <BsFilter size={30}/>
-                </button>
+                </button> */}
+                <FilterDialog stanja={filterStanja}
+                seterStanja={seterFilterStanja} />
                 <Link to={buildSearchUrl(0)}>
-                <button className='searchbar--search_btn'>
-                    <BsSearch size={30} />
-                </button>
+                <Button className='searchbar--search_btn'>
+                    <BsSearch size={30}  />
+                </Button>
                 </Link>
            
             </div>  
@@ -139,8 +144,8 @@ export default function SearchBar({userId,route})
                     </button>
                     
                 </Link>:<div className='searchbar--nav_btn'/>}
-            <FilterWindow active={filterWindowActive} setActive={setFilterWindowActive} stanja={filterStanja}
-                seterStanja={seterFilterStanja} />
+           {/*  <FilterWindow active={filterWindowActive} setActive={setFilterWindowActive} stanja={filterStanja}
+                seterStanja={seterFilterStanja} /> */}
             <SortWindow active={sortWindowActive} setActive={setSortWindowActive} stanja={sortStanja } seterStanja={seterSortStanja} />
     </div>)
 }
