@@ -5,9 +5,15 @@ import PopUpModal from '../../Veljko/LoginPage/PopUpModal';
 import { useNavigate } from "react-router-dom";
 const PostaviOglas = () => {
   let data=localStorage.getItem('userState');
-  let parsedData = JSON.parse(data);
-  let id = parsedData.id;
-  let rola = parsedData.role;
+  let id = null;
+  let rola = null;
+  if(data)
+  {
+    let parsedData = JSON.parse(data);
+    id = parsedData.id;
+    rola = parsedData.role;
+  }
+  
   let token = localStorage.getItem('token');
   const navigate =useNavigate();
   const[errorPop,setErrorPop]=useState();
@@ -346,8 +352,13 @@ const errorHandler =()=>{
   setErrorPop(null);
 }
 
+function handlePremium() {
+  navigate('/neka');
+}
+
   return (
-    <div className="postavi-oglas-container">
+    <>
+     { token ? ( <div className="postavi-oglas-container">
        {errorPop?<PopUpModal title= {errorPop.title} message={errorPop.message} onConfirm={errorHandler}></PopUpModal>:null}
       <form id="id-postavi-oglas-form" onSubmit={handleFormSubmit}>
         <div className="form-group">
@@ -611,12 +622,23 @@ const errorHandler =()=>{
               </select>
           </div>
         )}
-        <div className="dugme-div">
-          <button type="submit" className="btn btn-primary">Postavi oglas</button>
+        <div className='d-flex flex-row justify-content-between'>
+          <div className="dugme-div">
+            <button type="button" className="btn btn-primary" onClick={handlePremium}>Postani premium</button>
+          </div>
+          <div className="dugme-div">
+            <button type="submit" className="btn btn-primary">Postavi oglas</button>
+          </div>
         </div>
       </form>
     </div>
-  );
+  ) : (
+    <></>
+  )}
+    </>
+  )
+    
+  
 };
 
 export default PostaviOglas;

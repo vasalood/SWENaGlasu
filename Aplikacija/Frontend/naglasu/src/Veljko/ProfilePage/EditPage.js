@@ -210,7 +210,7 @@ return(<div className="container rounded bg-white mt-5 mb-5" style={{ width: '10
         <div className="p-3 py-5">
  
     <div className="d-flex justify-content-between align-items-center experience">
-      <Link to="/neka">Postani premium</Link>
+      {user.role === 'User' ? <Link to="/neka">Postani premium</Link> : <Link to="/neka">Dopuni sredstva</Link>}
     </div>
   
 <br></br>
