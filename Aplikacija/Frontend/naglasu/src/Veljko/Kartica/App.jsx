@@ -6,7 +6,17 @@ import { CgEditFlipH } from "react-icons/cg";
 import { useDispatch,useSelector } from "react-redux";
 import { userActions } from "../store/user";
 import { useNavigate } from "react-router-dom";
+import NavBarContext from "../../Uros/Contexts/NavBarContext";
+import { useEffect } from "react";
+import { useContext } from "react";
 export default function App() {
+
+  const { navbarSetCollapsable } = useContext(NavBarContext)
+    useEffect(() => {
+        navbarSetCollapsable(false)
+        return ()=>navbarSetCollapsable(true)
+    }, [])
+
   const navigate =useNavigate();
   const dispatch=useDispatch();
   const user = useSelector(state =>({
