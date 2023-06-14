@@ -6,28 +6,22 @@ import AddUgovorDialog from './AddUgovorDialog';
 export default function MessageInputBox({ className, inputState, setInputState, onSubmit, dialogState, setDialogState, oglasId, isVlasnik
 ,setErrorPop})
 {
-    const inputRef = React.useRef(null)
-    function enterHandler(ev)
+    const buttonRef = React.useRef(null)
+    function handleOnKeyUp(e)
     {
-        if (ev.key === 'Enter')
+        e.preventDefault()
+        if (e.keyCode === 13)
         {
-
-            //console.log("IT WORKS")
-            //onSubmit()
+            buttonRef.current.click()
         }
-            
     }
-    React.useEffect(() =>
-    {
-        inputRef.current.addEventListener('keypress', enterHandler)
-        
-    },[inputRef.current])
+    
     return (
         <div className={'p-2 d-flex flex-row justify-content-center align-items-center w-100' + className !== undefined ?
     className:''}>{/*container */}
             <div className='p-1 w-100 d-flex flex-row justify-content-center border bg-white align-items-center'
                 style={{ height: '46px', borderRadius: '15px' }}>{/**wrapper */}
-                <input ref={inputRef} className='w-100 border-0 px-2' style={{ fontSize: 'large', height: '30px', outline: 'none' }}
+                <input onKeyUp={handleOnKeyUp} className='w-100 border-0 px-2' style={{ fontSize: 'large', height: '30px', outline: 'none' }}
                 value={inputState} onChange={(ev)=>setInputState(ev.target.value)}>
                 
                 </input>
@@ -38,7 +32,7 @@ export default function MessageInputBox({ className, inputState, setInputState, 
                         setDialogState={setDialogState}
                         oglasId={oglasId}
                     setErrorPop={setErrorPop}/>}
-                <Button className='border-0 bg-white' style={{ outline: 'none !important', boxShadow: 'none !important' }}
+                <Button className='border-0 bg-white' ref={buttonRef} style={{ outline: 'none !important', boxShadow: 'none !important' }}
                     onClick={ev => onSubmit()}
                  >
                     <BsSend size ={30}/>

@@ -33,7 +33,7 @@ export default function SearchBar({userId,route})
         {
             let retValue = ''
             retValue+=this.ime!==''?'ime='+this.ime:''
-            retValue += this.selectedKat.id != '' ? `kategorijaId=${this.selectedKat.id}` : ''
+            retValue += this.selectedKat.id !== '' ? `kategorijaId=${this.selectedKat.id}` : ''
             if (this.selectedPodkat.length > 0)
             {
                 let selectedPodkatString='&podkategorijeId='
@@ -44,15 +44,15 @@ export default function SearchBar({userId,route})
                     })
                 retValue+=selectedPodkatString
             }
-            retValue += this.selectedSmer!=''?`&smer=${this.selectedSmer}`:''
-            retValue +=this.selectedTip!=''? `&tip=${this.selectedTip}`:''
+            retValue += this.selectedSmer!==''?`&smer=${this.selectedSmer}`:''
+            retValue +=this.selectedTip!==''? `&tip=${this.selectedTip}`:''
             if (this.selectedStanja.length > 0)
             {
                 let selectedStanjaString='&stanja='
                 this.selectedStanja.forEach((s,index) =>
                 {
                     selectedStanjaString += s
-                    selectedStanjaString+=index!=this.selectedStanja.length-1?'_':''
+                    selectedStanjaString+=index!==this.selectedStanja.length-1?'_':''
                     })
                 retValue+=selectedStanjaString
             }
@@ -95,6 +95,15 @@ export default function SearchBar({userId,route})
                         stringFilterStanja
                     }`
     }
+    const buttonRef=React.useRef()
+    function handleOnKeyUp(e)
+    {
+        e.preventDefault()
+        if (e.keyCode === 13)
+        {
+            buttonRef.current.click()
+        }
+    }
     return (
         <div className='searchbar--container' /* style={opacityStyle} */>
             {trenutnaStranica !== 0?
@@ -115,7 +124,7 @@ export default function SearchBar({userId,route})
                             }
                         })
                     }}
-                    value={filterStanja.ime}></input>
+                    value={filterStanja.ime} onKeyUp={handleOnKeyUp}></input>
                 <SortDialog stanja={sortStanja} seterStanja={seterSortStanja}/>
 {/*                 <button className='searchBar--sort_btn'>
                     <BsSortDownAlt size={30} onClick={(ev) => setSortWindowActive(
@@ -131,7 +140,7 @@ export default function SearchBar({userId,route})
                 <FilterDialog stanja={filterStanja}
                 seterStanja={seterFilterStanja} />
                 <Link to={buildSearchUrl(0)}>
-                <Button className='searchbar--search_btn'>
+                <Button className='searchbar--search_btn' ref={buttonRef}>
                     <BsSearch size={30}  />
                 </Button>
                 </Link>
