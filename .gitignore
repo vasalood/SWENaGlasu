@@ -476,7 +476,7 @@ $RECYCLE.BIN/
 .vscode/
 *.json
 Migrations/
-wwwroot/
+#wwwroot/
 !wwwroot/test.txt
 !appsettings.json
 !package.json
