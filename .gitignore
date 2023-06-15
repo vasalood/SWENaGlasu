@@ -479,4 +479,5 @@ Migrations/
 wwwroot/
 !wwwroot/test.txt
 !appsettings.json
+!package.json
 ####################################
