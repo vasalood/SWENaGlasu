@@ -1,8 +1,4 @@
-import MenuItemm from "./MenuItemm";
-import './Oglasi.css';
 import { useContext, useEffect, useState } from "react";
-import { useSelector,useDispatch } from "react-redux";
-import ExpensesFilter from "./ExpensesFilter";
 import AuthContext from "../store/auth-context";
 import KarticaOglasNova from "./KarticaOglasNova";
 const ViewOglasi = (props) =>{

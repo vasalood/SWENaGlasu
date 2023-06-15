@@ -1,8 +1,5 @@
-import MenuItemm from "./MenuItemm";
-import './Oglasi.css';
 import { useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
-import ExpensesFilter from "./ExpensesFilter";
 import KarticaOglasNova from "./KarticaOglasNova";
 import './KarticaOglasNova.css';
 const Favoriti = (props) =>{

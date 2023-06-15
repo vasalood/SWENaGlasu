@@ -1,7 +1,6 @@
 import './Datatable.css';
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import mango from './mango.jpg';
 import { useState,useEffect } from 'react';
 import { Button } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';

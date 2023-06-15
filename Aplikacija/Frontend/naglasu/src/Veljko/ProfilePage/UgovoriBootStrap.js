@@ -1,13 +1,4 @@
 import React, { useState } from 'react';
-import {
-  MDBCard,
-  MDBCardTitle,
-  MDBCardText,
-  MDBCardBody,
-  MDBCardHeader,
-  MDBCardFooter
-} from 'mdb-react-ui-kit';
-import ExpenseDate from './ExpenseDate';
 import { useEffect } from 'react';
 import UgovorBeli from './UgovorBeli';
 import UgovorPlavi from './UgovorPlavi';

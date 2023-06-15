@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import './Oglas.css';
 import PlaceHolder from "../../Uros/Res/Slike/placeholder.jpg";
 import NavBarContext from "../../Uros/Contexts/NavBarContext";
-import { Escalator } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import PopUpModal from '../../Veljko/LoginPage/PopUpModal';
 export async function OglasLoader({params}) {

@@ -3,16 +3,13 @@ import { useSelector,useDispatch } from "react-redux";
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import classes from "../LoginPage/Login.module.css";
-import ErrorModal from "./ErrorModal";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../store/auth-context";
-import { getListSubheaderUtilityClass } from "@mui/material";
 import { userActions } from "../store/user";
 import PopUpModal from './PopUpModal';
 import NavBarContext from "../../Uros/Contexts/NavBarContext";
-import Naslovna from "../../Uros/Stranice/Naslovna/Naslovna";
-import ConnectionContext from "../../Uros/Contexts/ConnectionContext";
-const Login = (props) => {
+
+const Login = () => {
  
   let token = localStorage.getItem('token');
   const { navbarSetCollapsable } = React.useContext(NavBarContext)

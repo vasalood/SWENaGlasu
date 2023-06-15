@@ -1,5 +1,4 @@
 import './EditPage.css';
-import slika from './mango.jpg';
 import { userActions } from "../store/user";
 import { useSelector,useDispatch } from "react-redux";
 import { Link } from 'react-router-dom';

@@ -2,28 +2,19 @@ import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import SettingsIcon from '@mui/icons-material/Settings';
-import WavingHandIcon from '@mui/icons-material/WavingHand';
 import { useState } from "react";
 import  './Layout.module.css';
 import EditPage from "./EditPage";
-import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
-import MenuItemm from "./MenuItemm";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { userActions } from "../store/user";
 import { useSelector,useDispatch } from "react-redux";
-import Oglasi from "./Oglasi";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import Table2 from './Table2';
 import DataTable from "./Datatable";
 import Neka from "./Neka";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import GavelIcon from '@mui/icons-material/Gavel';
 import PedalBikeIcon from '@mui/icons-material/PedalBike';
-import Ugovori from "./Ugovori";
 import Expenses from "./Expenses";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useContext,useEffect } from "react";
@@ -457,7 +448,6 @@ const handlerMoji = () =>{
       <main style={{ width: '100%', height: '100%' }}>
         {page.ugovori==""?(<></>):<App3></App3>}
         {page.tabele==""?(<></>):<DataTable></DataTable>}
-        {page.favoriti==""?(<></>):<Oglasi></Oglasi>}
         {page.oglasi==""?(<></>):<Favoriti></Favoriti>}
         {page.korisnik!=""?(<></>):<Neka handlerIzmena={handlerIzmena} loaderData={loaderData}></Neka>}
         {page.ocene==""?(<></>):<Expenses items={oglasList}></Expenses>}

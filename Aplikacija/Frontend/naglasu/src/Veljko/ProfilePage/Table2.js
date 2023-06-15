@@ -8,7 +8,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useState,useEffect } from 'react';
 import './Table2.css';
-import mango from './mango.jpg';
 function Table2() {
     const [users,SetUsers]=useState([]);
     const fetchUsers = () =>{

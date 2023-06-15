@@ -32,8 +32,8 @@ export default function SearchBar({userId,route})
         stringify: function () 
         {
             let retValue = ''
-            retValue+=this.ime!==''?'ime='+this.ime:''
-            retValue += this.selectedKat.id !== '' ? `kategorijaId=${this.selectedKat.id}` : ''
+            retValue+=this.ime!==''?'&ime='+this.ime:''
+            retValue += this.selectedKat.id !== '' ? `&kategorijaId=${this.selectedKat.id}` : ''
             if (this.selectedPodkat.length > 0)
             {
                 let selectedPodkatString='&podkategorijeId='

@@ -1,8 +1,6 @@
 import KarticaOglasNova from "./KarticaOglasNova";
-import { useEffect, useState } from "react";
 import './KarticaOglasNova.css';
 import { useSelector,useDispatch } from "react-redux";
-import PlaceHolder from "../../Uros/Res/Slike/placeholder.jpg";
 const KarticeZaPrikaz = ({oglasList}) =>{
     //const [oglasList,setOglasList]= useState([]);
     console.log(oglasList);

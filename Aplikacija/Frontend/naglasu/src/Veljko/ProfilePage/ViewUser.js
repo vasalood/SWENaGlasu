@@ -1,6 +1,3 @@
-import QuoteItem from './QuoteItem';
-import mango from './mango.jpg';
-import Expenses from './Expenses';
 import ViewMarks from './ViewMarks';
 import NavBarContext from '../../Uros/Contexts/NavBarContext';
 import { useParams } from "react-router-dom";

@@ -4,7 +4,7 @@ import classes from './Email.module.css';
 import PopUpModal from './PopUpModal';
 import NavBarContext from "../../Uros/Contexts/NavBarContext";
 
-const ForgotPassword = (props) => {
+const ForgotPassword = () => {
   const { navbarSetCollapsable } = React.useContext(NavBarContext)
   React.useEffect(() => {
       

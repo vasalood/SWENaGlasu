@@ -3,6 +3,12 @@ import "./PostaviOglas.css";
 import NavBarContext from "../../Uros/Contexts/NavBarContext";
 import PopUpModal from '../../Veljko/LoginPage/PopUpModal';
 import { useNavigate } from "react-router-dom";
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 const PostaviOglas = () => {
   let data=localStorage.getItem('userState');
   let id = null;
@@ -496,39 +502,47 @@ function handlePremium() {
 
 
 
-{prikazStanja && <div className="form-group">
-
-<label className="labell" htmlFor="stanje">Stanje:</label>
-
-<select
-
-  id="stanje"
-
-  className="svi-isti"
-
-  value={stanje}
-
-  onChange={(e) => setStanje(e.target.value)}
-
-  required
-
->
-
-  <option value="nijeIzabrano">Izaberite stanje</option>
-
-  <option value="0">Novo - neotpakovano</option>
-
-  <option value="1">Kao novo - nekorišćeno</option>
-
-  <option value="2">Polovno - očuvano</option>
-
-  <option value="3">Polovno</option>
-
-  <option value="4">Polovno - neupotrebivo</option>
-
-</select>
-
+{/*prikazStanja && 
+  <div className="form-group">
+    <Box sx={{ minWidth: 120 }}>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Stanje</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={stanje}
+          label="Stanje"
+          onChange={(e) => setStanje(e.target.value)}
+          style={{backgroundColor: 'white'}}
+        >
+          <MenuItem value={'0'}>Novo</MenuItem>
+          <MenuItem value={'1'}>Kao novo</MenuItem>
+          <MenuItem value={'2'}>Polovno - ocuvano</MenuItem>
+          <MenuItem value={'3'}>Polovno</MenuItem>
+          <MenuItem value={'4'}>Polovno - neupotrebivo</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+  </div>
+*/}
+{<div className="form-group">
+  <label className="labell" htmlFor="stanje">Stanje:</label>
+  <select
+    id="stanje"
+    className="svi-isti"
+    value={stanje}
+    onChange={(e) => setStanje(e.target.value)}
+    required
+  >
+    <option value="nijeIzabrano">Izaberite stanje</option>
+    <option value="0">Novo - neotpakovano</option>
+    <option value="1">Kao novo - nekorišćeno</option>
+    <option value="2">Polovno - očuvano</option>
+    <option value="3">Polovno</option>
+    <option value="4">Polovno - neupotrebivo</option>
+  </select>
 </div>}
+
 
         <div className="form-group">
           <label className="labell" htmlFor="opis">Opis:</label>

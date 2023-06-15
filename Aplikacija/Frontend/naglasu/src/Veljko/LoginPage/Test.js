@@ -1,6 +1,6 @@
 import AuthContext from '../store/auth-context';
 import { useRef, useContext } from 'react';
-const Test = props =>{
+const Test = () => {
     const authCtx=useContext(AuthContext);
     const usernameInputRef= useRef();
     const handler = (event)=>{

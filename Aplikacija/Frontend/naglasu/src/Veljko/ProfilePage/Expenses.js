@@ -1,6 +1,6 @@
 import ExpenseItem from './ExpenseItem';
 import ExpensesFilter from './ExpensesFilter';
-import { useState,useEffect } from 'react';
+import { useState } from 'react';
 import Cardd from './Cardd';
 import ExpensesFilterMonth from './ExpensesFilterMonth';
 import ExpensesFilterMark from './ExpensesFilterMark';

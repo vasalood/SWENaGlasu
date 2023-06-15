@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useRef } from "react";
 import classes from './SignUp.module.css';
-import ErrorModal from "./ErrorModal";
 import { Link } from "react-router-dom";
 import PopUpModal from './PopUpModal';
 import { useNavigate } from "react-router-dom";
 import NavBarContext from "../../Uros/Contexts/NavBarContext";
 
-const SignUp = props => {
+const SignUp = () => {
   
     
   const { navbarSetCollapsable } = React.useContext(NavBarContext)
