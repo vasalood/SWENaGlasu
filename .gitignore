@@ -480,4 +480,5 @@ wwwroot/
 !wwwroot/test.txt
 !appsettings.json
 !package.json
+!launchSettings.json
 ####################################
