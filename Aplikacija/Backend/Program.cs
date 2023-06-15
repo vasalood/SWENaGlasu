@@ -120,7 +120,7 @@ builder.Services.AddAuthentication(options=>{
               }
               return Task.CompletedTask;
           }
-      };
+    };
 
 });
 //Add Email Configs
