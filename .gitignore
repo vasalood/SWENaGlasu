@@ -481,5 +481,5 @@ Migrations/
 !appsettings.json
 !package.json
 !launchSettings.json
-connectionLog.txt
+Aplikacija/Backend/connectionLog.txt
 ####################################

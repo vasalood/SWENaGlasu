@@ -43,13 +43,13 @@ const EditPage = () =>{
   }));
   let savedUserState=localStorage.getItem('userState');
   //console.log(user.slika);
-  console.log(savedUserState);
+  //console.log(savedUserState);
   if(savedUserState)
   {
     dispatch(userActions.setValues(JSON.parse(savedUserState)));
   }
 
-  console.log(user.name+" "+user.surname+""+user.role);
+  //console.log(user.name+" "+user.surname+""+user.role);
 const handlerIzmena = ()=>{
   let proba =-1;
   const ime = ImeRef.current.value;
@@ -62,7 +62,8 @@ const handlerIzmena = ()=>{
   const isTelefonValid = /^\d+$/.test(telefon) && telefon.length>7;
   if(isImeValid && isPrezimeValid && isAdresaValid && isTelefonValid)
   {
-    console.log("PROMENAAA");
+    //console.log("PROMENAAA");
+    //console.log(AdresaRef.current.value);
   fetch("http://localhost:5105/Authentication/UpdateUser/"+ user.username + "/" + ImeRef.current.value + "/" + PrezimeRef.current.value + "/" + AdresaRef.current.value + "/" + TelefonRef.current.value, {
     method: "PUT", // HTTP metoda koja se koristi za zahtev
     headers: {
@@ -107,12 +108,12 @@ const handlerIzmena = ()=>{
     }
     
   }) .catch((error) => {
-    console.log(error);
+    //console.log(error);
   });
   if(proba ==1)
   {
-  console.log(savedUserState);
-  console.log(savedUserState.id);
+  //console.log(savedUserState);
+  //console.log(savedUserState.id);
     let obj ={
     name:ImeRef.current.value,
   surname:PrezimeRef.current.value,
@@ -157,9 +158,9 @@ const handlerSifre = () =>{
     }),
   }).then(odgovorTekst=>{
   
-    console.log(odgovorTekst);
+    //console.log(odgovorTekst);
   }) .catch((error) => {
-    console.log(error);
+    //console.log(error);
   });
 }
 else
